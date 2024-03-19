@@ -134,6 +134,10 @@ void acb_theta_naive_term(acb_t res, acb_srcptr z, const acb_mat_t tau, const sl
 typedef void (*acb_theta_naive_worker_t)(acb_ptr, acb_srcptr, acb_srcptr, const slong *,
     slong, const acb_t, const slong *, slong, slong, slong, slong);
 
+void acb_theta_naive_worker_from_ctx(acb_ptr th, slong len, acb_srcptr exp_zs, acb_srcptr exp_zs_inv,
+	slong nb, const acb_mat_t exp_tau, const acb_mat_t exp_tau_inv, const acb_theta_eld_t E,
+	slong ord, slong prec, acb_theta_naive_worker_t worker);
+
 void acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr zs, slong nb,
     const acb_mat_t tau, const acb_theta_eld_t E, slong ord, slong prec,
     acb_theta_naive_worker_t worker);
@@ -173,6 +177,7 @@ void acb_theta_jet_naive_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau,
 void acb_theta_jet_error_bounds(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
     acb_srcptr dth, slong ord, slong prec);
 
+
 /* Quasi-linear algorithms on the reduced domain */
 
 void acb_theta_dist_pt(arb_t d, arb_srcptr v, const arb_mat_t C, const slong * n, slong prec);
@@ -185,6 +190,41 @@ void acb_theta_agm_sqrt(acb_ptr res, acb_srcptr a, acb_srcptr roots, slong nb, s
 void acb_theta_agm_mul(acb_ptr res, acb_srcptr a1, acb_srcptr a2, slong g, slong prec);
 void acb_theta_agm_mul_tight(acb_ptr res, acb_srcptr a0, acb_srcptr a,
     arb_srcptr d0, arb_srcptr d, slong g, slong prec);
+
+struct acb_theta_ql_ctx_struct
+{
+	arb_mat_struct Y;
+	arb_mat_struct Yinv;
+	arb_mat_struct C;
+	arb_mat_struct Cinv;
+	acb_mat_struct exp_tau;
+	acb_mat_struct exp_tau_inv;
+
+	int z_is_real;
+	int z_is_zero;
+	int t_is_zero;
+
+	acb_struct * exp_zs;
+	acb_struct * exp_zs_inv;
+	arb_struct * vs;
+	arb_struct * dists_a0;
+};
+/* In the g=1 case, drop: Y, Yinv, C, Cinv, vs, dists_a0 */
+
+typedef struct acb_theta_ql_ctx_struct acb_theta_ql_ctx_t[1];
+
+#define acb_theta_ql_ctx_g(ctx) (acb_mat_nrows((ctx)->exp_tau))
+
+void acb_theta_ql_ctx_init(acb_theta_ql_ctx_t ctx, slong g);
+void acb_theta_ql_ctx_set(acb_theta_ql_ctx_t ctx, acb_srcptr z, const acb_mat_t tau, slong prec);
+void acb_theta_ql_ctx_clear(acb_theta_ql_ctx_t ctx);
+
+void acb_theta_ql_ctx_choose_t(acb_theta_ql_ctx_t ctx, const acb_ptr t, slong prec);
+slong acb_theta_ql_ctx_nbz(const acb_theta_ql_ctx_t ctx);
+void acb_theta_ql_ctx_dupl(acb_theta_ql_ctx_t ctx2, const acb_theta_ql_ctx_t ctx, slong prec);
+
+void acb_theta_ql_a0_naive_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec);
+void acb_theta_ql_all_naive_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec);
 
 typedef int (*acb_theta_ql_worker_t)(acb_ptr, acb_srcptr, acb_srcptr,
     arb_srcptr, arb_srcptr, const acb_mat_t, slong, slong);
