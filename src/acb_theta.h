@@ -198,22 +198,22 @@ struct acb_theta_ql_ctx_struct
 	arb_mat_struct C;
 	arb_mat_struct Cinv;
 	acb_mat_struct exp_tau;
-	acb_mat_struct exp_tau_inv;
 
 	int z_is_real;
 	int z_is_zero;
 	int t_is_zero;
 
 	acb_struct * exp_zs;
-	acb_struct * exp_zs_inv;
 	arb_struct * vs;
 	arb_struct * dists_a0;
 };
-/* In the g=1 case, drop: Y, Yinv, C, Cinv, vs, dists_a0 */
+/* In the g=1 case, drop Yinv, C, Cinv, vs, dists_a0 */
 
 typedef struct acb_theta_ql_ctx_struct acb_theta_ql_ctx_t[1];
 
 #define acb_theta_ql_ctx_g(ctx) (acb_mat_nrows((ctx)->exp_tau))
+
+typedef int (*acb_theta_ql_worker_from_ctx_t)(acb_ptr, const acb_theta_ql_ctx_t, slong);
 
 void acb_theta_ql_ctx_init(acb_theta_ql_ctx_t ctx, slong g);
 void acb_theta_ql_ctx_set(acb_theta_ql_ctx_t ctx, acb_srcptr z, const acb_mat_t tau, slong prec);
@@ -225,6 +225,19 @@ void acb_theta_ql_ctx_dupl(acb_theta_ql_ctx_t ctx2, const acb_theta_ql_ctx_t ctx
 
 void acb_theta_ql_a0_naive_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec);
 void acb_theta_ql_all_naive_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec);
+
+int acb_theta_ql_a0_steps_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong nb_steps,
+	slong s, slong prec, acb_ql_worker_from_ctx_t worker);
+int acb_theta_ql_a0_split_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong s, slong prec,
+	acb_theta_ql_worker_from_ctx_t worker);
+slong acb_theta_ql_a0_nb_steps_from_ctx(slong* s, const acb_theta_ql_ctx_t ctx, slong prec);
+int acb_theta_ql_a0_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec);
+
+void acb_theta_ql_all_trunc_from_ctx(acb_ptr th, acb_srcptr z, const acb_mat_t tau, int sqr, slong prec);
+void acb_theta_ql_all_from_ctx(acb_ptr th, acb_srcptr z, const acb_mat_t tau, int sqr, slong prec);
+/* todo: we assume that the input is exact in all these functions. */
+
+/* Older functions */
 
 typedef int (*acb_theta_ql_worker_t)(acb_ptr, acb_srcptr, acb_srcptr,
     arb_srcptr, arb_srcptr, const acb_mat_t, slong, slong);
