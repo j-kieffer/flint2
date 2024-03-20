@@ -11,58 +11,6 @@
 
 #include "acb_theta.h"
 
-/* copied from acb_theta_naive_0b */
-
-static void
-worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2, const slong * precs, slong len,
-    const acb_t cofactor, const slong * coords, slong ord, slong g, slong prec, slong fullprec)
-{
-    slong n = 1 << g;
-    acb_t s0, s1, add, sub;
-    ulong b;
-    slong dot;
-
-    acb_init(s0);
-    acb_init(s1);
-    acb_init(add);
-    acb_init(sub);
-
-    /* Compute alternate sums to adjust signs */
-    acb_dot(s0, NULL, 0, v1, 2, v2, 2, (len + 1) / 2, prec);
-    acb_dot(s1, NULL, 0, v1 + 1, 2, v2 + 1, 2, len / 2, prec);
-    acb_add(add, s0, s1, prec);
-    acb_sub(sub, s0, s1, prec);
-    acb_mul(add, add, cofactor, prec);
-    acb_mul(sub, sub, cofactor, prec);
-
-    for (b = 0; b < n; b++)
-    {
-        dot = acb_theta_char_dot_slong(b, coords, g) % 2;
-        if ((b >> (g - 1)) && dot)
-        {
-            acb_sub(&th[b], &th[b], sub, fullprec);
-        }
-        else if ((b >> (g - 1)))
-        {
-            acb_add(&th[b], &th[b], sub, fullprec);
-        }
-        else if (dot)
-        {
-            acb_sub(&th[b], &th[b], add, fullprec);
-        }
-        else
-        {
-            acb_add(&th[b], &th[b], add, fullprec);
-        }
-    }
-
-    acb_clear(s0);
-    acb_clear(s1);
-    acb_clear(add);
-    acb_clear(sub);
-}
-
-/* almost the same as ql_a0_naive_from_ctx */
 static void
 acb_theta_ql_a0_naive_from_ctx_gen(cb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec)
 {
@@ -72,7 +20,7 @@ acb_theta_ql_a0_naive_from_ctx_gen(cb_ptr th, const acb_theta_ql_ctx_t ctx, slon
 	arb_ptr new_v;
 	acb_theta_eld_t E;
 	arf_t R2, eps;
-	acb_ptr aux, new_exp_zs, new_exp_zs_inv;
+	acb_ptr aux, new_exp_zs, cs;
 	slong new_prec;
 	slong a, j;
 	int success = 1;
@@ -81,28 +29,32 @@ acb_theta_ql_a0_naive_from_ctx_gen(cb_ptr th, const acb_theta_ql_ctx_t ctx, slon
 	arf_init(R2);
 	arf_init(eps);
 	new_exp_zs = _acb_vec_init(nbt * g);
-	new_exp_zs_inv = _acb_vec_init(nbt * g);
 	aux = _acb_vec_init(nbt * n); /* todo: could do 6 at once if z is real */
+	cs = _acb_vec_init(nbt);
 
 	/* Get theta_a0 at 0, t, 2t */
 	for (a = 0; (a < n) && success; a++)
 	{
-		/* Figure out the right factors... */
 		acb_theta_char_get_arb(new_v, a, g);
-		arb_vec_add(new_v, new_v, ctx->vs, g, prec);
+		_arb_vec_neg(new_v, new_v, g);
+		_arb_vec_add(new_v, new_v, ctx->vs, g, prec);
 		new_prec = prec + acb_theta_dist_addprec(&ctx->dists_a0[a]);
-
 		acb_theta_naive_radius(R2, eps, &ctx->C, 0, new_prec);
 		success = acb_theta_eld_set(E, &ctx->C, R2, new_v);
-		if (success)
+
+		if (!success) break;
+
+		for (j = 0; j < nbt; j++)
 		{
-			acb_theta_naive_worker_from_ctx(aux, n, new_exp_zs, new_exp_zs_inv, nbt,
-				&ctx->exp_tau, &ctx->exp_tau_inv, E, 0, new_prec, worker);
-			for (j = 0; j < nbt; j++)
-			{
-				_acb_vec_set(th + j * n * n + a * n, aux + j * n, n);
-				/* figure out the right cofactors... */
-			}
+			acb_theta_naive_exp_translate(&cs[j], new_exp_zs + j * g, ctx->exp_zs + j * g,
+				&ctx->exp_tau, a, prec);
+		}
+
+		acb_theta_naive_worker(aux, n, new_exp_zs,  nbt,
+			&ctx->exp_tau, E, 0, new_prec, acb_theta_naive_0b_worker);
+		for (j = 0; j < nbt; j++)
+		{
+			_acb_vec_scalar_mul(th + j * n * n + a * n, aux + j * n, &cs[j], n, prec);
 		}
 	}
 
@@ -112,24 +64,29 @@ acb_theta_ql_a0_naive_from_ctx_gen(cb_ptr th, const acb_theta_ql_ctx_t ctx, slon
 		for (a = 0; (a < n) && success; a++)
 		{
 			acb_theta_char_get_arb(new_v, a, g);
-			arb_vec_add(new_v, new_v, ctx->vs + g, g, prec);
+			_arb_vec_neg(new_v, new_v, g);
+			_arb_vec_add(new_v, new_v, ctx->vs + g, g, prec);
 			new_prec = prec + acb_theta_dist_addprec(&ctx->dists_a0[n + a]);
-
 			acb_theta_naive_radius(R2, eps, &ctx->C, 0, new_prec);
 			success = acb_theta_eld_set(E, &ctx->C, R2, new_v);
-			if (success)
+
+			if (!success) break;
+
+			acb_theta_naive_worker(aux, n, new_exp_zs,  nbt,
+				&ctx->exp_tau, E, 0, new_prec, acb_theta_naive_worker_0b);
+			for (j = 0; j < nbt; j++)
 			{
-				acb_theta_naive_worker_from_ctx(aux, n, new_exp_zs, new_exp_zs_inv, nbt,
-					&ctx->exp_tau, &ctx->exp_tau_inv, E, 0, new_prec, worker);
-				for (j = 0; j < nbt; j++)
-				{
-					_acb_vec_set(th + (nbt + j) * n * n + a * n, aux + j * n, n);
-					/* figure out the right cofactors */
-				}
+				_acb_vec_scalar_mul(th + (nbt + j) * n * n + a * n, aux + j * n, &cs[j], n, prec);
 			}
 		}
-
 	}
+
+	_arb_vec_clear(new_v, g);
+	arf_clear(R2);
+	arf_clear(eps);
+	_acb_vec_clear(new_exp_zs, nbt * g);
+	_acb_vec_clear(aux, nbt * n);
+	_acb_vec_clear(cs, nbt);
 }
 
 static void
@@ -155,8 +112,7 @@ acb_theta_ql_all_naive_from_ctx_g1(acb_ptr th, const acb_theta_ql_ctx ctx, slong
 	arb_mul_2exp_si(x, x, -2);
 	newprec = prec + acb_theta_dist_addprec(x);
 
-	/* todo: use the inverses we have computed? */
-	/* todo: we don't need the theta constants to extract square roots */
+	/* todo: we don't need the theta constants to extract square roots... */
 	for (j = 0; j < nbt; j++)
 	{
 		if (j == 0)

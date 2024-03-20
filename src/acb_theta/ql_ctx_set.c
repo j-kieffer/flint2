@@ -16,13 +16,12 @@ acb_theta_ql_ctx_set(acb_theta_ql_ctx_t ctx, acb_srcptr z, const acb_mat_t tau, 
 {
 	slong g = acb_theta_ql_ctx_g(ctx);
 	int res;
-	slong j, k, a;
-	slong lp = ACB_THETA_LOW_PREC;
-	arb_ptr w;
+	slong j;
+
+	acb_mat_get_imag(ctx->Y, tau);
 
 	if (g >= 2)
 	{
-		acb_mat_get_imag(ctx->Y, tau);
 		acb_siegel_yinv(ctx->Yinv, tau, prec);
 		acb_siegel_cho(ctx->C, tau, prec);
 		res = acb_mat_inv(ctx->Cinv, ctx->C, prec);
@@ -32,60 +31,29 @@ acb_theta_ql_ctx_set(acb_theta_ql_ctx_t ctx, acb_srcptr z, const acb_mat_t tau, 
 		}
 	}
 
-	/* Exponentials of tau */
-	/* These are the square roots of the entries of exp_tau in naive_worker. */
-	for (j = 0; j < g; j++)
-	{
-		for (k = j; k < g; k++)
-		{
-			acb_set(acb_mat_entry(ctx->exp_tau, j, k), acb_mat_entry(tau, j, k));
-			if (k == j)
-			{
-				acb_mul_2exp_si(acb_mat_entry(ctx->exp_tau, j, k), acb_mat_entry(ctx->exp_tau, j, k), -1);
-			}
-			acb_exp_pi_i(acb_mat_entry(ctx->exp_tau, j, k), acb_mat_entry(ctx->exp_tau, j, k));
-
-			if (arb_is_zero(acb_imagref(acb_mat_entry(tau, j, k))))
-			{
-				acb_conj(acb_mat_entry(ctx->exp_tau_inv, j, k), acb_mat_entry(ctx->exp_tau, j, k));
-			}
-			else
-			{
-				acb_inv(acb_mat_entry(ctx->exp_tau_inv, j, k), acb_mat_entry(ctx->exp_tau, j, k));
-			}
-		}
-	}
-
 	/* t = 0 at initialization */
 	ctx->z_is_real = _acb_vec_is_real(z, g);
 	ctx->z_is_zero = _acb_vec_is_zero(z, g);
 	ctx->t_is_zero = 1;
 
-	/* Exponentials of 0 and z */
-	/* These are the entries of exp_z as in naive_worker for the two vectors 0, z. */
+	/* Exponentials */
 	for (j = 0; j < g; j++)
 	{
 		acb_one(&exp_zs[j]);
-		acb_one(&exp_zs_inv[j]);
-
-		if (!ctx->z_is_zero)
-		{
-			acb_mul_2exp_si(&exp_zs[j + g], &z[j], 1);
-			acb_exp_pi_i(&exp_zs[j + g], &exp_zs[j + g], prec);
-			if (arb_is_zero(acb_imagref(&z[j])))
-			{
-				acb_conj(&exp_zs_inv[j + g], &exp_zs[j + g], prec);
-			}
-			else
-			{
-				acb_inv(&exp_zs_inv[j + g], &exp_zs[j + g], prec);
-			}
-		}
 	}
+	if (!ctx->z_is_zero)
+	{
+		acb_theta_naive_exp_z(ctx->exp_zs + g, z, g, prec);
+	}
+	acb_theta_naive_exp_tau(ctx->exp_tau, tau, prec);
 
 	/* Center of ellipsoid and distances */
 	if (g >= 2)
 	{
+		arb_ptr w;
+		slong lp = ACB_THETA_LOW_PREC;
+		slong a;
+
 		w = _arb_vec_init(g);
 
 		_acb_vec_zero(ctx->vs, g);

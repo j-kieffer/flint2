@@ -12,20 +12,14 @@
 #include "acb_theta.h"
 
 void
-acb_theta_ql_ctx_init(acb_theta_ql_ctx_t ctx, slong g)
+acb_theta_naive_exp_z(acb_ptr exp_z, acb_scrptr z, slong g, slong prec)
 {
-	slong n = 1 << g;
+	slong j;
 
-	acb_mat_init(ctx->exp_tau, g, g);
-	ctx->exp_zs = _acb_vec_init(6 * g);
-	arb_mat_init(ctx->Y, g, g);
-
-	if (g >= 2)
+	for (j = 0; j < g; j++)
 	{
-		arb_mat_init(ctx->Yinv, g, g);
-		arb_mat_init(ctx->C, g, g);
-		arb_mat_init(ctx->Cinv, g, g);
-		ctx->vs = _acb_vec_init(2 * g);
-		ctx->dists_a0 = _acb_vec_init(2 * n);
+		acb_set_round(&exp_z[j], &z[j], prec);
+		acb_mul_2exp_si(&exp_z[j], &exp_z[j], 1);
+		acb_exp_pi_i(&exp_z[j], &exp_z[j], prec);
 	}
 }

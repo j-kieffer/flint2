@@ -18,13 +18,11 @@ acb_theta_ql_ctx_clear(acb_theta_ql_ctx_t ctx)
 	slong n = 1 << g;
 
 	acb_mat_clear(ctx->exp_tau);
-	acb_mat_clear(ctx->exp_tau_inv);
 	_acb_vec_clear(ctx->exp_zs, 6 * g);
-	_acb_vec_clear(ctx->exp_zs_inv, 6 * g);
+	arb_mat_clear(ctx->Y);
 
 	if (g >= 2)
 	{
-		arb_mat_clear(ctx->Y);
 		arb_mat_clear(ctx->Yinv);
 		arb_mat_clear(ctx->C);
 		arb_mat_clear(ctx->Cinv);

@@ -131,16 +131,23 @@ void acb_theta_naive_reduce(arb_ptr v, acb_ptr new_zs, arb_ptr as, acb_ptr cs, a
 void acb_theta_naive_term(acb_t res, acb_srcptr z, const acb_mat_t tau, const slong * tup,
     const slong * n, slong prec);
 
+void acb_theta_naive_exp_tau(acb_mat_t exp_tau, const acb_mat_t tau, slong prec);
+void acb_theta_naive_exp_z(acb_ptr exp_z, acb_scrptr z, slong g, slong prec);
+void acb_theta_naive_exp_translate(acb_t c, acb_ptr exp_z2, acb_srcptr exp_z1,
+	const acb_mat_t exp_tau, ulong a, slong prec);
+
 typedef void (*acb_theta_naive_worker_t)(acb_ptr, acb_srcptr, acb_srcptr, const slong *,
     slong, const acb_t, const slong *, slong, slong, slong, slong);
 
-void acb_theta_naive_worker_from_ctx(acb_ptr th, slong len, acb_srcptr exp_zs, acb_srcptr exp_zs_inv,
-	slong nb, const acb_mat_t exp_tau, const acb_mat_t exp_tau_inv, const acb_theta_eld_t E,
-	slong ord, slong prec, acb_theta_naive_worker_t worker);
-
-void acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr zs, slong nb,
+void acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr exp_zs, slong nb,
+	const acb_mat_t exp_tau, const acb_theta_eld_t E, slong ord, slong prec,
+	acb_theta_naive_worker_t worker);
+void acb_theta_naive_worker_old(acb_ptr th, slong len, acb_srcptr zs, slong nb,
     const acb_mat_t tau, const acb_theta_eld_t E, slong ord, slong prec,
     acb_theta_naive_worker_t worker);
+
+acb_theta_naive_worker_t acb_theta_naive_00_worker;
+acb_theta_naive_worker_t acb_theta_naive_0b_worker;
 
 void acb_theta_naive_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
 void acb_theta_naive_0b(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
@@ -176,7 +183,6 @@ void acb_theta_jet_naive_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau,
 
 void acb_theta_jet_error_bounds(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
     acb_srcptr dth, slong ord, slong prec);
-
 
 /* Quasi-linear algorithms on the reduced domain */
 

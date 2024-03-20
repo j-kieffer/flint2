@@ -20,23 +20,15 @@ acb_theta_ql_ctx_choose_t(acb_theta_ql_ctx_t ctx, const acb_ptr t, slong prec)
 	if (ctx->t_is_zero) /* put exponentials of z as vector no 3*/
 	{
 		_acb_vec_set(ctx->exp_zs + 3 * g, ctx->exp_zs + g, g);
-		_acb_vec_set(ctx->exp_zs_inv + 3 * g, ctx->exp_zs_inv + g, g);
 	}
 	ctx->t_is_zero = 0;
 
 	/* Update exponentials of 0, t, 2t, z, z + t, z + 2t */
+	acb_theta_naive_exp_z(ctx->exp_zs + g, t, g, prec);
 	for (j = 0; j < g; j++)
 	{
-		acb_mul_2exp_si(&ctx->exp_zs[g + j], &t[j], 1);
-		acb_exp_pi_i(&ctx->exp_zs[g + j], &ctx->exp_zs[g + j], prec);
-		acb_conj(&ctx->exp_zs_inv[g + j], &ctx->exp_zs[g + j]);
-
 		acb_sqr(&ctx->exp_zs[2 * g + j], &ctx->exp_zs[g + j], prec);
-		acb_conj(&ctx->exp_zs_inv[2 * g + j], &ctx->exp_zs[2 * g + j]);
-
 		acb_mul(&ctx->exp_zs[4 * g + j], &ctx->exp_zs[g + j], &ctx->exp_zs[3 * g + j], prec);
 		acb_mul(&ctx->exp_zs[5 * g + j], &ctx->exp_zs[2 * g + j], &ctx->exp_zs[3 * g + j], prec);
-		acb_mul(&ctx->exp_zs_inv[4 * g + j], &ctx->exp_zs_inv[g + j], &ctx->exp_zs_inv[3 * g + j], prec);
-		acb_mul(&ctx->exp_zs_inv[5 * g + j], &ctx->exp_zs_inv[2 * g + j], &ctx->exp_zs_inv[3 * g + j], prec);
 	}
 }

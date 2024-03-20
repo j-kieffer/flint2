@@ -11,21 +11,16 @@
 
 #include "acb_theta.h"
 
-void
-acb_theta_ql_ctx_init(acb_theta_ql_ctx_t ctx, slong g)
+static void
+acb_theta_naive_00_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2, const slong * precs, slong len,
+    const acb_t cofactor, const slong * coords, slong ord, slong g, slong prec, slong fullprec)
 {
-	slong n = 1 << g;
+    acb_t sum;
 
-	acb_mat_init(ctx->exp_tau, g, g);
-	ctx->exp_zs = _acb_vec_init(6 * g);
-	arb_mat_init(ctx->Y, g, g);
+    acb_init(sum);
 
-	if (g >= 2)
-	{
-		arb_mat_init(ctx->Yinv, g, g);
-		arb_mat_init(ctx->C, g, g);
-		arb_mat_init(ctx->Cinv, g, g);
-		ctx->vs = _acb_vec_init(2 * g);
-		ctx->dists_a0 = _acb_vec_init(2 * n);
-	}
+    acb_dot(sum, NULL, 0, v1, 1, v2, 1, len, prec);
+    acb_addmul(th, sum, cofactor, fullprec);
+
+    acb_clear(sum);
 }

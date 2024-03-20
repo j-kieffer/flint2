@@ -11,21 +11,6 @@
 
 #include "acb_theta.h"
 
-/* copied from acb_theta_naive_00 */
-static void
-worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2, const slong * precs, slong len,
-    const acb_t cofactor, const slong * coords, slong ord, slong g, slong prec, slong fullprec)
-{
-    acb_t sum;
-
-    acb_init(sum);
-
-    acb_dot(sum, NULL, 0, v1, 1, v2, 1, len, prec);
-    acb_addmul(th, sum, cofactor, fullprec);
-
-    acb_clear(sum);
-}
-
 void
 acb_theta_ql_a0_naive_from_ctx_gen(cb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec)
 {
@@ -35,7 +20,7 @@ acb_theta_ql_a0_naive_from_ctx_gen(cb_ptr th, const acb_theta_ql_ctx_t ctx, slon
 	arb_ptr new_v;
 	acb_theta_eld_t E;
 	arf_t R2, eps;
-	acb_ptr aux, new_exp_zs, new_exp_zs_inv;
+	acb_ptr new_exp_zs, aux, cs;
 	slong new_prec;
 	slong a, j;
 	int success = 1;
@@ -44,28 +29,35 @@ acb_theta_ql_a0_naive_from_ctx_gen(cb_ptr th, const acb_theta_ql_ctx_t ctx, slon
 	arf_init(R2);
 	arf_init(eps);
 	new_exp_zs = _acb_vec_init(nbt * g);
-	new_exp_zs_inv = _acb_vec_init(nbt * g);
 	aux = _acb_vec_init(nbt); /* todo: could do 6 at once if z is real */
+	cs = _acb_vec_init(nbt);
 
 	/* Get theta_a0 at 0, t, 2t */
 	for (a = 0; (a < n) && success; a++)
 	{
-		/* Figure out the right factors... */
+		/* Compute ellipsoid */
 		acb_theta_char_get_arb(new_v, a, g);
-		arb_vec_add(new_v, new_v, ctx->vs, g, prec);
+		_arb_vec_neg(new_v, new_v, g);
+		_arb_vec_add(new_v, new_v, ctx->vs, g, prec);
 		new_prec = prec + acb_theta_dist_addprec(&ctx->dists_a0[a]);
-
 		acb_theta_naive_radius(R2, eps, &ctx->C, 0, new_prec);
 		success = acb_theta_eld_set(E, &ctx->C, R2, new_v);
-		if (success)
+
+		if (!success) break;
+
+		/* Translate exponentials */
+		for (j = 0; j < nbt; j++)
 		{
-			acb_theta_naive_worker_from_ctx(aux, 1, new_exp_zs, new_exp_zs_inv, nbt,
-				&ctx->exp_tau, &ctx->exp_tau_inv, E, 0, new_prec, worker);
-			for (j = 0; j < nbt; j++)
-			{
-				acb_set(&th[j * n + a], &aux[j]);
-				/* figure out the right cofactors... */
-			}
+			acb_theta_naive_exp_translate(&cs[j], new_exp_zs + j * g, ctx->exp_zs + j * g,
+				&ctx->exp_tau, a, prec);
+		}
+
+		/* Call worker */
+		acb_theta_naive_worker(aux, 1, new_exp_zs, nbt, &ctx->exp_tau, E, 0, new_prec,
+			acb_theta_naive_00_worker);
+		for (j = 0; j < nbt; j++)
+		{
+			acb_mul(&th[j * n + a], &aux[j], &cs[j], prec);
 		}
 	}
 
@@ -74,25 +66,38 @@ acb_theta_ql_a0_naive_from_ctx_gen(cb_ptr th, const acb_theta_ql_ctx_t ctx, slon
 	{
 		for (a = 0; (a < n) && success; a++)
 		{
+			/* Compute ellipsoid */
 			acb_theta_char_get_arb(new_v, a, g);
-			arb_vec_add(new_v, new_v, ctx->vs + g, g, prec);
+			_arb_vec_neg(new_v, new_v, g);
+			_arb_vec_add(new_v, new_v, ctx->vs + g, g, prec);
 			new_prec = prec + acb_theta_dist_addprec(&ctx->dists_a0[n + a]);
-
 			acb_theta_naive_radius(R2, eps, &ctx->C, 0, new_prec);
 			success = acb_theta_eld_set(E, &ctx->C, R2, new_v);
-			if (success)
+
+			if (!success) break;
+
+			/* Translate exponentials */
+			for (j = 0; j < nbt; j++)
 			{
-				acb_theta_naive_worker_from_ctx(aux, 1, new_exp_zs, new_exp_zs_inv, nbt,
-					&ctx->exp_tau, &ctx->exp_tau_inv, E, 0, new_prec, worker);
-				for (j = 0; j < nbt; j++)
-				{
-					acb_set(&th[(nbt + j) * n + a], &aux[j]);
-					/* figure out the right cofactors */
-				}
+				acb_theta_naive_exp_translate(&cs[j], new_exp_zs + j * g, ctx->exp_zs + (nbt + j) * g,
+					exp_tau, a, prec);
+			}
+
+			acb_theta_naive_worker_from_ctx(aux, 1, new_exp_zs,  nbt,
+					&ctx->exp_tau, E, 0, new_prec, acb_theta_naive_00_worker);
+			for (j = 0; j < nbt; j++)
+			{
+				acb_mul(&th[(nbt + j) * n + a], &aux[j], &cs[j], prec);
 			}
 		}
-
 	}
+
+	_acb_vec_clear(new_v, g);
+	arf_clear(R2);
+	arf_clear(eps);
+	_acb_vec_clear(new_exp_zs, nbt * g);
+	_acb_vec_init(aux, nbt);
+	_acb_vec_clear(cs, nbt);
 }
 
 void
