@@ -16,16 +16,21 @@ acb_theta_ql_ctx_init(acb_theta_ql_ctx_t ctx, slong g)
 {
 	slong n = 1 << g;
 
-	acb_mat_init(ctx->exp_tau, g, g);
-	ctx->exp_zs = _acb_vec_init(6 * g);
-	arb_mat_init(ctx->Y, g, g);
+	acb_mat_init(acb_theta_ql_ctx_exp_tau(ctx), g, g);
+	acb_theta_ql_ctx_exp_zs(ctx) = _acb_vec_init(6 * g);
+	arb_mat_init(acb_theta_ql_ctx_y(ctx), g, g);
+	acb_init(acb_theta_ql_ctx_c(ctx));
+
+	ctx->z_is_zero = 1;
+	ctx->z_is_real = 1;
+	ctx->t_is_zero = 1;
 
 	if (g >= 2)
 	{
-		arb_mat_init(ctx->Yinv, g, g);
-		arb_mat_init(ctx->C, g, g);
-		arb_mat_init(ctx->Cinv, g, g);
-		ctx->vs = _acb_vec_init(2 * g);
-		ctx->dists_a0 = _acb_vec_init(2 * n);
+		arb_mat_init(acb_theta_ql_ctx_yinv(ctx), g, g);
+		arb_mat_init(acb_theta_ql_ctx_cho(ctx), g, g);
+		arb_mat_init(acb_theta_ql_ctx_choinv(ctx), g, g);
+		acb_theta_ql_ctx_v(ctx) = _acb_vec_init(g);
+		acb_theta_ql_ctx_dists(ctx) = _acb_vec_init(2 * n);
 	}
 }

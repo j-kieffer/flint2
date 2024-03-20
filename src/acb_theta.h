@@ -184,18 +184,22 @@ void acb_theta_jet_naive_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau,
 void acb_theta_jet_error_bounds(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
     acb_srcptr dth, slong ord, slong prec);
 
-/* Quasi-linear algorithms on the reduced domain */
+/* Distances */
 
 void acb_theta_dist_pt(arb_t d, arb_srcptr v, const arb_mat_t C, const slong * n, slong prec);
 void acb_theta_dist_lat(arb_t d, arb_srcptr v, const arb_mat_t C, slong prec);
 void acb_theta_dist_a0(arb_ptr d, acb_srcptr z, const acb_mat_t tau, slong prec);
 slong acb_theta_dist_addprec(const arb_t d);
 
+/* AGM steps */
+
 void acb_theta_agm_hadamard(acb_ptr res, acb_srcptr a, slong g, slong prec);
 void acb_theta_agm_sqrt(acb_ptr res, acb_srcptr a, acb_srcptr roots, slong nb, slong prec);
 void acb_theta_agm_mul(acb_ptr res, acb_srcptr a1, acb_srcptr a2, slong g, slong prec);
 void acb_theta_agm_mul_tight(acb_ptr res, acb_srcptr a0, acb_srcptr a,
     arb_srcptr d0, arb_srcptr d, slong g, slong prec);
+
+/* Context structure for quasi-linear algorithm */
 
 struct acb_theta_ql_ctx_struct
 {
@@ -210,36 +214,45 @@ struct acb_theta_ql_ctx_struct
 	int t_is_zero;
 
 	acb_struct * exp_zs;
-	arb_struct * vs;
-	arb_struct * dists_a0;
+	arb_struct * v;
+	arb_struct c;
+	arb_struct * dists;
 };
 /* In the g=1 case, drop Yinv, C, Cinv, vs, dists_a0 */
 
 typedef struct acb_theta_ql_ctx_struct acb_theta_ql_ctx_t[1];
 
 #define acb_theta_ql_ctx_g(ctx) (acb_mat_nrows((ctx)->exp_tau))
+#define acb_theta_ql_ctx_y(ctx) (&(ctx)->Y)
+#define acb_theta_ql_ctx_yinv(ctx) (&(ctx)->Yinv)
+#define acb_theta_ql_ctx_cho(ctx) (&(ctx)->C)
+#define acb_theta_ql_ctx_choinv(ctx) (&(ctx)->Cinv)
+#define acb_theta_ql_ctx_exp_tau(ctx) (&(ctx)->exp_tau)
+#define acb_theta_ql_ctx_exp_zs(ctx) ((ctx)->exp_zs)
+#define acb_theta_ql_ctx_v(ctx) ((ctx)->v)
+#define acb_theta_ql_ctx_c(ctx) (&(ctx)->c)
+#define acb_theta_ql_ctx_dists(ctx) (&(ctx)->dists)
+
+void acb_theta_ql_ctx_init(acb_theta_ql_ctx_t ctx, slong g);
+void acb_theta_ql_ctx_clear(acb_theta_ql_ctx_t ctx);
+void acb_theta_ql_ctx_set(acb_theta_ql_ctx_t ctx, acb_srcptr z, const acb_mat_t tau, slong prec);
+void acb_theta_ql_ctx_copy(acb_theta_ql_ctx_t ctx2, const acb_theta_ql_ctx_t ctx);
+void acb_theta_ql_ctx_choose_t(acb_theta_ql_ctx_t ctx, const acb_ptr t, slong prec);
+void acb_theta_ql_ctx_dupl(acb_theta_ql_ctx_t ctx, slong prec);
 
 typedef int (*acb_theta_ql_worker_from_ctx_t)(acb_ptr, const acb_theta_ql_ctx_t, slong);
 
-void acb_theta_ql_ctx_init(acb_theta_ql_ctx_t ctx, slong g);
-void acb_theta_ql_ctx_set(acb_theta_ql_ctx_t ctx, acb_srcptr z, const acb_mat_t tau, slong prec);
-void acb_theta_ql_ctx_clear(acb_theta_ql_ctx_t ctx);
-
-void acb_theta_ql_ctx_choose_t(acb_theta_ql_ctx_t ctx, const acb_ptr t, slong prec);
-slong acb_theta_ql_ctx_nbz(const acb_theta_ql_ctx_t ctx);
-void acb_theta_ql_ctx_dupl(acb_theta_ql_ctx_t ctx2, const acb_theta_ql_ctx_t ctx, slong prec);
-
-void acb_theta_ql_a0_naive_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec);
-void acb_theta_ql_all_naive_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec);
+acb_theta_ql_worker_from_ctx_t acb_theta_ql_a0_naive_from_ctx;
+int acb_theta_ql_roots_from_ctx(acb_ptr rts, const acb_theta_ql_ctx_t ctx, slong guard);
 
 int acb_theta_ql_a0_steps_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong nb_steps,
-	slong s, slong prec, acb_ql_worker_from_ctx_t worker);
+	slong s, slong prec, slong guard, acb_ql_worker_from_ctx_t worker);
 int acb_theta_ql_a0_split_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong s, slong prec,
 	acb_theta_ql_worker_from_ctx_t worker);
 slong acb_theta_ql_a0_nb_steps_from_ctx(slong* s, const acb_theta_ql_ctx_t ctx, slong prec);
-int acb_theta_ql_a0_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong prec);
 
-void acb_theta_ql_all_trunc_from_ctx(acb_ptr th, acb_srcptr z, const acb_mat_t tau, int sqr, slong prec);
+acb_theta_ql_worker_from_ctx_t acb_theta_ql_a0_from_ctx;
+
 void acb_theta_ql_all_from_ctx(acb_ptr th, acb_srcptr z, const acb_mat_t tau, int sqr, slong prec);
 /* todo: we assume that the input is exact in all these functions. */
 

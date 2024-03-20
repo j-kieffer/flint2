@@ -14,19 +14,20 @@
 void
 acb_theta_ql_ctx_clear(acb_theta_ql_ctx_t ctx)
 {
-	slong g = acb_mat_nrows(ctx->exp_tau);
+	slong g = acb_theta_ql_ctx_g(ctx);
 	slong n = 1 << g;
 
-	acb_mat_clear(ctx->exp_tau);
-	_acb_vec_clear(ctx->exp_zs, 6 * g);
-	arb_mat_clear(ctx->Y);
+	acb_mat_clear(acb_theta_ql_ctx_exp_tau(ctx));
+	_acb_vec_clear(acb_theta_ql_ctx_exp_zs(ctx), 6 * g);
+	arb_mat_clear(acb_theta_ql_ctx_y(ctx));
+	acb_clear(acb_theta_ql_ctx_c(ctx));
 
 	if (g >= 2)
 	{
-		arb_mat_clear(ctx->Yinv);
-		arb_mat_clear(ctx->C);
-		arb_mat_clear(ctx->Cinv);
-		_arb_vec_clear(vs, 2 * g);
-		_arb_vec_clear(dists, 2 * n);
+		arb_mat_clear(acb_theta_ql_ctx_yinv(ctx));
+		arb_mat_clear(acb_theta_ql_ctx_cho(ctx));
+		arb_mat_clear(acb_theta_ql_ctx_choinv(ctx));
+		_arb_vec_clear(acb_theta_ql_ctx_v(ctx), 2 * g);
+		_arb_vec_clear(acb_theta_ql_ctx_dists(ctx), 2 * n);
 	}
 }
