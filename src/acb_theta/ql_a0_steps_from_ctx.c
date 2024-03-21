@@ -11,47 +11,6 @@
 
 #include "acb_theta.h"
 
-/* todo: don't compute the values that are not needed ? */
-int
-acb_theta_ql_a0_get_roots(acb_ptr rts, const acb_theta_ql_ctx_t ctx, slong guard)
-{
-	slong g = acb_theta_ql_ctx_g(ctx);
-	slong n = 1 << g;
-	slong nbr = (ctx->t_is_zero ? 1 : 2) * (ctx->z_is_zero ? 1 : 2);
-	slong nbz = acb_theta_ql_ctx_nbz(ctx);
-	acb_ptr values;
-	slong j;
-	int res = 1;
-
-	values = _acb_vec_init(nbz * n);
-
-	acb_theta_ql_a0_naive_from_ctx(values, ctx, guard);
-	if (ctx->t_is_zero)
-	{
-		_acb_vec_set(rts, values, nbr * n);
-	}
-	else
-	{
-		_acb_vec_set(rts, values + n, 2 * n);
-		if (!ctx->z_is_zero)
-		{
-			_acb_vec_set(rts + 2 * n, values + 4 * n, 2 * n); /* todo: cofactor! */
-		}
-	}
-
-	for (j = 0; j < nbr * n; j++)
-	{
-		if (acb_contains_zero(&rts[j]))
-		{
-			res = 0;
-			break;
-		}
-	}
-
-	_acb_vec_clear(values, nbz * n);
-	return res;
-}
-
 static void
 acb_theta_ql_step_1(acb_ptr res, acb_srcptr th0, acb_srcptr th, acb_srcptr rts,
     arb_srcptr d0, arb_srcptr d, slong g, slong prec)
@@ -81,7 +40,6 @@ acb_theta_ql_step_2(acb_ptr res, acb_srcptr th0, acb_srcptr th, acb_srcptr rts,
     _acb_vec_clear(aux, 3 * n);
 }
 
-
 static void
 acb_theta_ql_step_3(acb_ptr res, acb_srcptr th0, acb_srcptr th, acb_srcptr rts,
     arb_srcptr d0, arb_srcptr d, slong g, slong prec)
@@ -110,11 +68,11 @@ acb_theta_ql_step_3(acb_ptr res, acb_srcptr th0, acb_srcptr th, acb_srcptr rts,
 
 static void
 acb_theta_ql_a0_step(acb_ptr th, acb_srcptr rts, arb_srcptr d0, arb_srcptr d,
-	const acb_theta_ql_ctx_t ctx, slong prec)
+	const acb_theta_ql_ctx_t ctx, int last_step, slong prec)
 {
 	slong g = acb_theta_ql_ctx_g(ctx);
 	slong n = 1 << g;
-	slong nbz = acb_theta_ql_ctx_nbz(ctx);
+	slong nbz = (ctx->z_is_zero ? 1 : 2) * (ctx->t_is_zero ? 1 : 3);
 	acb_ptr next;
 
 	next = _acb_vec_init(nbz * n);
@@ -164,7 +122,7 @@ acb_theta_ql_a0_steps_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong n
 	int res = 1;
 
 	acb_theta_ql_ctx_init(new_ctx, g);
-	rts = _acb_vec_init(nbr * n * nb_steps); /* todo: keep just what we need? */
+	rts = _acb_vec_init(nbr * n * nb_steps);
 	d = _arb_vec_init(n);
 	d0 = _arb_vec_init(n);
 
@@ -174,7 +132,7 @@ acb_theta_ql_a0_steps_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong n
 	{
 		/* Compute rts efficiently */
 		res = acb_theta_ql_a0_get_roots(rts + nbr * n * k, new_ctx, guard);
-		acb_theta_ql_ctx_dupl(new_ctx, ctx, prec);
+		acb_theta_ql_ctx_dupl(new_ctx, new_ctx, prec);
 	}
 
 	if (res)
@@ -186,7 +144,7 @@ acb_theta_ql_a0_steps_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong n
 		}
 		else
 		{
-			res = acb_theta_ql_a0_split_from_ctx(th, ctx, s, prec, worker);
+			res = acb_theta_ql_a0_split_from_ctx(th, new_ctx, s, prec, worker);
 		}
 	}
 
@@ -197,11 +155,12 @@ acb_theta_ql_a0_steps_from_ctx(acb_ptr th, const acb_theta_ql_ctx_t ctx, slong n
 		{
 			_arb_vec_scalar_mul_2exp_si(d0, &ctx->dists_a0, n, k);
 			_arb_vec_scalar_mul_2exp_si(d, &ctx->dists_a0 + n, n, k);
-			acb_theta_ql_a0_step(th, rts, d0, d, ctx, prec);
+			acb_theta_ql_a0_step(th, rts, d0, d, ctx, k == 0, prec);
 		}
-		if (!ctx->z_is_real) /* think about how to put f in ctx */
+		if (!ctx->z_is_real)
 		{
-			_acb_vec_scalar_mul_arb(th + nbt * n, th + nbt * n, nbt * n, c, prec);
+			_acb_vec_scalar_div_arb(th + nbt * n, th + nbt * n, nbt * n,
+				acb_theta_ql_ctx_c(ctx), prec);
 		}
 	}
 

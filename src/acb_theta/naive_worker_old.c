@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2024 Jean Kieffer
+    Copyright (C) 2023 Jean Kieffer
 
     This file is part of FLINT.
 
@@ -15,21 +15,28 @@ acb_theta_naive_worker_old(acb_ptr th, slong len, acb_srcptr zs, slong nb,
     acb_theta_naive_worker_t worker)
 {
     slong g = acb_theta_eld_ambient_dim(E);
+	int * zs_are_real;
 	acb_mat_t exp_tau;
 	acb_ptr exp_zs;
 	slong j;
 
 	acb_mat_init(exp_tau, g, g);
 	exp_zs = _acb_vec_init(g * nb);
+	zs_are_real = flint_malloc(g * nb * sizeof(int));
 
 	acb_theta_naive_exp_tau(exp_tau, tau, prec);
 	for (j = 0; j < nb; j++)
 	{
 		acb_theta_naive_exp_z(exp_zs + j * g, zs + j * g, g, prec);
 	}
+	for (j = 0; j < g * nb; j++)
+	{
+		zs_are_real[j] = acb_is_real(&zs[j]);
+	}
 
 	acb_theta_naive_worker(th, len, exp_zs, nb, exp_tau, E, ord, prec, worker);
 
 	acb_mat_clear(exp_tau);
 	_acb_vec_clear(exp_zs, g * nb);
+	flint_free(zs_are_real);
 }

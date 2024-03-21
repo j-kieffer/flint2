@@ -283,20 +283,20 @@ acb_theta_naive_sqr_pow(acb_ptr * sqr_pow, const acb_mat_t exp_tau, const acb_th
     acb_clear(ddc);
 }
 
-/* User function */
+/* User functions */
 
 void
-acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr exp_zs, slong nb,
-	const acb_mat_t exp_tau, const acb_theta_eld_t E, slong ord, slong prec,
-	acb_theta_naive_worker_t worker)
+acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr exp_zs, acb_srcptr exp_zs_inv,
+	slong nb, const acb_mat_t exp_tau, const acb_mat_t exp_tau_inv, const acb_theta_eld_t E,
+	slong ord, slong prec, acb_theta_naive_worker_t worker)
 {
 	slong g = acb_theta_eld_ambient_dim(E);
 	slong fullprec = acb_theta_naive_fullprec(E, prec);
 	slong width = 0;
 
-	acb_mat_t exp_tau_inv, lin_pow, lin_pow_inv;
+	acb_mat_t lin_pow, lin_pow_inv;
 	acb_ptr * sqr_pow;
-    acb_ptr v1, v2, exp_z_inv, res;
+    acb_ptr v1, v2, res;
     slong * precs;
     acb_t cf;
     slong j, k;
@@ -306,7 +306,6 @@ acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr exp_zs, slong nb,
         width = FLINT_MAX(width, 2 * acb_theta_eld_box(E, j) + 1);
     }
 
-    acb_mat_init(exp_tau_inv, g, g);
     acb_mat_init(lin_pow, g, g);
     acb_mat_init(lin_pow_inv, g, g);
     sqr_pow = flint_malloc(g * sizeof(acb_ptr));
@@ -316,22 +315,10 @@ acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr exp_zs, slong nb,
     }
     v1 = _acb_vec_init(width);
     v2 = _acb_vec_init(width);
-    exp_z_inv = _acb_vec_init(g);
     res = _acb_vec_init(len * nb);
     acb_init(cf);
     precs = flint_malloc(width * sizeof(slong));
 
-	for (j = 0; j < g; j++)
-	{
-		for (k = j; k < g; k++)
-		{
-			acb_inv(acb_mat_entry(exp_tau_inv, j, k), acb_mat_entry(exp_tau, j, k), prec);
-		}
-	}
-	for (j = 0; j < g * nb; j++)
-	{
-		acb_inv(&exp_zs_inv[j], &exp_zs[j], prec);
-	}
 	acb_theta_naive_sqr_pow(sqr_pow, exp_tau, E, prec);
 	acb_one(cf);
 
@@ -341,12 +328,11 @@ acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr exp_zs, slong nb,
 		acb_mat_set(lin_pow_inv, exp_tau_inv);
 
 		acb_theta_naive_worker_rec(res + j * len, v1, v2, precs, lin_pow, lin_pow_inv,
-			cf, exp_z, exp_z_inv, exp_tau, exp_tau_inv, sqr_pow, E, ord,
+			cf, exp_zs + j * g, exp_zs_inv + j * g, exp_tau, exp_tau_inv, sqr_pow, E, ord,
 			fullprec, fullprec, worker);
 	}
 	_acb_vec_set(th, res, len * nb);
 
-    acb_mat_clear(exp_tau_inv);
     acb_mat_clear(lin_pow);
     acb_mat_clear(lin_pow_inv);
     for (j = 0; j < g; j++)
@@ -356,8 +342,8 @@ acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr exp_zs, slong nb,
     flint_free(sqr_pow);
     _acb_vec_clear(v1, width);
     _acb_vec_clear(v2, width);
-    _acb_vec_clear(exp_z_inv, g);
     _acb_vec_clear(res, len * nb);
     acb_clear(cf);
     flint_free(precs);
 }
+

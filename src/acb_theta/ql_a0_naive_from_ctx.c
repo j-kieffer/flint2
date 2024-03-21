@@ -11,74 +11,6 @@
 
 #include "acb_theta.h"
 
-static int
-acb_theta_ql_naive_worker_gen(acb_ptr th, acb_srcptr exp_zs, slong nb, const acb_mat_t exp_tau,
-	arb_scrptr v, arb_srcptr d, const arb_mat C, int all, slong prec);
-{
-	arb_ptr new_v;
-	acb_ptr cs, aux, new_exp_zs;
-	arf_t R2, eps;
-	acb_theta_eld_t E;
-	slong new_prec;
-	slong a;
-	int success = 1;
-
-	new_v = _arb_vec_init(g);
-	arf_init(R2);
-	arf_init(eps);
-	acb_theta_eld_init(E, g);
-	cs = _acb_vec_init(nb);
-	aux = _acb_vec_init(nb * (all ? n : 1));
-	new_exp_zs = _acb_vec_init(nb * g);
-
-	for (a = 0; (a < n) && success; a++)
-	{
-		acb_theta_char_get_arb(new_v, a, g);
-		_arb_vec_neg(new_v, new_v, g);
-		_arb_vec_add(new_v, new_v, v, g, prec);
-		new_prec = prec + acb_theta_dist_addprec(&d[a]);
-		acb_theta_naive_radius(R2, eps, C, 0, new_prec);
-		success = acb_theta_eld_set(E, C, R2, new_v);
-
-		if (!success) break;
-
-		/* Translate exponentials */
-		for (j = 0; j < nb; j++)
-		{
-			acb_theta_naive_exp_translate(&cs[j], new_exp_zs + j * g,
-				exp_zs + j * g, exp_tau, a, prec);
-		}
-
-		/* Call worker */
-		if (all)
-		{
-			acb_theta_naive_worker(aux, n, new_exp_zs, nb, exp_tau,
-				E, 0, new_prec, acb_theta_naive_0b_worker);
-			for (j = 0; j < nb; j++)
-			{
-				_acb_vec_scalar_mul(th + j * n * n + a * n, aux + j * n, n, &cs[j], prec);
-			}
-		}
-		else
-		{
-			acb_theta_naive_worker(aux, 1, new_exp_zs, nb, exp_tau,
-				E, 0, new_prec, acb_theta_naive_00_worker);
-			for (j = 0; j < nb; j++)
-			{
-				acb_mul(&th[j * n + a], &aux[j], &cs[j], prec);
-			}
-		}
-	}
-
-	_acb_vec_clear(new_v, g);
-	arf_clear(R2);
-	arf_clear(eps);
-	acb_theta_eld_clear(E);
-	_acb_vec_clear(cs, nb);
-	_acb_vec_clear(aux, nb * (all ? n : 1));
-	_acb_vec_clear(new_exp_zs, nb * g);
-	return success;
-}
 
 static int
 acb_theta_ql_naive_from_ctx_gen(acb_ptr th, const acb_theta_ql_ctx_t ctx,
@@ -229,6 +161,7 @@ acb_theta_ql_roots_from_ctx(acb_ptr rts, const acb_theta_ql_ctx_t ctx, slong gua
 	slong g = acb_theta_ql_ctx_g(ctx);
 	slong n = 1 << g;
 	slong nbr = (ctx->t_is_zero ? 1 : 2) * (ctx->z_is_zero ? 1 : 2);
+	slong nbt = (ctx->t_is_zero ? 1 : 2);
 	slong j;
 	int res;
 
@@ -241,6 +174,12 @@ acb_theta_ql_roots_from_ctx(acb_ptr rts, const acb_theta_ql_ctx_t ctx, slong gua
 	else
 	{
 		res = acb_theta_ql_naive_from_ctx_gen(th, ctx, 0, 1, guard);
+	}
+
+	/* Rescale roots corresponding to a nonzero z */
+	if (!ctx->z_is_zero)
+	{
+		_acb_vec_scalar_mul(th + n * nbt, th + n * nbt, n * nbt, acb_theta_ql_ctx_c(ctx), guard);
 	}
 
 	/* Check that roots don't contain zero. */
