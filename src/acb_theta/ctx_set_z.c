@@ -11,8 +11,34 @@
 
 #include "acb_theta.h"
 
+static void
+acb_theta_naive_round(arb_ptr a, arb_srcptr v, slong g)
+{
+    slong j;
+    fmpz_t m;
+
+    fmpz_init(m);
+
+    for (j = 0; j < g; j++)
+    {
+        if (arb_is_finite(&v[j])
+            && arf_cmpabs_2exp_si(arb_midref(&v[j]), 1000000) <= 0)
+        {
+            arf_get_fmpz(m, arb_midref(&v[j]), ARF_RND_NEAR);
+            arb_set_fmpz(&a[j], m);
+        }
+        else
+        {
+            arb_zero(&a[j]);
+        }
+    }
+
+    fmpz_clear(m);
+}
+
 void
-acb_theta_ctx_set(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
+acb_theta_ctx_set_z(acb_theta_ctx_t ctx, arb_srcptr a, acb_t c,
+	acb_srcptr z, slong j, slong prec)
 {
 	slong g = acb_theta_ctx_g(ctx);
 	acb_t x;
@@ -26,6 +52,9 @@ acb_theta_ctx_set(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
 	acb_init(x);
 	arb_init(u);
 	y = _arb_vec_init(g);
+
+	/* Set v, a, c */
+	/* todo: round... */
 
 	/* Set exp_z, exp_z_inv */
 	for (k = 0; k < g; k++)

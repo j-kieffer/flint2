@@ -12,7 +12,7 @@
 #include "acb_theta.h"
 
 static void
-acb_theta_naive_00_gen(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec)
+acb_theta_00_notransform_gen(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec)
 {
     slong g = acb_mat_nrows(tau);
 	slong lp = ACB_THETA_LOW_PREC;
@@ -82,7 +82,7 @@ acb_theta_naive_00_gen(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 }
 
 static void
-acb_theta_naive_00_g1(acb_ptr th, acb_srcptr zs, slong nb, const acb_t tau, slong prec)
+acb_theta_00_notransform_g1(acb_ptr th, acb_srcptr zs, slong nb, const acb_t tau, slong prec)
 {
 	slong g = 1;
 	acb_theta_ctx_t ctx;
@@ -117,7 +117,7 @@ acb_theta_naive_00_g1(acb_ptr th, acb_srcptr zs, slong nb, const acb_t tau, slon
 }
 
 void
-acb_theta_naive_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec)
+acb_theta_00_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec)
 {
 	slong g = acb_mat_nrows(tau);
 

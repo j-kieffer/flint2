@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2023 Jean Kieffer
+    Copyright (C) 2024 Jean Kieffer
 
     This file is part of FLINT.
 
@@ -180,7 +180,7 @@ struct acb_theta_ctx_struct
 	acb_mat_struct exp_tau_div_2;
 	acb_mat_struct exp_tau;
 	acb_struct * exp_zs;
-	acb_struct * exp_zs_inv;
+	acb_struct * exp_zs_inv; /* todo: only g >= 2 ? */
 	arb_struct * cs;
 	slong nb;
 
@@ -224,7 +224,7 @@ void acb_theta_ctx_init(acb_theta_ctx_t ctx, slong nb, slong g);
 void acb_theta_ctx_clear(acb_theta_ctx_t ctx);
 
 void acb_theta_ctx_set_tau(acb_theta_ctx_t ctx, const acb_mat_t tau, slong prec);
-void acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec);
+void acb_theta_ctx_set_z(acb_theta_ctx_t ctx, arb_ptr a, acb_t c, acb_srcptr z, slong j, slong prec);
 void acb_theta_ctx_set_ql(acb_theta_ctx_t ctx, acb_srcptr z, const acb_mat_t tau, slong prec);
 void acb_theta_ctx_copy(acb_theta_ctx_t ctx2, const acb_theta_ctx_t ctx);
 void acb_theta_ctx_choose_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec);
@@ -243,6 +243,12 @@ void acb_theta_naive_00_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2, const s
     const acb_t cofactor, const slong * coords, slong ord, slong g, slong prec, slong fullprec);
 void acb_theta_naive_0b_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2, const slong * precs, slong len,
     const acb_t cofactor, const slong * coords, slong ord, slong g, slong prec, slong fullprec);
+void acb_theta_jet_naive_00_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
+	const slong * precs, slong len, const acb_t cofactor, const slong * coords,
+	slong ord, slong g, slong prec, slong fullprec)
+void acb_theta_jet_naive_all_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
+	const slong * precs, slong len, const acb_t cofactor, const slong * coords,
+	slong ord, slong g, slong prec, slong fullprec)
 
 void acb_theta_naive_exp_translate(acb_t c, acb_ptr exp_z, const acb_mat_t exp_tau_div_4,
 	ulong a, slong prec);
@@ -256,9 +262,21 @@ int acb_theta_naive_a0_one_eld(acb_ptr th, acb_srcptr exp_zs, acb_srcptr exp_zs_
 void acb_theta_naive_a0_g1(acb_ptr th, const acb_t exp_z, int w_is_unit,
 	const acb_t exp_tau_div_4, const acb_t exp_tau, int all, slong prec);
 
+/* Naive algorithms: main functions */
+
+void acb_theta_naive_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
+void acb_theta_naive_fixed_ab(acb_ptr th, ulong ab, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, slong prec);
+/* todo: need to fall back to translations here as in naive_a0 */
+void acb_theta_naive_all(int sqr);
+void acb_theta_jet_naive_00();
+void acb_theta_jet_naive_fixed_ab();
+void acb_theta_jet_naive_all();
+
 /* Quasilinear algorithm: internals */
 
 slong acb_theta_ql_nb_steps_from_ctx(slong* s, const acb_theta_ctx_t ctx, slong prec);
+slong acb_theta_ql_max_nb_steps(const acb_mat_t tau, slong prec);
 
 typedef int (*acb_theta_ql_worker_t)(acb_ptr, const acb_theta_ctx_t, slong);
 
@@ -270,21 +288,24 @@ int acb_theta_ql_a0_steps(acb_ptr th, const acb_theta_ctx_t ctx, slong prec, slo
 int acb_theta_ql_a0_split(acb_ptr th, const acb_theta_ctx_t ctx, slong s, slong prec,
 	acb_theta_ql_worker_t worker);
 int acb_theta_ql_a0(acb_ptr th, const acb_theta_ctx_t ctx, slong prec);
-int acb_theta_ql_all(acb_ptr th, const acb_theta_ctx_t ctx, slong prec);
-int acb_theta_ql_all_sqr(acb_ptr th, const acb_theta_ctx_t ctx, slong prec);
+
+/* somehow ctx contains the choice of guard, so we need to do things a bit differently here,
+ and perhaps take tau, z as input. */
+/* we get the reduction when building the context. */
+int acb_theta_ql_all_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
+int acb_theta_ql_all_sqr_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
 
 /* Main user function */
 
-int acb_theta_ql_all_from_midpoint(acb_ptr th, acb_srcptr zs, slong nb,
-	const acb_mat_t tau, int sqr, slong prec); /* extract midpoint, use error bound */
-void acb_theta_ql_all_reduced_z(acb_ptr th, acb_srcptr zs, slong nb,
-	const acb_mat_t tau, int sqr, slong prec); /* compare with naive algorithm */
-void acb_theta_naive_reduce(arb_ptr v, acb_ptr new_zs, arb_ptr as, acb_ptr cs, arb_ptr us,
-    acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
-void acb_theta_ql_all_nonreduced_z(acb_ptr th, acb_scrptr zs, slong nb,
-	const acb_mat_t tau, int sqr, slong prec); /* add reduction step */
-void acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
-	int sqr, slong prec); /* add transformation formula */
+/* extract midpoint, use error bound */
+int acb_theta_ql_all_notransform(acb_ptr th, acb_srcptr zs, slong nb,
+	const acb_mat_t tau, int sqr, slong prec);
+/* compare with naive algorithm */
+void acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb,
+	const acb_mat_t tau, int sqr, slong prec);
+/* add transformation formula */
+void acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
+	int sqr, slong prec);
 
 /* Main user function for derivatives */
 
@@ -301,14 +322,16 @@ void acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 
 /* One characteristic, but not quasi-linear */
 
-void acb_theta_00_reduced_z(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
-void acb_theta_00_nonreduced_z(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
+void acb_theta_00_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
+void acb_theta_ab_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
 void acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
 
-void acb_theta_jet_00_reduced_z();
-void acb_theta_jet_00_nonreduced_z();
-void acb_theta_jet_00(acb_ptr dth, acb_srcptr zs, slong nb, const acb_mat_t tau,
-	slong ord, slong prec);
+void acb_theta_jet_00_notransform(acb_ptr dth, acb_srcptr zs, slong nb,
+	const acb_mat_t tau, slong ord, slong prec);
+void acb_theta_jet_ab_notransform(acb_ptr dth, acb_srcptr zs, slong nb,
+	const acb_mat_t tau, slong ord, slong prec);
+void acb_theta_jet_00(acb_ptr dth, acb_srcptr zs, slong nb,
+	const acb_mat_t tau, slong ord, slong prec);
 
 /* ************/
 
