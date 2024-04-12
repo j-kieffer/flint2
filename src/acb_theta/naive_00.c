@@ -14,8 +14,8 @@
 #include "acb_modular.h"
 #include "acb_theta.h"
 
-static void
-worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2, const slong * precs, slong len,
+void
+acb_theta_naive_00_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2, const slong * precs, slong len,
     const acb_t cofactor, const slong * coords, slong ord, slong g, slong prec, slong fullprec)
 {
     acb_t sum;
@@ -58,7 +58,8 @@ acb_theta_naive_00_gen(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 
     if (b)
     {
-        acb_theta_naive_worker(th, 1, new_zs, nb, tau, E, 0, prec, worker);
+        acb_theta_naive_worker_old(th, 1, new_zs, nb, tau, E, 0, prec,
+			acb_theta_naive_00_worker);
 
         for (k = 0; k < nb; k++)
         {
