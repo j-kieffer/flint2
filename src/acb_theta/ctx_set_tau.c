@@ -18,11 +18,13 @@ void
 acb_theta_ctx_set_tau(acb_theta_ctx_t ctx, const acb_mat_t tau, slong prec)
 {
     slong g = acb_theta_ctx_g(ctx);
+    arb_t pi;
     acb_t x;
     slong j, k;
     int res;
 
     FLINT_ASSERT(g == acb_mat_nrows(tau));
+    arb_init(pi);
     acb_init(x);
 
     /* Set tau, Y, exp_tau */
@@ -36,11 +38,12 @@ acb_theta_ctx_set_tau(acb_theta_ctx_t ctx, const acb_mat_t tau, slong prec)
             acb_set_round(x, acb_mat_entry(tau, j, k), prec);
             acb_mul_2exp_si(x, x, (k == j ? -2 : -1));
             acb_exp_pi_i(acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), x, prec);
-        }
-        acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), j, k),
-            acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), prec);
-        acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau(ctx), j, k),
-            acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), j, k), prec);
+
+	    acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), j, k),
+		acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), prec);
+	    acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau(ctx), j, k),
+		acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), j, k), prec);
+	}
     }
 
     /* Set C, Cinv, Yinv, exp_tau_inv */
@@ -51,7 +54,8 @@ acb_theta_ctx_set_tau(acb_theta_ctx_t ctx, const acb_mat_t tau, slong prec)
     }
     else
     {
-        acb_siegel_cho(acb_theta_ctx_cho(ctx), tau, prec);
+	arb_const_pi(pi, prec);
+        acb_siegel_cho(acb_theta_ctx_cho(ctx), tau, prec); /* has a factor sqrt(pi) */
         res = arb_mat_inv(acb_theta_ctx_choinv(ctx), acb_theta_ctx_cho(ctx), prec);
         if (!res)
         {
@@ -59,6 +63,7 @@ acb_theta_ctx_set_tau(acb_theta_ctx_t ctx, const acb_mat_t tau, slong prec)
         }
         arb_mat_transpose(acb_theta_ctx_yinv(ctx), acb_theta_ctx_choinv(ctx));
         arb_mat_mul(acb_theta_ctx_yinv(ctx), acb_theta_ctx_choinv(ctx), acb_theta_ctx_yinv(ctx), prec);
+	arb_mat_scalar_mul_arb(acb_theta_ctx_yinv(ctx), acb_theta_ctx_yinv(ctx), pi, prec);
 
         for (j = 0; j < g; j++)
         {

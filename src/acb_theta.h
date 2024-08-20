@@ -170,6 +170,9 @@ void acb_theta_jet_ql_bounds(arb_t c, arb_t rho, acb_srcptr z, const acb_mat_t t
 void acb_theta_jet_ql_radius(arf_t eps, arf_t err, const arb_t c, const arb_t rho,
     slong ord, slong g, slong prec);
 
+void acb_theta_naive_term(acb_t res, acb_srcptr z, const acb_mat_t tau, const slong * tup,
+    const slong * n, slong prec);
+
 /* Context structure for theta function evaluations */
 
 struct acb_theta_ctx_struct
@@ -246,8 +249,6 @@ typedef void (*acb_theta_naive_worker_t)(acb_ptr, acb_srcptr, acb_srcptr, const 
 
 void acb_theta_naive_reduce(arb_ptr v, acb_ptr new_zs, arb_ptr as, acb_ptr cs, arb_ptr us,
     acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
-void acb_theta_naive_term(acb_t res, acb_srcptr z, const acb_mat_t tau, const slong * tup,
-    const slong * n, slong prec);
 
 
 void acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr zs, slong nb,

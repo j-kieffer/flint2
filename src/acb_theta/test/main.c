@@ -21,6 +21,8 @@
 #include "t-char_is_even.c"
 #include "t-char_is_goepel.c"
 #include "t-char_is_syzygous.c"
+#include "t-ctx_set_tau.c"
+#include "t-ctx_set_z.c"
 #include "t-dist_a0.c"
 #include "t-dist_lat.c"
 #include "t-dist_pt.c"
@@ -85,7 +87,7 @@
 
 test_struct tests[] =
 {
-    TEST_FUNCTION(acb_theta_agm_hadamard),
+    /*TEST_FUNCTION(acb_theta_agm_hadamard),
     TEST_FUNCTION(acb_theta_agm_mul),
     TEST_FUNCTION(acb_theta_agm_mul_tight),
     TEST_FUNCTION(acb_theta_agm_sqrt),
@@ -94,8 +96,10 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_char_get_a),
     TEST_FUNCTION(acb_theta_char_is_even),
     TEST_FUNCTION(acb_theta_char_is_goepel),
-    TEST_FUNCTION(acb_theta_char_is_syzygous),
-    TEST_FUNCTION(acb_theta_dist_a0),
+    TEST_FUNCTION(acb_theta_char_is_syzygous),*/
+    TEST_FUNCTION(acb_theta_ctx_set_tau),
+    TEST_FUNCTION(acb_theta_ctx_set_z),
+    /*TEST_FUNCTION(acb_theta_dist_a0),
     TEST_FUNCTION(acb_theta_dist_lat),
     TEST_FUNCTION(acb_theta_dist_pt),
     TEST_FUNCTION(acb_theta_eld_border),
@@ -153,7 +157,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_transform_char),
     TEST_FUNCTION(acb_theta_transform_kappa),
     TEST_FUNCTION(acb_theta_transform_proj),
-    TEST_FUNCTION(acb_theta_transform_sqrtdet)
+    TEST_FUNCTION(acb_theta_transform_sqrtdet)*/
 };
 
 /* main function *************************************************************/

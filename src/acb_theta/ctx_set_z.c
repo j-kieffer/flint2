@@ -73,6 +73,7 @@ acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
     /* Round t = Yinv y to nearest vector a = 0 mod 2 */
     _acb_vec_get_imag(y, z, g);
     arb_mat_vector_mul_col(t, acb_theta_ctx_yinv(ctx), y, prec);
+
     _arb_vec_scalar_mul_2exp_si(t, t, g, -1);
     acb_theta_ctx_round(a, t, g);
     _arb_vec_scalar_mul_2exp_si(a, a, g, 1);
@@ -124,11 +125,11 @@ acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
         acb_set(&acb_theta_ctx_exp_zs_inv(ctx)[j * g + k], x);
     }
 
-    /* c is exp(i pi a^T (z + new_z)); use new_z as temp */
+    /* c is exp(- i pi a^T (z + new_z)); use new_z as temp */
     _acb_vec_add(new_z, new_z, z, g, prec);
     _arb_vec_zero(t, g);
     _acb_vec_set_real_imag(s, a, t, g);
-    acb_dot(x, NULL, 0, s, 1, new_z, 1, g, prec);
+    acb_dot(x, NULL, 1, s, 1, new_z, 1, g, prec);
     acb_exp_pi_i(acb_theta_ctx_cs(ctx) + j, x, prec);
 
     arb_clear(u);
