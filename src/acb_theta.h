@@ -174,36 +174,38 @@ void acb_theta_jet_ql_radius(arf_t eps, arf_t err, const arb_t c, const arb_t rh
 
 struct acb_theta_ctx_struct
 {
-	arb_mat_struct Y;
-	arb_mat_struct Yinv;
-	acb_mat_struct exp_tau_div_4;
-	acb_mat_struct exp_tau_div_2;
-	acb_mat_struct exp_tau;
-	acb_struct * exp_zs;
-	acb_struct * exp_zs_inv; /* todo: only g >= 2 ? */
-	arb_struct * cs;
-	arb_struct * as;
-	slong nb;
+    acb_mat_struct tau;
+    arb_mat_struct Y;
+    arb_mat_struct Yinv;
+    acb_mat_struct exp_tau_div_4;
+    acb_mat_struct exp_tau_div_2;
+    acb_mat_struct exp_tau;
+    acb_struct * exp_zs;
+    acb_struct * exp_zs_inv; /* todo: only g >= 2 ? */
+    acb_struct * cs;
+    arb_struct * us;
+    arb_struct * as;
+    slong nb;
 
-	/* g >= 2 only */
-	arb_mat_struct C;
-	arb_mat_struct Cinv;
-	acb_mat_struct exp_tau_inv;
-	arb_struct * vs;
+    /* g >= 2 only */
+    arb_mat_struct C;
+    arb_mat_struct Cinv;
+    acb_mat_struct exp_tau_inv;
+    arb_struct * vs;
 
-	/* Quasilinear algorithm only */
-	int t_is_zero;
-	int z_is_zero;
-	int z_is_real;
+    /* Quasilinear algorithm only */
+    int t_is_zero;
+    int z_is_zero;
+    int z_is_real;
 
-	/* g >= 2 and quasilinear algorithm only */
-	arb_struct * d0;
-	arb_struct * d;
+    /* g >= 2 and quasilinear algorithm only */
+    arb_struct * d0;
+    arb_struct * d;
 };
 
 typedef struct acb_theta_ctx_struct acb_theta_ctx_t[1];
 
-#define acb_theta_ctx_g(ctx) (acb_mat_nrows((ctx)->exp_tau))
+#define acb_theta_ctx_tau(ctx) (&(ctx)->tau)
 #define acb_theta_ctx_y(ctx) (&(ctx)->Y)
 #define acb_theta_ctx_yinv(ctx) (&(ctx)->Yinv)
 #define acb_theta_ctx_exp_tau_div_4(ctx) (&(ctx)->exp_tau_div_4)
@@ -212,14 +214,16 @@ typedef struct acb_theta_ctx_struct acb_theta_ctx_t[1];
 #define acb_theta_ctx_exp_zs(ctx) ((ctx)->exp_zs)
 #define acb_theta_ctx_exp_zs_inv(ctx) ((ctx)->exp_zs_inv)
 #define acb_theta_ctx_cs(ctx) ((ctx)->cs)
+#define acb_theta_ctx_us(ctx) ((ctx)->us)
+#define acb_theta_ctx_as(ctx) ((ctx)->as)
 #define acb_theta_ctx_nb(ctx) ((ctx)->nb)
 #define acb_theta_ctx_cho(ctx) (&(ctx)->C)
 #define acb_theta_ctx_choinv(ctx) (&(ctx)->Cinv)
 #define acb_theta_ctx_exp_tau_inv(ctx) (&(ctx)->exp_tau_inv)
-#define acb_theta_ctx_vs(ctx) (&(ctx)->vs)
-#define acb_theta_ctx_v(ctx) (&(ctx)->v)
-#define acb_theta_ctx_d0(ctx) (&(ctx)->d0)
-#define acb_theta_ctx_d(ctx) (&(ctx)->d)
+#define acb_theta_ctx_vs(ctx) ((ctx)->vs)
+#define acb_theta_ctx_d0(ctx) ((ctx)->d0)
+#define acb_theta_ctx_d(ctx) ((ctx)->d)
+slong acb_theta_ctx_g(acb_theta_ctx_t ctx);
 
 void acb_theta_ctx_init(acb_theta_ctx_t ctx, slong nb, slong g);
 void acb_theta_ctx_clear(acb_theta_ctx_t ctx);
@@ -227,7 +231,7 @@ void acb_theta_ctx_clear(acb_theta_ctx_t ctx);
 void acb_theta_ctx_set_tau(acb_theta_ctx_t ctx, const acb_mat_t tau, slong prec);
 void acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec);
 void acb_theta_ctx_set_z_ql(acb_theta_ctx_t ctx, acb_srcptr z, slong prec);
-void acb_theta_ctx_choose_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec);
+void acb_theta_ctx_set_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec);
 void acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec);
 
 /* Summation algorithms: internal functions */
