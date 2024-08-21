@@ -226,7 +226,7 @@ typedef struct acb_theta_ctx_struct acb_theta_ctx_t[1];
 #define acb_theta_ctx_vs(ctx) ((ctx)->vs)
 #define acb_theta_ctx_d0(ctx) ((ctx)->d0)
 #define acb_theta_ctx_d(ctx) ((ctx)->d)
-slong acb_theta_ctx_g(acb_theta_ctx_t ctx);
+slong acb_theta_ctx_g(const acb_theta_ctx_t ctx);
 
 void acb_theta_ctx_init(acb_theta_ctx_t ctx, slong nb, slong g);
 void acb_theta_ctx_clear(acb_theta_ctx_t ctx);
@@ -236,6 +236,7 @@ void acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
 void acb_theta_ctx_set_z_ql(acb_theta_ctx_t ctx, acb_srcptr z, slong prec);
 void acb_theta_ctx_set_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec);
 void acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec);
+void acb_theta_ctx_common_v(arb_ptr v, const acb_theta_ctx_t ctx);
 
 /* Summation algorithms: internal functions */
 
@@ -261,13 +262,12 @@ void acb_theta_sum_jet_all_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
 
 /* Summation algorithms: main functions */
 
-void acb_theta_sum_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
-void acb_theta_sum_fixed_ab(acb_ptr th, ulong ab, acb_srcptr zs, slong nb,
-    const acb_mat_t tau, slong prec);
-void acb_theta_sum_all(int sqr);
-void acb_theta_sum_jet_00();
-void acb_theta_sum_jet_fixed_ab();
-void acb_theta_sum_jet_all();
+void acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_t ctx, slong prec);
+void acb_theta_sum_fixed_ab(acb_ptr th, ulong ab, const acb_theta_ctx_t ctx, slong prec);
+void acb_theta_sum_all(acb_ptr th, int sqr, const acb_theta_ctx_t ctx, slong prec);
+void acb_theta_sum_jet_00(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec);
+void acb_theta_sum_jet_fixed_ab(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec);
+void acb_theta_sum_jet_all(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec);
 
 /* ************************************************************************* */
 
