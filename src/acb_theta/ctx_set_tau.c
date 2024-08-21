@@ -83,5 +83,6 @@ acb_theta_ctx_set_tau(acb_theta_ctx_t ctx, const acb_mat_t tau, slong prec)
         }
     }
 
+    arb_clear(pi);
     acb_clear(x);
 }

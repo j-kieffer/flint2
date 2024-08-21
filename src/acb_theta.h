@@ -185,6 +185,8 @@ struct acb_theta_ctx_struct
     acb_mat_struct exp_tau;
     acb_struct * exp_zs;
     acb_struct * exp_zs_inv; /* todo: only g >= 2 ? */
+    acb_struct * exp_2zs;
+    acb_struct * exp_2zs_inv;
     acb_struct * cs;
     arb_struct * us;
     arb_struct * as;
@@ -216,6 +218,8 @@ typedef struct acb_theta_ctx_struct acb_theta_ctx_t[1];
 #define acb_theta_ctx_exp_tau(ctx) (&(ctx)->exp_tau)
 #define acb_theta_ctx_exp_zs(ctx) ((ctx)->exp_zs)
 #define acb_theta_ctx_exp_zs_inv(ctx) ((ctx)->exp_zs_inv)
+#define acb_theta_ctx_exp_2zs(ctx) ((ctx)->exp_2zs)
+#define acb_theta_ctx_exp_2zs_inv(ctx) ((ctx)->exp_2zs_inv)
 #define acb_theta_ctx_cs(ctx) ((ctx)->cs)
 #define acb_theta_ctx_us(ctx) ((ctx)->us)
 #define acb_theta_ctx_as(ctx) ((ctx)->as)
@@ -236,7 +240,7 @@ void acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
 void acb_theta_ctx_set_z_ql(acb_theta_ctx_t ctx, acb_srcptr z, slong prec);
 void acb_theta_ctx_set_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec);
 void acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec);
-void acb_theta_ctx_common_v(arb_ptr v, const acb_theta_ctx_t ctx);
+void acb_theta_ctx_common_v(arb_ptr v, const acb_theta_ctx_t ctx, slong prec);
 
 /* Summation algorithms: internal functions */
 

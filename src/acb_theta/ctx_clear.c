@@ -30,6 +30,8 @@ acb_theta_ctx_clear(acb_theta_ctx_t ctx)
     acb_mat_clear(acb_theta_ctx_exp_tau(ctx));
     _acb_vec_clear(acb_theta_ctx_exp_zs(ctx), nb * g);
     _acb_vec_clear(acb_theta_ctx_exp_zs_inv(ctx), nb * g);
+    _acb_vec_clear(acb_theta_ctx_exp_2zs(ctx), nb * g);
+    _acb_vec_clear(acb_theta_ctx_exp_2zs_inv(ctx), nb * g);
     _acb_vec_clear(acb_theta_ctx_cs(ctx), nb);
     _arb_vec_clear(acb_theta_ctx_us(ctx), nb);
     _arb_vec_clear(acb_theta_ctx_as(ctx), nb * g);

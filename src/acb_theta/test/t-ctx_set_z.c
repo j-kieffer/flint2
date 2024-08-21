@@ -50,10 +50,7 @@ TEST_FUNCTION_START(acb_theta_ctx_set_z, state)
 	{
 	    arb_get_unique_fmpz(m, acb_theta_ctx_as(ctx) + j * g + k);
 	    small = small && fmpz_fits_si(m);
-	    if (small)
-	    {
-		n[k] = -fmpz_get_si(m);
-	    }
+	    n[k] = (small ? -fmpz_get_si(m) : 0);
 	}
 	acb_theta_naive_term(t, z, tau, NULL, n, prec);
 

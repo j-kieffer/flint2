@@ -48,7 +48,6 @@ acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
 {
     slong g = acb_theta_ctx_g(ctx);
     arb_t u;
-    acb_t x;
     arb_ptr y, t, a;
     acb_ptr s, new_z;
     slong k;
@@ -56,7 +55,6 @@ acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
     FLINT_ASSERT(j >= 0 && j < acb_theta_ctx_nb(ctx));
 
     arb_init(u);
-    acb_init(x);
     y = _arb_vec_init(g);
     t = _arb_vec_init(g);
     a = _arb_vec_init(g);
@@ -86,10 +84,11 @@ acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
     arb_mul(acb_theta_ctx_us(ctx) + j, acb_theta_ctx_us(ctx) + j, u, prec);
     arb_exp(acb_theta_ctx_us(ctx) + j, acb_theta_ctx_us(ctx) + j, prec);
 
-    /* v is t - a */
+    /* v is C(t - a) */
     if (g > 1)
     {
-        _arb_vec_sub(acb_theta_ctx_vs(ctx) + j * g, t, a, g, prec);
+        _arb_vec_sub(t, t, a, g, prec);
+        arb_mat_vector_mul_col(acb_theta_ctx_vs(ctx) + j * g, acb_theta_ctx_cho(ctx), t, prec);
     }
 
     /* new_z is z - tau * a; we further reduce its x-coordinate mod 4 */
@@ -107,33 +106,35 @@ acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
         acb_sub_arb(&new_z[k], &new_z[k], &t[k], prec);
     }
 
-    /* Set exp_z, exp_z_inv */
+    /* Set exp_z, exp_z_inv, exp_2z, exp_2z_inv */
     for (k = 0; k < g; k++)
     {
-        acb_set_round(x, &new_z[k], prec);
-        acb_mul_2exp_si(x, x, 1);
-	acb_exp_pi_i(x, x, prec);
-        acb_set(&acb_theta_ctx_exp_zs(ctx)[j * g + k], x);
+        acb_exp_pi_i(&acb_theta_ctx_exp_zs(ctx)[j * g + k], &new_z[k], prec);
+        acb_sqr(&acb_theta_ctx_exp_2zs(ctx)[j * g + k], &acb_theta_ctx_exp_zs(ctx)[j * g + k], prec);
         if (acb_is_real(&z[k]))
         {
-            acb_conj(x, x);
+            acb_conj(&acb_theta_ctx_exp_zs_inv(ctx)[j * g + k],
+                &acb_theta_ctx_exp_zs(ctx)[j * g + k]);
+            acb_conj(&acb_theta_ctx_exp_2zs_inv(ctx)[j * g + k],
+                &acb_theta_ctx_exp_2zs(ctx)[j * g + k]);
         }
         else
         {
-            acb_inv(x, x, prec);
+            acb_inv(&acb_theta_ctx_exp_zs_inv(ctx)[j * g + k],
+                &acb_theta_ctx_exp_zs(ctx)[j * g + k], prec);
+            acb_sqr(&acb_theta_ctx_exp_2zs_inv(ctx)[j * g + k],
+                &acb_theta_ctx_exp_zs_inv(ctx)[j * g + k], prec);
         }
-        acb_set(&acb_theta_ctx_exp_zs_inv(ctx)[j * g + k], x);
     }
 
     /* c is exp(- i pi a^T (z + new_z)); use new_z as temp */
     _acb_vec_add(new_z, new_z, z, g, prec);
     _arb_vec_zero(t, g);
     _acb_vec_set_real_imag(s, a, t, g);
-    acb_dot(x, NULL, 1, s, 1, new_z, 1, g, prec);
-    acb_exp_pi_i(acb_theta_ctx_cs(ctx) + j, x, prec);
+    acb_dot(&acb_theta_ctx_cs(ctx)[j], NULL, 1, s, 1, new_z, 1, g, prec);
+    acb_exp_pi_i(&acb_theta_ctx_cs(ctx)[j], &acb_theta_ctx_cs(ctx)[j], prec);
 
     arb_clear(u);
-    acb_clear(x);
     _arb_vec_clear(y, g);
     _arb_vec_clear(t, g);
     _arb_vec_clear(a, g);

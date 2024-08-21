@@ -106,11 +106,26 @@ TEST_FUNCTION_START(acb_theta_ctx_dupl, state)
 	if (!_acb_vec_overlaps(acb_theta_ctx_exp_zs(ctx1), acb_theta_ctx_exp_zs(ctx2), 6 * g))
 	{
 	    flint_printf("FAIL (exp_zs)\n");
+	    _acb_vec_printd(acb_theta_ctx_exp_zs(ctx1), 6 * g, 5);
+	    _acb_vec_printd(acb_theta_ctx_exp_zs(ctx2), 6 * g, 5);
 	    flint_abort();
 	}
 	if (!_acb_vec_overlaps(acb_theta_ctx_exp_zs_inv(ctx1), acb_theta_ctx_exp_zs_inv(ctx2), 6 * g))
 	{
 	    flint_printf("FAIL (exp_zs_inv)\n");
+	    flint_abort();
+	}
+	if (!_acb_vec_overlaps(acb_theta_ctx_exp_2zs(ctx1), acb_theta_ctx_exp_2zs(ctx2), 6 * g))
+	{
+	    flint_printf("FAIL (exp_2zs)\n");
+	    flint_abort();
+	}
+	if (!_acb_vec_overlaps(acb_theta_ctx_exp_2zs_inv(ctx1), acb_theta_ctx_exp_2zs_inv(ctx2), 6 * g))
+	{
+	    flint_printf("FAIL (exp_2zs_inv)\n");
+	    _acb_vec_printd(acb_theta_ctx_exp_2zs(ctx1), 6 * g, 5);
+	    _acb_vec_printd(acb_theta_ctx_exp_2zs_inv(ctx1), 6 * g, 5);
+	    _acb_vec_printd(acb_theta_ctx_exp_2zs_inv(ctx2), 6 * g, 5);
 	    flint_abort();
 	}
 	if (!_acb_vec_overlaps(acb_theta_ctx_cs(ctx1), acb_theta_ctx_cs(ctx2), 6))

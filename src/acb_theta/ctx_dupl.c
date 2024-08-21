@@ -42,7 +42,7 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
                 acb_mat_entry(acb_theta_ctx_exp_tau(ctx), j, k), prec);
         }
     }
-    if (g >= 2)
+    if (g > 1)
     {
         arb_mat_scalar_mul_arb(acb_theta_ctx_cho(ctx), acb_theta_ctx_cho(ctx), sqrt2, prec);
         arb_mat_scalar_div_arb(acb_theta_ctx_choinv(ctx), acb_theta_ctx_choinv(ctx), sqrt2, prec);
@@ -58,36 +58,50 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
 
     /* Duplicate z part. Do nothing for the zero vector.
        Ignore cs, as, us and vs that are not used. */
+    for (j = 1; j < nb; j++)
+    {
+	_acb_vec_set(acb_theta_ctx_exp_zs(ctx) + j * g, acb_theta_ctx_exp_2zs(ctx) + j * g, g);
+	_acb_vec_set(acb_theta_ctx_exp_zs_inv(ctx) + j * g, acb_theta_ctx_exp_2zs_inv(ctx) + j * g, g);
+    }
     if (!ctx->t_is_zero)
     {
-        _acb_vec_set(acb_theta_ctx_exp_zs(ctx) + g, acb_theta_ctx_exp_zs(ctx) + 2 * g, g);
-        _acb_vec_set(acb_theta_ctx_exp_zs_inv(ctx) + g, acb_theta_ctx_exp_zs_inv(ctx) + 2 * g, g);
+        _acb_vec_set(acb_theta_ctx_exp_2zs(ctx) + g, acb_theta_ctx_exp_2zs(ctx) + 2 * g, g);
+        _acb_vec_set(acb_theta_ctx_exp_2zs_inv(ctx) + g, acb_theta_ctx_exp_2zs_inv(ctx) + 2 * g, g);
         for (j = 0; j < g; j++)
         {
-            acb_sqr(&acb_theta_ctx_exp_zs(ctx)[2 * g + j], &acb_theta_ctx_exp_zs(ctx)[2 * g + j], prec);
-            acb_conj(&acb_theta_ctx_exp_zs_inv(ctx)[2 * g + j], &acb_theta_ctx_exp_zs(ctx)[2 * g + j]);
+            acb_sqr(&acb_theta_ctx_exp_2zs(ctx)[2 * g + j], &acb_theta_ctx_exp_2zs(ctx)[2 * g + j], prec);
+            acb_conj(&acb_theta_ctx_exp_2zs_inv(ctx)[2 * g + j], &acb_theta_ctx_exp_2zs(ctx)[2 * g + j]);
         }
     }
     if (!ctx->z_is_zero)
     {
+	for (j = 3; j < 3 + nb; j++)
+	{
+	    _acb_vec_set(acb_theta_ctx_exp_zs(ctx) + j * g, acb_theta_ctx_exp_2zs(ctx) + j * g, g);
+	    _acb_vec_set(acb_theta_ctx_exp_zs_inv(ctx) + j * g, acb_theta_ctx_exp_2zs_inv(ctx) + j * g, g);
+	}
         for (j = 0; j < nb * g; j++)
         {
-            acb_sqr(&acb_theta_ctx_exp_zs(ctx)[3 * g + j], &acb_theta_ctx_exp_zs(ctx)[3 * g + j], prec);
+            acb_sqr(&acb_theta_ctx_exp_2zs(ctx)[3 * g + j], &acb_theta_ctx_exp_2zs(ctx)[3 * g + j], prec);
             if (ctx->z_is_real)
             {
-                acb_conj(&acb_theta_ctx_exp_zs_inv(ctx)[3 * g + j], &acb_theta_ctx_exp_zs(ctx)[3 * g + j]);
+                acb_conj(&acb_theta_ctx_exp_2zs_inv(ctx)[3 * g + j], &acb_theta_ctx_exp_2zs(ctx)[3 * g + j]);
             }
             else
             {
-                acb_sqr(&acb_theta_ctx_exp_zs_inv(ctx)[3 * g + j],
-                    &acb_theta_ctx_exp_zs_inv(ctx)[3 * g + j], prec);
+                acb_sqr(&acb_theta_ctx_exp_2zs_inv(ctx)[3 * g + j],
+                    &acb_theta_ctx_exp_2zs_inv(ctx)[3 * g + j], prec);
             }
         }
         acb_sqr(&acb_theta_ctx_cs(ctx)[3], &acb_theta_ctx_cs(ctx)[3], prec);
+	if (g > 1)
+	{
+	    _arb_vec_scalar_mul(acb_theta_ctx_vs(ctx) + 3 * g, acb_theta_ctx_vs(ctx) + 3 * g, g, sqrt2, prec);
+	}
     }
 
     /* Duplicate distances */
-    if (g >= 2)
+    if (g > 1)
     {
         _arb_vec_scalar_mul_2exp_si(acb_theta_ctx_d0(ctx), acb_theta_ctx_d0(ctx), n, 1);
         if (!ctx->z_is_real)

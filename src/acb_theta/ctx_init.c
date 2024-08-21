@@ -31,6 +31,8 @@ acb_theta_ctx_init(acb_theta_ctx_t ctx, slong nb, slong g)
     acb_mat_init(acb_theta_ctx_exp_tau(ctx), g, g);
     acb_theta_ctx_exp_zs(ctx) = _acb_vec_init(nb * g);
     acb_theta_ctx_exp_zs_inv(ctx) = _acb_vec_init(nb * g);
+    acb_theta_ctx_exp_2zs(ctx) = _acb_vec_init(nb * g);
+    acb_theta_ctx_exp_2zs_inv(ctx) = _acb_vec_init(nb * g);
     acb_theta_ctx_cs(ctx) = _acb_vec_init(nb);
     acb_theta_ctx_us(ctx) = _arb_vec_init(nb);
     acb_theta_ctx_as(ctx) = _arb_vec_init(nb * g);

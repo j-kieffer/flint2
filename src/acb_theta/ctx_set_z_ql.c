@@ -50,8 +50,8 @@ acb_theta_ctx_set_z_ql(acb_theta_ctx_t ctx, acb_srcptr z, slong prec)
             for (a = 0; a < n; a++)
             {
                 acb_theta_char_get_arb(w, a, g);
-                _arb_vec_add(w, acb_theta_ctx_vs(ctx) + 3 * g, w, g, lp);
                 arb_mat_vector_mul_col(w, acb_theta_ctx_cho(ctx), w, lp);
+                _arb_vec_add(w, acb_theta_ctx_vs(ctx) + 3 * g, w, g, lp);
                 acb_theta_dist_lat(&acb_theta_ctx_d(ctx)[a], w, acb_theta_ctx_cho(ctx), lp);
             }
         }
