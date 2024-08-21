@@ -111,7 +111,7 @@ acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
     {
         acb_exp_pi_i(&acb_theta_ctx_exp_zs(ctx)[j * g + k], &new_z[k], prec);
         acb_sqr(&acb_theta_ctx_exp_2zs(ctx)[j * g + k], &acb_theta_ctx_exp_zs(ctx)[j * g + k], prec);
-        if (acb_is_real(&z[k]))
+        if (acb_is_real(&new_z[k]))
         {
             acb_conj(&acb_theta_ctx_exp_zs_inv(ctx)[j * g + k],
                 &acb_theta_ctx_exp_zs(ctx)[j * g + k]);

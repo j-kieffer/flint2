@@ -52,17 +52,16 @@ TEST_FUNCTION_START(acb_theta_sum_00, state)
 	acb_theta_sum_00(th1, ctx, prec);
 	acb_theta_naive_00(th2, zs, nb, tau, prec);
 
-	flint_printf("\n\ng=%wd\n", g);
-	acb_mat_printd(tau, 5);
-	_acb_vec_printd(zs, nb * g, 5);
-	flint_printf("th1 : ");
-	_acb_vec_printd(th1, nb, 5);
-	flint_printf("th2 : ");
-	_acb_vec_printd(th2, nb, 5);
-
 	if (!_acb_vec_overlaps(th1, th2, nb))
 	{
 	    flint_printf("FAIL\n");
+	    flint_printf("\n\ng=%wd\n", g);
+	    acb_mat_printd(tau, 5);
+	    _acb_vec_printd(zs, nb * g, 5);
+	    flint_printf("th1 : ");
+	    _acb_vec_printd(th1, nb, 5);
+	    flint_printf("th2 : ");
+	    _acb_vec_printd(th2, nb, 5);
 	    flint_printf("Difference: ");
 	    _acb_vec_sub(th1, th1, th2, nb, prec);
 	    _acb_vec_printd(th1, nb, 5);

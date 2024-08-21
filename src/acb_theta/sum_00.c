@@ -35,8 +35,6 @@ acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_t ctx, slong prec)
 	{
 	    /* acb_modular_theta_sum recomputes the inverse of exp_z */
 	    /* todo: store w_is_unit as part of context */
-	    acb_printd(&acb_theta_ctx_exp_zs(ctx)[j], 5);
-	    flint_printf(" in sum_00\n");
 	    acb_modular_theta_sum(&res[0], &res[1], &res[2], &res[3],
 		&acb_theta_ctx_exp_zs(ctx)[j], 0,
 		acb_mat_entry(acb_theta_ctx_exp_tau(ctx), 0, 0), 1, prec);
