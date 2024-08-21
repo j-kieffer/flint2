@@ -263,11 +263,11 @@ void acb_theta_sum_jet_all_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
 /* Summation algorithms: main functions */
 
 void acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_t ctx, slong prec);
-void acb_theta_sum_fixed_ab(acb_ptr th, ulong ab, const acb_theta_ctx_t ctx, slong prec);
-void acb_theta_sum_all(acb_ptr th, int sqr, const acb_theta_ctx_t ctx, slong prec);
-void acb_theta_sum_jet_00(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec);
-void acb_theta_sum_jet_fixed_ab(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec);
-void acb_theta_sum_jet_all(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec);
+/* void acb_theta_sum_fixed_ab(acb_ptr th, ulong ab, const acb_theta_ctx_t ctx, slong prec);
+   void acb_theta_sum_all(acb_ptr th, int sqr, const acb_theta_ctx_t ctx, slong prec); */
+/* void acb_theta_sum_jet_00(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec); */
+/* void acb_theta_sum_jet_fixed_ab(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec);
+   void acb_theta_sum_jet_all(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec); */
 
 /* ************************************************************************* */
 
