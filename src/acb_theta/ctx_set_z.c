@@ -86,11 +86,10 @@ acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
     arb_mul(acb_theta_ctx_us(ctx) + j, acb_theta_ctx_us(ctx) + j, u, prec);
     arb_exp(acb_theta_ctx_us(ctx) + j, acb_theta_ctx_us(ctx) + j, prec);
 
-    /* v is C (t - a) */
+    /* v is t - a */
     if (g > 1)
     {
-        _arb_vec_sub(t, t, a, g, prec);
-        arb_mat_vector_mul_col(acb_theta_ctx_vs(ctx) + j * g, acb_theta_ctx_cho(ctx), t, prec);
+        _arb_vec_sub(acb_theta_ctx_vs(ctx) + j * g, t, a, g, prec);
     }
 
     /* new_z is z - tau * a; we further reduce its x-coordinate mod 4 */
@@ -113,7 +112,8 @@ acb_theta_ctx_set_z(acb_theta_ctx_t ctx, acb_srcptr z, slong j, slong prec)
     {
         acb_set_round(x, &new_z[k], prec);
         acb_mul_2exp_si(x, x, 1);
-        acb_exp_pi_i(&acb_theta_ctx_exp_zs(ctx)[j * g + k], x, prec);
+	acb_exp_pi_i(x, x, prec);
+        acb_set(&acb_theta_ctx_exp_zs(ctx)[j * g + k], x);
         if (acb_is_real(&z[k]))
         {
             acb_conj(x, x);

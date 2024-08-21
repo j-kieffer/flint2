@@ -21,9 +21,15 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
     slong g = acb_theta_ctx_g(ctx);
     slong n = 1 << g;
     slong nb = (ctx->t_is_zero ? 1 : 3);
+    arb_t sqrt2;
     slong j, k;
 
+    arb_init(sqrt2);
+    arb_set_si(sqrt2, 2);
+    arb_sqrt(sqrt2, sqrt2, prec);
+
     /* Duplicate tau part */
+    acb_mat_scalar_mul_2exp_si(acb_theta_ctx_tau(ctx), acb_theta_ctx_tau(ctx), 1);
     arb_mat_scalar_mul_2exp_si(acb_theta_ctx_y(ctx), acb_theta_ctx_y(ctx), 1);
     arb_mat_scalar_mul_2exp_si(acb_theta_ctx_yinv(ctx), acb_theta_ctx_yinv(ctx), -1);
     acb_mat_set(acb_theta_ctx_exp_tau_div_4(ctx), acb_theta_ctx_exp_tau_div_2(ctx));
@@ -38,11 +44,6 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
     }
     if (g >= 2)
     {
-        arb_t sqrt2;
-        arb_init(sqrt2);
-        arb_set_si(sqrt2, 2);
-        arb_sqrt(sqrt2, sqrt2, prec);
-
         arb_mat_scalar_mul_arb(acb_theta_ctx_cho(ctx), acb_theta_ctx_cho(ctx), sqrt2, prec);
         arb_mat_scalar_div_arb(acb_theta_ctx_choinv(ctx), acb_theta_ctx_choinv(ctx), sqrt2, prec);
         for (j = 0; j < g; j++)
@@ -53,11 +54,10 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
                     acb_mat_entry(acb_theta_ctx_exp_tau_inv(ctx), j, k), prec);
             }
         }
-
-        arb_clear(sqrt2);
     }
 
-    /* Duplicate z part. Do nothing for the zero vector. */
+    /* Duplicate z part. Do nothing for the zero vector.
+       Ignore cs, as, us and vs that are not used. */
     if (!ctx->t_is_zero)
     {
         _acb_vec_set(acb_theta_ctx_exp_zs(ctx) + g, acb_theta_ctx_exp_zs(ctx) + 2 * g, g);
@@ -67,7 +67,6 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
             acb_sqr(&acb_theta_ctx_exp_zs(ctx)[2 * g + j], &acb_theta_ctx_exp_zs(ctx)[2 * g + j], prec);
             acb_conj(&acb_theta_ctx_exp_zs_inv(ctx)[2 * g + j], &acb_theta_ctx_exp_zs(ctx)[2 * g + j]);
         }
-        /* Ignore cs and vs which are not used. */
     }
     if (!ctx->z_is_zero)
     {
@@ -84,7 +83,6 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
                     &acb_theta_ctx_exp_zs_inv(ctx)[3 * g + j], prec);
             }
         }
-        /* Ignore cs and vs which are not used. */
         acb_sqr(&acb_theta_ctx_cs(ctx)[3], &acb_theta_ctx_cs(ctx)[3], prec);
     }
 
@@ -97,4 +95,6 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
             _arb_vec_scalar_mul_2exp_si(acb_theta_ctx_d(ctx), acb_theta_ctx_d(ctx), n, 1);
         }
     }
+
+    arb_clear(sqrt2);
 }

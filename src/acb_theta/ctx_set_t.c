@@ -33,7 +33,7 @@ acb_theta_ctx_set_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec)
         acb_sqr(&acb_theta_ctx_exp_zs(ctx)[2 * g + j],
             &acb_theta_ctx_exp_zs(ctx)[g + j], prec);
         acb_conj(&acb_theta_ctx_exp_zs_inv(ctx)[2 * g + j],
-            &acb_theta_ctx_exp_zs_inv(ctx)[g + j]);
+            &acb_theta_ctx_exp_zs(ctx)[2 * g + j]);
         /* Ignore cs and vs which are not used. */
     }
 
