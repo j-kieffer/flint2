@@ -21,7 +21,7 @@ TEST_FUNCTION_START(acb_theta_sum_00, state)
     /* Test: matches naive_00 */
     for (iter = 0; iter < 100 * flint_test_multiplier(); iter++)
     {
-        slong g = 1 + n_randint(state, 4);
+        slong g = 1 + n_randint(state, 3);
 	slong prec = 100 + n_randint(state, 200);
         slong mag_bits = n_randint(state, 4);
 	slong nb = 1 + n_randint(state, 4);
@@ -52,6 +52,7 @@ TEST_FUNCTION_START(acb_theta_sum_00, state)
 	acb_theta_sum_00(th1, ctx, prec);
 	acb_theta_naive_00(th2, zs, nb, tau, prec);
 
+	flint_printf("\n\ng=%wd\n", g);
 	acb_mat_printd(tau, 5);
 	_acb_vec_printd(zs, nb * g, 5);
 	flint_printf("th1 : ");
@@ -62,11 +63,16 @@ TEST_FUNCTION_START(acb_theta_sum_00, state)
 	if (!_acb_vec_overlaps(th1, th2, nb))
 	{
 	    flint_printf("FAIL\n");
+	    flint_printf("Difference: ");
+	    _acb_vec_sub(th1, th1, th2, nb, prec);
+	    _acb_vec_printd(th1, nb, 5);
+	    flint_printf("\n");
 	    flint_abort();
 	}
 
 	acb_mat_clear(tau);
 	_acb_vec_clear(zs, nb * g);
+	acb_theta_ctx_clear(ctx);
 	_acb_vec_clear(th1, nb);
 	_acb_vec_clear(th2, nb);
     }

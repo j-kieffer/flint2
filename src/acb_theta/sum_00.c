@@ -35,11 +35,12 @@ acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_t ctx, slong prec)
 	{
 	    /* acb_modular_theta_sum recomputes the inverse of exp_z */
 	    /* todo: store w_is_unit as part of context */
-	    acb_printd(acb_mat_entry(acb_theta_ctx_exp_tau(ctx), 0, 0), 5);
+	    acb_printd(&acb_theta_ctx_exp_zs(ctx)[j], 5);
+	    flint_printf(" in sum_00\n");
 	    acb_modular_theta_sum(&res[0], &res[1], &res[2], &res[3],
 		&acb_theta_ctx_exp_zs(ctx)[j], 0,
 		acb_mat_entry(acb_theta_ctx_exp_tau(ctx), 0, 0), 1, prec);
-	    acb_set(&th[j], &res[2]);
+	    acb_mul(&th[j], &res[2], &acb_theta_ctx_cs(ctx)[j], prec);
 	}
 	_acb_vec_clear(res, 4);
     }
@@ -63,7 +64,7 @@ acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_t ctx, slong prec)
 
 	if (b)
 	{
-	    acb_theta_sum_work(th, 1, acb_theta_ctx_exp_zs(ctx), acb_theta_ctx_exp_zs_inv(ctx), nb,
+	    acb_theta_sum_work(th, 1, acb_theta_ctx_exp_2zs(ctx), acb_theta_ctx_exp_2zs_inv(ctx), nb,
 		acb_theta_ctx_exp_tau(ctx), acb_theta_ctx_exp_tau_inv(ctx), E, 0,
 		prec, acb_theta_sum_00_worker);
 	    for (j = 0; j < nb; j++)

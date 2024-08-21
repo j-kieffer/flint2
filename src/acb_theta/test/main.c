@@ -159,7 +159,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sp2gz_inv),
     TEST_FUNCTION(acb_theta_sp2gz_is_correct),
     TEST_FUNCTION(acb_theta_sp2gz_set_blocks), */
-    //TEST_FUNCTION(acb_theta_sum_00),
+    TEST_FUNCTION(acb_theta_sum_00),
     /* TEST_FUNCTION(acb_theta_transform_char),
     TEST_FUNCTION(acb_theta_transform_kappa),
     TEST_FUNCTION(acb_theta_transform_proj),

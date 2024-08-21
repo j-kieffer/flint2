@@ -104,6 +104,8 @@ acb_theta_naive_00_g1(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, 
     for (k = 0; k < nb; k++)
     {
         acb_exp_pi_i(w, &zs[k], prec);
+	acb_printd(w, 5);
+	flint_printf(" in naive_00\n");
         w_is_unit = arb_is_zero(acb_imagref(&zs[k]));
         acb_modular_theta_sum(&res[0], &res[1], &res[2], &res[3],
             w, w_is_unit, q, 1, prec);
