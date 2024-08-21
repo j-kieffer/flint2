@@ -242,14 +242,16 @@ void acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec);
 typedef void (*acb_theta_sum_worker_t)(acb_ptr, acb_srcptr, acb_srcptr, const slong *,
     slong, const acb_t, const slong *, slong, slong, slong, slong);
 
-void acb_theta_sum_worker(acb_ptr th, slong len, acb_srcptr exp_zs, acb_srcptr exp_zs_inv,
+void acb_theta_sum_work(acb_ptr th, slong len, acb_srcptr exp_zs, acb_srcptr exp_zs_inv,
     slong nb, const acb_mat_t exp_tau, const acb_mat_t exp_tau_inv, const acb_theta_eld_t E,
     slong ord, slong prec, acb_theta_sum_worker_t worker);
 
-void acb_theta_sum_00_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2, const slong * precs, slong len,
-    const acb_t cofactor, const slong * coords, slong ord, slong g, slong prec, slong fullprec);
-void acb_theta_sum_0b_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2, const slong * precs, slong len,
-    const acb_t cofactor, const slong * coords, slong ord, slong g, slong prec, slong fullprec);
+void acb_theta_sum_00_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
+    const slong * precs, slong len, const acb_t cofactor, const slong * coords,
+    slong ord, slong g, slong prec, slong fullprec);
+void acb_theta_sum_0b_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
+    const slong * precs, slong len, const acb_t cofactor, const slong * coords,
+    slong ord, slong g, slong prec, slong fullprec);
 void acb_theta_sum_jet_00_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
     const slong * precs, slong len, const acb_t cofactor, const slong * coords,
     slong ord, slong g, slong prec, slong fullprec);
