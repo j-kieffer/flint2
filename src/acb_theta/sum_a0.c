@@ -28,13 +28,6 @@ acb_theta_sum_a0(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
     if (g == 1)
     {
         res = _acb_vec_init(4);
-
-        flint_printf("sum_a0 exponentials (start = %wd): ", start);
-        _acb_vec_printd(acb_theta_ctx_exp_zs(ctx) + start * g, nb * g, 5);
-        flint_printf("c factors: ");
-        _acb_vec_printd(acb_theta_ctx_cs(ctx) + start, nb, 5);
-        flint_printf("\n");
-
         for (j = 0; j < nb; j++)
         {
             /* acb_modular_theta_sum takes shifted precisions into account */

@@ -95,6 +95,8 @@ acb_theta_ctx_shift_z(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx,
         acb_set(&acb_theta_ctx_cs(new_ctx)[j], c);
     }
 
+    /* A miracle happens: ctx_as does not appear in this function. */
+
     /* Compute common cofactor exp(pi i/4 a^T tau a) */
     acb_one(c);
     for (j = 0; j < g; j++)
@@ -119,8 +121,8 @@ acb_theta_ctx_shift_z(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx,
     for (j = 0; j < nb; j++)
     {
         acb_abs(abs, &acb_theta_ctx_cs(new_ctx)[j], prec);
-        arb_mul(&acb_theta_ctx_us(new_ctx)[j], &acb_theta_ctx_us(ctx)[j], abs, prec);
-        acb_mul(&acb_theta_ctx_cs(new_ctx)[j], &acb_theta_ctx_cs(new_ctx)[j], &acb_theta_ctx_cs(ctx)[j], prec);
+        arb_mul(&acb_theta_ctx_us(new_ctx)[j], &acb_theta_ctx_us(ctx)[start + j], abs, prec);
+        acb_mul(&acb_theta_ctx_cs(new_ctx)[j], &acb_theta_ctx_cs(new_ctx)[j], &acb_theta_ctx_cs(ctx)[start + j], prec);
     }
     if (g > 1)
     {
