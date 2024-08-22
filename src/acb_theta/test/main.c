@@ -82,6 +82,7 @@
 #include "t-sp2gz_is_correct.c"
 #include "t-sp2gz_set_blocks.c"
 #include "t-sum_00.c"
+#include "t-sum_0b.c"
 #include "t-sum_a0.c"
 #include "t-transform_char.c"
 #include "t-transform_kappa.c"
@@ -163,6 +164,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sp2gz_is_correct),
     TEST_FUNCTION(acb_theta_sp2gz_set_blocks), */
     TEST_FUNCTION(acb_theta_sum_00),
+    TEST_FUNCTION(acb_theta_sum_0b),
     TEST_FUNCTION(acb_theta_sum_a0),
     /* TEST_FUNCTION(acb_theta_transform_char),
     TEST_FUNCTION(acb_theta_transform_kappa),
