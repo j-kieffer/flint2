@@ -56,12 +56,12 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
         }
     }
 
-    /* Duplicate z part. Do nothing for the zero vector.
-       Ignore cs, as, us and vs that are not used. */
+    /* Duplicate z part. Do nothing for the zero vector. */
+    /* For the completely real part, c, v, a, u do not change */
     for (j = 1; j < nb; j++)
     {
-	_acb_vec_set(acb_theta_ctx_exp_zs(ctx) + j * g, acb_theta_ctx_exp_2zs(ctx) + j * g, g);
-	_acb_vec_set(acb_theta_ctx_exp_zs_inv(ctx) + j * g, acb_theta_ctx_exp_2zs_inv(ctx) + j * g, g);
+        _acb_vec_set(acb_theta_ctx_exp_zs(ctx) + j * g, acb_theta_ctx_exp_2zs(ctx) + j * g, g);
+        _acb_vec_set(acb_theta_ctx_exp_zs_inv(ctx) + j * g, acb_theta_ctx_exp_2zs_inv(ctx) + j * g, g);
     }
     if (!ctx->t_is_zero)
     {
@@ -73,13 +73,16 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
             acb_conj(&acb_theta_ctx_exp_2zs_inv(ctx)[2 * g + j], &acb_theta_ctx_exp_2zs(ctx)[2 * g + j]);
         }
     }
+    /* For the non-real part, c, v, and u may change */
     if (!ctx->z_is_zero)
     {
-	for (j = 3; j < 3 + nb; j++)
-	{
-	    _acb_vec_set(acb_theta_ctx_exp_zs(ctx) + j * g, acb_theta_ctx_exp_2zs(ctx) + j * g, g);
-	    _acb_vec_set(acb_theta_ctx_exp_zs_inv(ctx) + j * g, acb_theta_ctx_exp_2zs_inv(ctx) + j * g, g);
-	}
+        /* Set exponentials and cs */
+        for (j = 3; j < 3 + nb; j++)
+        {
+            _acb_vec_set(acb_theta_ctx_exp_zs(ctx) + j * g, acb_theta_ctx_exp_2zs(ctx) + j * g, g);
+            _acb_vec_set(acb_theta_ctx_exp_zs_inv(ctx) + j * g, acb_theta_ctx_exp_2zs_inv(ctx) + j * g, g);
+            acb_sqr(&acb_theta_ctx_cs(ctx)[j], &acb_theta_ctx_cs(ctx)[j], prec);
+        }
         for (j = 0; j < nb * g; j++)
         {
             acb_sqr(&acb_theta_ctx_exp_2zs(ctx)[3 * g + j], &acb_theta_ctx_exp_2zs(ctx)[3 * g + j], prec);
@@ -93,11 +96,21 @@ acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec)
                     &acb_theta_ctx_exp_2zs_inv(ctx)[3 * g + j], prec);
             }
         }
-        acb_sqr(&acb_theta_ctx_cs(ctx)[3], &acb_theta_ctx_cs(ctx)[3], prec);
-	if (g > 1)
-	{
-	    _arb_vec_scalar_mul(acb_theta_ctx_vs(ctx) + 3 * g, acb_theta_ctx_vs(ctx) + 3 * g, g, sqrt2, prec);
-	}
+
+        /* Set us and vs (same for all 3 vectors) */
+        arb_sqr(&acb_theta_ctx_us(ctx)[3], &acb_theta_ctx_us(ctx)[3], prec);
+        if (g > 1)
+        {
+            _arb_vec_scalar_mul(acb_theta_ctx_vs(ctx) + 3 * g, acb_theta_ctx_vs(ctx) + 3 * g, g, sqrt2, prec);
+        }
+        for (j = 4; j < 3 + nb; j++)
+        {
+            arb_set(&acb_theta_ctx_us(ctx)[j], &acb_theta_ctx_us(ctx)[3]);
+            if (g > 1)
+            {
+                _arb_vec_set(acb_theta_ctx_vs(ctx) + j * g, acb_theta_ctx_vs(ctx) + 3 * g, g);
+            }
+        }
     }
 
     /* Duplicate distances */

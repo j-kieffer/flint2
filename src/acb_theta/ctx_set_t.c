@@ -16,15 +16,19 @@ void
 acb_theta_ctx_set_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec)
 {
     slong g = acb_theta_ctx_g(ctx);
+    acb_t x;
+    arb_ptr t_real;
     slong j;
 
     FLINT_ASSERT(_acb_vec_is_real(t, g));
-
     ctx->t_is_zero = _acb_vec_is_zero(t, g);
     if (ctx->t_is_zero)
     {
         return;
     }
+
+    acb_init(x);
+    t_real = _arb_vec_init(g);
     acb_theta_ctx_set_z(ctx, t, 1, prec);
 
     /* Propagate 2t using squares/conjs */
@@ -36,7 +40,8 @@ acb_theta_ctx_set_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec)
             &acb_theta_ctx_exp_2zs(ctx)[g + j], prec);
         acb_conj(&acb_theta_ctx_exp_2zs_inv(ctx)[2 * g + j],
             &acb_theta_ctx_exp_2zs(ctx)[2 * g + j]);
-        /* Ignore cs and vs which are not used. */
+        acb_one(&acb_theta_ctx_cs(ctx)[2]);
+        arb_one(&acb_theta_ctx_us(ctx)[2]);
     }
 
     /* Propagate z+t, z+2t using mults */
@@ -79,6 +84,24 @@ acb_theta_ctx_set_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec)
                     &acb_theta_ctx_exp_zs_inv(ctx)[5 * g + j], prec);
             }
         }
-        /* Ignore cs and vs which are not used. */
+        /* The factor c gets multiplied by exp(-2 pi i a^T t) */
+        _acb_vec_get_real(t_real, t, g);
+        arb_dot(acb_realref(x), NULL, 1, acb_theta_ctx_as(ctx) + 3 * g, 1, t_real, 1, g, prec);
+        acb_mul_2exp_si(x, x, 1);
+        acb_exp_pi_i(x, x, prec);
+        acb_mul(&acb_theta_ctx_cs(ctx)[4], &acb_theta_ctx_cs(ctx)[3], x, prec);
+        acb_mul(&acb_theta_ctx_cs(ctx)[5], &acb_theta_ctx_cs(ctx)[4], x, prec);
+        for (j = 4; j < 6; j++)
+        {
+            arb_set(&acb_theta_ctx_us(ctx)[j], &acb_theta_ctx_us(ctx)[3]);
+            _arb_vec_set(acb_theta_ctx_as(ctx) + j * g, acb_theta_ctx_as(ctx) + 3 * g, g);
+            if (g > 1)
+            {
+                _arb_vec_set(acb_theta_ctx_vs(ctx) + j * g, acb_theta_ctx_vs(ctx) + 3 * g, g);
+            }
+        }
     }
+
+    acb_clear(x);
+    _arb_vec_clear(t_real, g);
 }
