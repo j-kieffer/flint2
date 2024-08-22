@@ -241,6 +241,9 @@ void acb_theta_ctx_set_z_ql(acb_theta_ctx_t ctx, acb_srcptr z, slong prec);
 void acb_theta_ctx_set_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec);
 void acb_theta_ctx_dupl(acb_theta_ctx_t ctx, slong prec);
 void acb_theta_ctx_common_v(arb_ptr v, const acb_theta_ctx_t ctx, slong prec);
+void acb_theta_ctx_copy_tau(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx);
+void acb_theta_ctx_shift_z(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx,
+    slong start, slong nb, ulong a, slong prec);
 
 /* Summation algorithms */
 
@@ -265,10 +268,10 @@ void acb_theta_sum_jet_all_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
     slong ord, slong g, slong prec, slong fullprec);
 
 void acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_t ctx, slong prec);
-void acb_theta_sum_a0(acb_ptr th, const acb_theta_ctx_t ctx, slong z_start,
-    slong z_end, int z_is_real, slong prec);
-void acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_t ctx, slong z_start,
-    slong z_end, int z_is_real, slong prec);
+void acb_theta_sum_a0(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
+    slong nb, int z_is_real, slong prec);
+void acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
+    slong nb, int z_is_real, slong prec);
 
 /* Quasilinear algorithms */
 
