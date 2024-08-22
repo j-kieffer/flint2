@@ -25,6 +25,7 @@
 #include "t-ctx_set_t.c"
 #include "t-ctx_set_tau.c"
 #include "t-ctx_set_z.c"
+#include "t-ctx_shift_z.c"
 #include "t-dist_a0.c"
 #include "t-dist_lat.c"
 #include "t-dist_pt.c"
@@ -104,6 +105,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_ctx_set_t),
     TEST_FUNCTION(acb_theta_ctx_set_tau),
     TEST_FUNCTION(acb_theta_ctx_set_z),
+    TEST_FUNCTION(acb_theta_ctx_shift_z),
     /*TEST_FUNCTION(acb_theta_dist_a0),
     TEST_FUNCTION(acb_theta_dist_lat),
     TEST_FUNCTION(acb_theta_dist_pt),

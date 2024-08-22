@@ -14,6 +14,12 @@
 #include "acb_mat.h"
 #include "acb_theta.h"
 
+static int
+acb_theta_aj_is_zero(ulong a, slong j, slong g)
+{
+    return !((a >> (g - 1 - j)) & 1);
+}
+
 void
 acb_theta_ctx_shift_z(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx,
     slong start, slong nb, ulong a, slong prec)
@@ -38,14 +44,10 @@ acb_theta_ctx_shift_z(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx,
     _acb_vec_set(acb_theta_ctx_exp_2zs_inv(new_ctx), acb_theta_ctx_exp_2zs_inv(ctx) + start * g, nb * g);
     for (j = 0; j < g; j++)
     {
-        if (!((a >> j) & 1))
-        {
-            continue; /* do nothing if aj = 0 */
-        }
         acb_one(c);
         for (k = 0; k < g; k++)
         {
-            if (!((a >> k) & 1))
+            if (acb_theta_aj_is_zero(a, k, g))
             {
                 continue;
             }
@@ -84,7 +86,7 @@ acb_theta_ctx_shift_z(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx,
         acb_one(c);
         for (k = 0; k < g; k++)
         {
-            if (!((a >> k) & 1))
+            if (acb_theta_aj_is_zero(a, k, g))
             {
                 continue;
             }
@@ -97,11 +99,18 @@ acb_theta_ctx_shift_z(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx,
     acb_one(c);
     for (j = 0; j < g; j++)
     {
-        if (!((a >> j) & 1))
+        if (acb_theta_aj_is_zero(a, j, g))
         {
-            continue; /* do nothing if aj = 0 */
+            continue;
         }
-        acb_mul(c, c, acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), prec);
+        for (k = j; k < g; k++)
+        {
+            if (acb_theta_aj_is_zero(a, k, g))
+            {
+                continue;
+            }
+            acb_mul(c, c, acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), prec);
+        }
     }
     _acb_vec_scalar_mul(acb_theta_ctx_cs(new_ctx), acb_theta_ctx_cs(new_ctx), nb, c, prec);
 
@@ -123,7 +132,7 @@ acb_theta_ctx_shift_z(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx,
         for (j = 0; j < nb; j++)
         {
             _arb_vec_add(acb_theta_ctx_vs(new_ctx) + j * g, v_shift,
-                acb_theta_ctx_vs(new_ctx) + (start + j) * g, g, prec);
+                acb_theta_ctx_vs(ctx) + (start + j) * g, g, prec);
         }
 
         _arb_vec_clear(v_shift, g);

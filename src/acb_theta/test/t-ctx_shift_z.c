@@ -13,63 +13,63 @@
 #include "arb_mat.h"
 #include "acb_theta.h"
 
-TEST_FUNCTION_START(acb_theta_ctx_dupl, state)
+TEST_FUNCTION_START(acb_theta_ctx_shift_z, state)
 {
     slong iter;
 
-    /* Test: matches with acb_theta_ctx_set with doubled input */
+    /* Test: matches with acb_theta_ctx_set with shifted input */
     for (iter = 0; iter < 50 * flint_test_multiplier(); iter++)
     {
         slong g = 1 + n_randint(state, 4);
         slong n = 1 << g;
+        slong nb_full = 1 + n_randint(state, 10);
+        slong nb = 1 + n_randint(state, nb_full);
+        slong start = n_randint(state, nb_full - nb + 1);
         slong prec = 100 + n_randint(state, 200);
         slong mag_bits = n_randint(state, 5);
+        ulong a = n_randint(state, n);
         acb_mat_t tau;
-        acb_ptr z, t;
-        acb_theta_ctx_t ctx1, ctx2;
+        acb_ptr z, z_shift, new_z;
+        acb_theta_ctx_t ctx, ctx1, ctx2;
+        int same_as;
         slong k;
 
         acb_mat_init(tau, g, g);
-        z = _acb_vec_init(g);
-        t = _acb_vec_init(g);
-        acb_theta_ctx_init(ctx1, 6, g);
-        acb_theta_ctx_init(ctx2, 6, g);
+        z = _acb_vec_init(nb_full * g);
+        z_shift = _acb_vec_init(g);
+        new_z = _acb_vec_init(nb * g);
+        acb_theta_ctx_init(ctx, nb_full, g);
+        acb_theta_ctx_init(ctx1, nb, g);
+        acb_theta_ctx_init(ctx2, nb, g);
 
         acb_siegel_randtest_reduced(tau, state, prec, mag_bits);
-        acb_siegel_randtest_vec(z, state, g, prec);
-        for (k = 0; k < g; k++)
+        acb_siegel_randtest_vec(z, state, nb_full * g, prec);
+        acb_theta_char_get_acb(z_shift, a, g);
+        acb_mat_vector_mul_col(z_shift, tau, z_shift, prec);
+        for (k = 0; k < nb; k++)
         {
-            arb_urandom(acb_realref(&t[k]), state, prec);
+            _acb_vec_add(new_z + k * g, z + (start + k) * g, z_shift, g, prec);
         }
 
-        /* Sometimes force z to be real or zero, or t to be zero */
-        if (iter % 3 == 0)
+        acb_theta_ctx_set_tau(ctx, tau, prec);
+        for (k = 0; k < nb_full; k++)
         {
-            for (k = 0; k < g; k++)
-            {
-                arb_zero(acb_imagref(&z[k]));
-            }
-        }
-        if (iter % 4 == 0)
-        {
-            _acb_vec_zero(t, g);
-        }
-        if (iter % 6 == 0)
-        {
-            _acb_vec_zero(z, g);
+            acb_theta_ctx_set_z(ctx, z + k * g, k, prec);
         }
 
         acb_theta_ctx_set_tau(ctx1, tau, prec);
-        acb_theta_ctx_set_z_ql(ctx1, z, prec);
-        acb_theta_ctx_set_t(ctx1, t, prec);
-        acb_theta_ctx_dupl(ctx1, prec);
+        for (k = 0; k < nb; k++)
+        {
+            acb_theta_ctx_set_z(ctx1, new_z + k * g, k, prec);
+        }
 
-        acb_mat_scalar_mul_2exp_si(tau, tau, 1);
-        _acb_vec_scalar_mul_2exp_si(z, z, g, 1);
-        _acb_vec_scalar_mul_2exp_si(t, t, g, 1);
-        acb_theta_ctx_set_tau(ctx2, tau, prec);
-        acb_theta_ctx_set_z_ql(ctx2, z, prec);
-        acb_theta_ctx_set_t(ctx2, t, prec);
+        acb_theta_ctx_copy_tau(ctx2, ctx);
+        acb_theta_ctx_shift_z(ctx2, ctx, start, nb, a, prec);
+
+        /* Check:
+           - information on tau matches
+           - if the a vectors are identical, then information on z matches except c and u */
+        same_as = _arb_vec_equal(acb_theta_ctx_as(ctx1), acb_theta_ctx_as(ctx2), nb * g);
 
         if (!acb_mat_overlaps(acb_theta_ctx_tau(ctx1), acb_theta_ctx_tau(ctx2)))
         {
@@ -103,42 +103,32 @@ TEST_FUNCTION_START(acb_theta_ctx_dupl, state)
             flint_printf("FAIL (exp_tau)\n");
             flint_abort();
         }
-        if (!_acb_vec_overlaps(acb_theta_ctx_exp_zs(ctx1), acb_theta_ctx_exp_zs(ctx2), 6 * g))
+        if (same_as && !_acb_vec_overlaps(acb_theta_ctx_exp_zs(ctx1), acb_theta_ctx_exp_zs(ctx2), nb * g))
         {
             flint_printf("FAIL (exp_zs)\n");
-            _acb_vec_printd(acb_theta_ctx_exp_zs(ctx1), 6 * g, 5);
-            _acb_vec_printd(acb_theta_ctx_exp_zs(ctx2), 6 * g, 5);
+            _acb_vec_printd(acb_theta_ctx_exp_zs(ctx1), nb * g, 5);
+            _acb_vec_printd(acb_theta_ctx_exp_zs(ctx2), nb * g, 5);
+            _acb_vec_printd(acb_theta_ctx_exp_zs(ctx) + start * g, nb * g, 5);
             flint_abort();
         }
-        if (!_acb_vec_overlaps(acb_theta_ctx_exp_zs_inv(ctx1), acb_theta_ctx_exp_zs_inv(ctx2), 6 * g))
+        if (same_as && !_acb_vec_overlaps(acb_theta_ctx_exp_zs_inv(ctx1), acb_theta_ctx_exp_zs_inv(ctx2), nb * g))
         {
             flint_printf("FAIL (exp_zs_inv)\n");
             flint_abort();
         }
-        if (!_acb_vec_overlaps(acb_theta_ctx_exp_2zs(ctx1), acb_theta_ctx_exp_2zs(ctx2), 6 * g))
+        if (same_as && !_acb_vec_overlaps(acb_theta_ctx_exp_2zs(ctx1), acb_theta_ctx_exp_2zs(ctx2), nb * g))
         {
             flint_printf("FAIL (exp_2zs)\n");
             flint_abort();
         }
-        if (!_acb_vec_overlaps(acb_theta_ctx_exp_2zs_inv(ctx1), acb_theta_ctx_exp_2zs_inv(ctx2), 6 * g))
+        if (same_as && !_acb_vec_overlaps(acb_theta_ctx_exp_2zs_inv(ctx1), acb_theta_ctx_exp_2zs_inv(ctx2), nb * g))
         {
             flint_printf("FAIL (exp_2zs_inv)\n");
-            _acb_vec_printd(acb_theta_ctx_exp_2zs(ctx1), 6 * g, 5);
-            _acb_vec_printd(acb_theta_ctx_exp_2zs_inv(ctx1), 6 * g, 5);
-            _acb_vec_printd(acb_theta_ctx_exp_2zs_inv(ctx2), 6 * g, 5);
+            _acb_vec_printd(acb_theta_ctx_exp_2zs(ctx1), nb * g, 5);
+            _acb_vec_printd(acb_theta_ctx_exp_2zs_inv(ctx1), nb * g, 5);
+            _acb_vec_printd(acb_theta_ctx_exp_2zs_inv(ctx2), nb * g, 5);
             flint_abort();
         }
-        if (!_acb_vec_overlaps(acb_theta_ctx_cs(ctx1), acb_theta_ctx_cs(ctx2), 6))
-        {
-            flint_printf("FAIL (cs)\n");
-            flint_abort();
-        }
-        /* if (!_arb_vec_overlaps(acb_theta_ctx_as(ctx1), acb_theta_ctx_as(ctx2), 6 * g))
-        {
-            flint_printf("FAIL (as)\n");
-            flint_abort();
-            } */
-        /* Do we need ctx_as and ctx_us ? */
         if (g > 1 && !arb_mat_overlaps(acb_theta_ctx_cho(ctx1), acb_theta_ctx_cho(ctx2)))
         {
             flint_printf("FAIL (cho)\n");
@@ -154,33 +144,22 @@ TEST_FUNCTION_START(acb_theta_ctx_dupl, state)
             flint_printf("FAIL (exp_tau_inv)\n");
             flint_abort();
         }
-        if (g > 1 && !_arb_vec_overlaps(acb_theta_ctx_vs(ctx1), acb_theta_ctx_vs(ctx2), 6 * g))
+        if (g > 1 && same_as && !_arb_vec_overlaps(acb_theta_ctx_vs(ctx1), acb_theta_ctx_vs(ctx2), nb * g))
         {
             flint_printf("FAIL (vs)\n");
             acb_mat_printd(tau, 5);
             _acb_vec_printd(z, g, 5);
-            _arb_vec_printd(acb_theta_ctx_vs(ctx1), 6 * g, 5);
-            _arb_vec_printd(acb_theta_ctx_vs(ctx2), 6 * g, 5);
+            _arb_vec_printd(acb_theta_ctx_vs(ctx1), nb * g, 5);
+            _arb_vec_printd(acb_theta_ctx_vs(ctx2), nb * g, 5);
             flint_abort();
         }
-        if (g > 1 && !_arb_vec_overlaps(acb_theta_ctx_d0(ctx1), acb_theta_ctx_d0(ctx2), n))
-        {
-            flint_printf("FAIL (d0)\n");
-            flint_abort();
-        }
-        if (g > 1 && !_arb_vec_overlaps(acb_theta_ctx_d(ctx1), acb_theta_ctx_d(ctx2), n))
-        {
-            flint_printf("FAIL (d)\n");
-            acb_mat_printd(tau, 5);
-            _acb_vec_printd(z, g, 5);
-            _arb_vec_printd(acb_theta_ctx_d(ctx1), n, 5);
-            _arb_vec_printd(acb_theta_ctx_d(ctx2), n, 5);
-            flint_abort();
-        }
+        /* d0 and d are not copied. */
 
         acb_mat_clear(tau);
-        _acb_vec_clear(z, g);
-        _acb_vec_clear(t, g);
+        _acb_vec_clear(z, nb_full * g);
+        _acb_vec_clear(z_shift, g);
+        _acb_vec_clear(new_z, nb * g);
+        acb_theta_ctx_clear(ctx);
         acb_theta_ctx_clear(ctx1);
         acb_theta_ctx_clear(ctx2);
     }
