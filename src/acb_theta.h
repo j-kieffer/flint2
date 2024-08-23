@@ -276,20 +276,37 @@ void acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
 void acb_theta_sum_jet_00(acb_ptr th, const acb_theta_ctx_t ctx, slong ord, slong prec);
 void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_t ctx, slong ord, slong prec);
 
-/* Quasilinear algorithms */
+/* Quasilinear algorithms on exact input */
 
+slong acb_theta_ql_nb_steps(slong* split, const acb_theta_ctx_t ctx, slong prec);
+/* int acb_theta_ql_setup(acb_ptr rts, acb_ptr ts, slong * t_indices, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, slong nb_steps, int all, int sqr, slong prec);
+int acb_theta_ql_steps(acb_ptr th, const slong * t_indices, acb_srcptr rts,
+    acb_srcptr th_init, slong nb_steps, int all, int sqr, slong prec);
+int acb_theta_ql_split(acb_ptr th, acb_srcptr ts, const slong * t_indices,
+    acb_srcptr zs, slong nb, int all, slong prec);
+int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
+int all, int sqr, slong prec); */
 
-/* void acb_theta_sum_fixed_ab(acb_ptr th, ulong ab, const acb_theta_ctx_t ctx, slong prec);
-   void acb_theta_sum_all(acb_ptr th, int sqr, const acb_theta_ctx_t ctx, slong prec); */
-/* void acb_theta_sum_jet_00(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec); */
-/* void acb_theta_sum_jet_fixed_ab(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec);
-   void acb_theta_sum_jet_all(acb_ptr dth, const acb_theta_ctx_t ctx, slong ord, slong prec); */
+/* Main functions */
 
-/* Quasi-linear algorithm: internal functions */
+/* void acb_theta_00_notransform(acb_ptr th, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, slong prec);
+void acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, int sqr, slong prec);
+void acb_theta_jet_00_notransform(acb_ptr th, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, slong ord, slong prec);
+void acb_theta_jet_all_notransform(acb_ptr th, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, slong ord, slong prec);
 
-slong acb_theta_ql_nb_steps_from_ctx(slong* split, const acb_theta_ctx_t ctx, slong prec);
-
-
+void acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, slonc prec);
+void acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, int sqr, slonc prec);
+void acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, slong ord, slong prec);
+void acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb,
+const acb_mat_t tau, slong ord, slong prec); */
 
 /* ************************************************************************* */
 
