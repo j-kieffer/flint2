@@ -40,10 +40,7 @@ TEST_FUNCTION_START(acb_theta_sum_0b, state)
         th2 = _acb_vec_init(n * nb);
 
         acb_siegel_randtest_reduced(tau, state, prec, mag_bits);
-        for (j = 0; j < nb; j++)
-        {
-            acb_siegel_randtest_vec(zs + j * g, state, g, prec);
-        }
+        acb_siegel_randtest_vec(zs, state, nb * g, prec);
 
         acb_theta_ctx_set_tau(ctx, tau, prec);
         for (j = 0; j < nb; j++)

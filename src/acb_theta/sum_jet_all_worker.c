@@ -17,7 +17,7 @@
    introduces powers of i in worker */
 
 void
-acb_theta_sum_jet_all_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
+acb_theta_sum_jet_all_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
     const slong * precs, slong len, const acb_t cofactor, const slong * coords,
     slong ord, slong g, slong prec, slong fullprec)
 {
@@ -65,7 +65,7 @@ acb_theta_sum_jet_all_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
         acb_mul_fmpz(x, cofactor, num, prec);
         acb_mul(&aux[j], &aux[j], x, prec);
     }
-    _acb_vec_add(dth, dth, aux, nb, fullprec);
+    _acb_vec_add(th, th, aux, nb, fullprec);
 
     flint_free(tups);
     _acb_vec_clear(v3, len);

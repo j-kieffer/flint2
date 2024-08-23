@@ -260,10 +260,10 @@ void acb_theta_sum_00_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
 void acb_theta_sum_0b_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
     const slong * precs, slong len, const acb_t cofactor, const slong * coords,
     slong ord, slong g, slong prec, slong fullprec);
-void acb_theta_sum_jet_00_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
+void acb_theta_sum_jet_00_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
     const slong * precs, slong len, const acb_t cofactor, const slong * coords,
     slong ord, slong g, slong prec, slong fullprec);
-void acb_theta_sum_jet_all_worker(acb_ptr dth, acb_srcptr v1, acb_srcptr v2,
+void acb_theta_sum_jet_all_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
     const slong * precs, slong len, const acb_t cofactor, const slong * coords,
     slong ord, slong g, slong prec, slong fullprec);
 
@@ -273,6 +273,8 @@ void acb_theta_sum_a0(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
     slong nb, int z_is_real, slong prec);
 void acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
     slong nb, int z_is_real, slong prec);
+void acb_theta_sum_jet_00(acb_ptr th, const acb_theta_ctx_t ctx, slong ord, slong prec);
+void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_t ctx, slong ord, slong prec);
 
 /* Quasilinear algorithms */
 

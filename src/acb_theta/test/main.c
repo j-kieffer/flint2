@@ -85,6 +85,7 @@
 #include "t-sum_0b.c"
 #include "t-sum_a0.c"
 #include "t-sum_all.c"
+#include "t-sum_jet_00.c"
 #include "t-transform_char.c"
 #include "t-transform_kappa.c"
 #include "t-transform_proj.c"
@@ -168,6 +169,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sum_0b),
     TEST_FUNCTION(acb_theta_sum_a0),
     TEST_FUNCTION(acb_theta_sum_all),
+    TEST_FUNCTION(acb_theta_sum_jet_00),
     /* TEST_FUNCTION(acb_theta_transform_char),
     TEST_FUNCTION(acb_theta_transform_kappa),
     TEST_FUNCTION(acb_theta_transform_proj),

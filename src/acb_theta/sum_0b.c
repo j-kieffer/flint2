@@ -79,7 +79,7 @@ acb_theta_sum_0b(acb_ptr th, const acb_theta_ctx_t ctx, slong prec)
         }
         else
         {
-            for (j = 0; j < nb; j++)
+            for (j = 0; j < nb * n; j++)
             {
                 acb_indeterminate(&th[j]);
             }
