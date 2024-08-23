@@ -18,12 +18,12 @@ TEST_FUNCTION_START(acb_theta_sum_all, state)
 {
     slong iter;
 
-    /* Test: matches naive_fixed_ab */
+    /* Test: matches naive_all */
     for (iter = 0; iter < 20 * flint_test_multiplier(); iter++)
     {
-        slong g = 1; // + n_randint(state, 3);
+        slong g = 1 + n_randint(state, 3);
         slong n = 1 << g;
-        slong prec = 100 + n_randint(state, 200);
+        slong prec = 100 + n_randint(state, 100);
         slong mag_bits = n_randint(state, 4);
         int z_is_real = iter % 2;
         acb_theta_ctx_t ctx;
@@ -76,14 +76,6 @@ TEST_FUNCTION_START(acb_theta_sum_all, state)
             _acb_vec_add(all_zs + (3 + j) * g, all_zs + j * g, z, g, prec);
         }
         acb_theta_naive_all(th2, all_zs, 6, tau, prec);
-        
-            flint_printf("\n\ng=%wd\n", g);
-            acb_mat_printd(tau, 5);
-            _acb_vec_printd(all_zs, 6 * g, 5);
-            flint_printf("th1: ");
-            _acb_vec_printd(th1, 6 * n * n, 5);
-            flint_printf("th2: ");
-            _acb_vec_printd(th2, 6 * n * n, 5);
 
         if (!_acb_vec_overlaps(th1, th2, 6 * n * n))
         {

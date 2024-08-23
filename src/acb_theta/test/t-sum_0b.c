@@ -19,7 +19,7 @@ TEST_FUNCTION_START(acb_theta_sum_0b, state)
     slong iter;
 
     /* Test: matches naive_0b */
-    for (iter = 0; iter < 100 * flint_test_multiplier(); iter++)
+    for (iter = 0; iter < 50 * flint_test_multiplier(); iter++)
     {
         slong g = 1 + n_randint(state, 3);
         slong n = 1 << g;

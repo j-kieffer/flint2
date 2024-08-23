@@ -23,7 +23,7 @@ acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
     acb_ptr res;
     acb_theta_ctx_t new_ctx;
     slong new_prec;
-    slong a, j;
+    slong a, b, j, dot;
 
     if (g == 1)
     {
@@ -61,6 +61,14 @@ acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
             for (j = 0; j < nb; j++)
             {
                 _acb_vec_set(th + n * n * j + n * a, res + n * j, n);
+            }
+            for (b = 0; b < n; b++)
+            {
+                dot = acb_theta_char_dot(a, b, g);
+                for (j = 0; j < nb; j++)
+                {
+                    acb_mul_i_pow_si(&th[n * n * j + n * a + b], &th[n * n * j + n * a + b], dot);
+                }
             }
         }
 
