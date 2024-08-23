@@ -325,12 +325,12 @@ acb_theta_sum_work(acb_ptr th, slong len, acb_srcptr exp_zs, acb_srcptr exp_zs_i
 
     for (j = 0; j < nb; j++)
     {
-	acb_mat_set(lin_pow, exp_tau);
-	acb_mat_set(lin_pow_inv, exp_tau_inv);
+        acb_mat_set(lin_pow, exp_tau);
+        acb_mat_set(lin_pow_inv, exp_tau_inv);
 
-	acb_theta_sum_work_rec(res + j * len, v1, v2, precs, lin_pow, lin_pow_inv,
-	    cf, exp_zs + j * g, exp_zs_inv + j * g, exp_tau, exp_tau_inv, sqr_pow, E, ord,
-	    fullprec, fullprec, worker);
+        acb_theta_sum_work_rec(res + j * len, v1, v2, precs, lin_pow, lin_pow_inv,
+            cf, exp_zs + j * g, exp_zs_inv + j * g, exp_tau, exp_tau_inv, sqr_pow, E, ord,
+            fullprec, fullprec, worker);
     }
     _acb_vec_set(th, res, len * nb);
 

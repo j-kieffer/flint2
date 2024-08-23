@@ -348,6 +348,7 @@ acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr zs, slong nb,
             acb_exp_pi_i(&exp_z[k], &exp_z[k], prec);
             acb_inv(&exp_z_inv[k], &exp_z[k], prec);
         }
+
         acb_mat_set(lin_pow, exp_tau);
         acb_mat_set(lin_pow_inv, exp_tau_inv);
 
