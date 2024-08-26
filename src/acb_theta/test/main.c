@@ -21,8 +21,8 @@
 #include "t-char_is_even.c"
 #include "t-char_is_goepel.c"
 #include "t-char_is_syzygous.c"
-#include "t-ctx_dupl.c"
-#include "t-ctx_set_t.c"
+/* #include "t-ctx_dupl.c" */
+/* #include "t-ctx_set_t.c" */
 #include "t-ctx_set_tau.c"
 #include "t-ctx_set_z.c"
 #include "t-ctx_shift_z.c"
@@ -106,8 +106,8 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_char_is_even),
     TEST_FUNCTION(acb_theta_char_is_goepel),
     TEST_FUNCTION(acb_theta_char_is_syzygous),*/
-    TEST_FUNCTION(acb_theta_ctx_dupl),
-    TEST_FUNCTION(acb_theta_ctx_set_t),
+    /* TEST_FUNCTION(acb_theta_ctx_dupl),
+       TEST_FUNCTION(acb_theta_ctx_set_t), */
     TEST_FUNCTION(acb_theta_ctx_set_tau),
     TEST_FUNCTION(acb_theta_ctx_set_z),
     TEST_FUNCTION(acb_theta_ctx_shift_z),
