@@ -11,6 +11,7 @@
 
 #include "arb.h"
 #include "arb_mat.h"
+#include "acb_mat.h"
 #include "acb_theta.h"
 
 /* These functions are more of a rule-of-thumb kind to increase performance. */
@@ -39,7 +40,7 @@ acb_theta_ql_split(const arb_mat_t cho)
 }
 
 slong
-acb_theta_ql_nb_steps(slong * split, const acb_theta_ctx_t ctx, slong prec)
+acb_theta_ql_nb_steps(slong * split, const acb_theta_ctx_tau_t ctx, slong prec)
 {
     slong g = acb_theta_ctx_g(ctx);
     slong lp = ACB_THETA_LOW_PREC;

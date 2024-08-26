@@ -107,11 +107,11 @@ acb_theta_ql_one_step(acb_ptr th, acb_srcptr rts, arb_srcptr d0, arb_srcptr d,
     _acb_vec_set(th, next, nb * n);
     _acb_vec_clear(next, nb * n);
 }
-
+/*
 int
 acb_theta_ql_steps(acb_ptr th, slong nb, slong split, const acb_theta_ctx_t ctx,
     slong guard, slong prec)
-{
+    {*/
     /* slong g = acb_theta_ctx_g(tau); */
     /* slong n = 1 << g; */
     /* acb_theta_ctx_t new_ctx; */
@@ -234,5 +234,5 @@ acb_theta_ql_steps(acb_ptr th, slong nb, slong split, const acb_theta_ctx_t ctx,
     /* _arb_vec_init(d0, n); */
     /* _arb_vec_init(d, n); */
     /* return res; */
-}
+/*}*/
 

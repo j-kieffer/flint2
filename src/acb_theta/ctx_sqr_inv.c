@@ -23,4 +23,4 @@ void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr,
     {
         acb_sqr(sqr_inv, inv, prec);
     }
-}k
+}

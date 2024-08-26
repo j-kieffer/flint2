@@ -77,8 +77,8 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
 
         arb_const_pi(pi, prec);
         acb_siegel_cho(acb_theta_ctx_cho(ctx), tau, prec); /* has a factor sqrt(pi) */
-        res = arb_mat_inv(acb_theta_ctx_choinv(ctx), acb_theta_ctx_cho(ctx), prec);
-        if (!res)
+        b = arb_mat_inv(acb_theta_ctx_choinv(ctx), acb_theta_ctx_cho(ctx), prec);
+        if (!b)
         {
             arb_mat_indeterminate(acb_theta_ctx_choinv(ctx));
         }
@@ -116,8 +116,8 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
                         acb_mul(x, x, acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), prec);
                     }
                 }
-                acb_set(acb_theta_ctx_exp_tau_a_div_2(ctx, a)[j], x);
-                acb_sqr(acb_theta_ctx_exp_tau_a(ctx, a)[j], x);
+                acb_set(&acb_theta_ctx_exp_tau_a_div_2(ctx, a)[j], x);
+                acb_sqr(&acb_theta_ctx_exp_tau_a(ctx, a)[j], x, prec);
                 /* Recompute multiplications to avoid inversions. */
                 acb_one(x);
                 for (k = 0; k < g; k++)
@@ -139,8 +139,8 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
                         acb_mul(x, x, acb_mat_entry(acb_theta_ctx_exp_tau_div_4_inv(ctx), j, k), prec);
                     }
                 }
-                acb_set(acb_theta_ctx_exp_tau_a_div_2_inv(ctx, a)[j], x);
-                acb_sqr(acb_theta_ctx_exp_tau_a_inv(ctx, a)[j], x);
+                acb_set(&acb_theta_ctx_exp_tau_a_div_2_inv(ctx, a)[j], x);
+                acb_sqr(&acb_theta_ctx_exp_tau_a_inv(ctx, a)[j], x, prec);
             }
             acb_one(x);
             for (j = 0; j < g; j++)

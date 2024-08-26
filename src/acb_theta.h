@@ -198,7 +198,7 @@ struct acb_theta_ctx_tau_struct
     acb_ptr exp_tau_a_div_2_inv;
     acb_ptr exp_tau_a_inv;
     acb_ptr exp_a_tau_a_div_4;
-}
+};
 
 typedef struct acb_theta_ctx_tau_struct acb_theta_ctx_tau_t[1];
 
@@ -223,7 +223,7 @@ typedef struct acb_theta_ctx_tau_struct acb_theta_ctx_tau_t[1];
 void acb_theta_ctx_tau_init(acb_theta_ctx_tau_t ctx, slong g);
 void acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx);
 void acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec);
-void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx);
+void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
 
 typedef struct
 {
@@ -266,10 +266,6 @@ void acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx
 void acb_theta_ctx_z_common_v(arb_ptr v, const acb_theta_ctx_z_struct * vec, slong nb, slong prec);
 void acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec);
 
-/*void acb_theta_ctx_set_t(acb_theta_ctx_t ctx, const acb_ptr t, slong prec);*/
-void acb_theta_ctx_shift_z(acb_theta_ctx_t new_ctx, const acb_theta_ctx_t ctx,
-    const slong * indices, slong nb, ulong a, slong prec);
-
 /* Summation algorithms */
 
 typedef void (*acb_theta_sum_worker_t)(acb_ptr, acb_srcptr, acb_srcptr, const slong *,
@@ -292,18 +288,22 @@ void acb_theta_sum_jet_all_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
     const slong * precs, slong len, const acb_t cofactor, const slong * coords,
     slong ord, slong g, slong prec, slong fullprec);
 
-void acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_t ctx, slong prec);
-void acb_theta_sum_0b(acb_ptr th, const acb_theta_ctx_t ctx, slong prec);
-void acb_theta_sum_a0(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
-    slong nb, int z_is_real, slong prec);
-void acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_t ctx, slong start,
-    slong nb, int z_is_real, slong prec);
-void acb_theta_sum_jet_00(acb_ptr th, const acb_theta_ctx_t ctx, slong ord, slong prec);
-void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_t ctx, slong ord, slong prec);
+void acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
+    const acb_theta_ctx_tau_t ctx_tau, slong prec);
+void acb_theta_sum_0b(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
+    const acb_theta_ctx_tau_t ctx_tau, slong prec);
+void acb_theta_sum_a0(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
+    const acb_theta_ctx_tau_t ctx_tau, arb_srcptr distances, slong prec);
+void acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
+    const acb_theta_ctx_tau_t ctx_tau, arb_srcptr distances, slong prec);
+void acb_theta_sum_jet_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
+    const acb_theta_ctx_tau_t ctx_tau, slong ord, slong prec);
+void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
+    const acb_theta_ctx_tau_t ctx_tau, slong ord, slong prec);
 
 /* Quasilinear algorithms on exact input */
 
-slong acb_theta_ql_nb_steps(slong* split, const acb_theta_ctx_t ctx, slong prec);
+slong acb_theta_ql_nb_steps(slong* split, const acb_theta_ctx_tau_t ctx_tau, slong prec);
 int acb_theta_ql_setup(acb_ptr rts, acb_ptr ts, slong * t_indices, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slong nb_steps, int all, int sqr, slong prec);
 /* int acb_theta_ql_steps(acb_ptr th, const slong * t_indices, acb_srcptr rts,

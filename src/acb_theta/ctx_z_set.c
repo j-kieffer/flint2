@@ -44,7 +44,7 @@ acb_theta_ctx_round(arb_ptr a, arb_srcptr v, slong g)
 }
 
 void
-acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau_t ctx_tau, slong prec);
+acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau_t ctx_tau, slong prec)
 {
     slong g = acb_theta_ctx_g(ctx_tau);
     arb_t u;
@@ -111,11 +111,11 @@ acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau
         if (g > 1)
         {
             is_real = acb_is_real(&new_z[k]);
-            acb_sqr(&acb_theta_ctx_exp_2zs(ctx)[k], &acb_theta_ctx_exp_zs(ctx)[k], prec);
-            acb_theta_ctx_exp_inv(&acb_theta_ctx_exp_zs_inv(ctx)[k],
-                &acb_theta_ctx_exp_zs(ctx)[k], &new_z[k], is_real, prec);
-            acb_theta_ctx_sqr_inv(&acb_theta_ctx_exp_2zs_inv(ctx)[k],
-                &acb_theta_ctx_exp_zs_inv(ctx)[k], &acb_theta_ctx_exp_2zs(ctx)[k],
+            acb_sqr(&acb_theta_ctx_exp_2z(ctx)[k], &acb_theta_ctx_exp_z(ctx)[k], prec);
+            acb_theta_ctx_exp_inv(&acb_theta_ctx_exp_z_inv(ctx)[k],
+                &acb_theta_ctx_exp_z(ctx)[k], &new_z[k], is_real, prec);
+            acb_theta_ctx_sqr_inv(&acb_theta_ctx_exp_2z_inv(ctx)[k],
+                &acb_theta_ctx_exp_z_inv(ctx)[k], &acb_theta_ctx_exp_2z(ctx)[k],
                 is_real, prec);
         }
     }

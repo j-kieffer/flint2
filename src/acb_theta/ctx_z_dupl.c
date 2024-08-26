@@ -17,7 +17,6 @@ void
 acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec)
 {
     slong g = ctx->g;
-    slong n = 1 << g;
     acb_ptr temp;
     slong j, k;
 
@@ -57,7 +56,7 @@ acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec)
         arb_sqrt(sqrt2, sqrt2, prec);
 
         arb_sqr(acb_theta_ctx_u(ctx), acb_theta_ctx_u(ctx), prec);
-        _arb_vec_scalar_mul(acb_theta_ctx_vs(ctx) + 3 * g, acb_theta_ctx_vs(ctx) + 3 * g, g, sqrt2, prec);
+        _arb_vec_scalar_mul(acb_theta_ctx_v(ctx), acb_theta_ctx_v(ctx), g, sqrt2, prec);
 
         arb_clear(sqrt2);
     }

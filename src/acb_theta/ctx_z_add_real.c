@@ -55,10 +55,10 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx1,
 
     /* The factor c gets multiplied by exp(-2 pi i r^T t) */
     _acb_vec_get_real(t_real, acb_theta_ctx_z(ctx_real), g);
-    arb_dot(acb_realref(x), NULL, 1, acb_theta_ctx_r(ctx), 1, t_real, 1, g, prec);
+    arb_dot(acb_realref(x), NULL, 1, acb_theta_ctx_r(ctx1), 1, t_real, 1, g, prec);
     acb_mul_2exp_si(x, x, 1);
     acb_exp_pi_i(x, x, prec);
-    acb_mul(&acb_theta_ctx_c(res), &acb_theta_ctx_c(ctx), x, prec);
+    acb_mul(acb_theta_ctx_c(res), acb_theta_ctx_c(ctx1), x, prec);
 
     acb_clear(x);
     _arb_vec_clear(t_real, g);

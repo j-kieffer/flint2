@@ -17,7 +17,6 @@ void
 acb_theta_ctx_z_clear(acb_theta_ctx_z_t ctx)
 {
     slong g = ctx->g;
-    slong n = 1 << g;
 
     _acb_vec_clear(acb_theta_ctx_z(ctx), g);
     _acb_vec_clear(acb_theta_ctx_exp_z(ctx), g);
