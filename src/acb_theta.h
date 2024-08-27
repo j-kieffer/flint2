@@ -223,6 +223,7 @@ typedef struct acb_theta_ctx_tau_struct acb_theta_ctx_tau_t[1];
 void acb_theta_ctx_tau_init(acb_theta_ctx_tau_t ctx, slong g);
 void acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx);
 void acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec);
+void acb_theta_ctx_tau_copy(acb_theta_ctx_tau_t res, const acb_theta_ctx_tau_t ctx);
 void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
 
 typedef struct
@@ -261,6 +262,7 @@ void acb_theta_ctx_z_clear(acb_theta_ctx_z_t ctx);
 acb_theta_ctx_z_struct * acb_theta_ctx_z_vec_init(slong nb, slong g);
 void acb_theta_ctx_z_vec_clear(acb_theta_ctx_z_struct * vec, slong nb);
 void acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau_t ctx_tau, slong prec);
+void acb_theta_ctx_z_copy(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx);
 int acb_theta_ctx_z_overlaps(const acb_theta_ctx_z_t ctx1, const acb_theta_ctx_z_t ctx2);
 
 void acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
@@ -308,8 +310,9 @@ void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong
 /* Quasilinear algorithms on exact input */
 
 slong acb_theta_ql_nb_steps(slong* split, const acb_theta_ctx_tau_t ctx_tau, slong prec);
-int acb_theta_ql_setup(acb_ptr rts, acb_ptr ts, slong * t_indices, acb_srcptr zs, slong nb,
-    const acb_mat_t tau, slong nb_steps, int all, int sqr, slong prec);
+int acb_theta_ql_setup(acb_ptr rts, acb_ptr t,  slong * guard, slong * easy_steps,
+    acb_srcptr zs, slong nb, const acb_mat_t tau, arb_srcptr distances,
+    slong nb_steps, int all, int sqr, slong prec);
 /* int acb_theta_ql_steps(acb_ptr th, const slong * t_indices, acb_srcptr rts,
     acb_srcptr th_init, slong nb_steps, int all, int sqr, slong prec);
 int acb_theta_ql_split(acb_ptr th, acb_srcptr ts, const slong * t_indices,
