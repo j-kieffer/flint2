@@ -54,11 +54,7 @@ acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     else
     {
         /* Update the context for each a, call sum_00 with the right precision */
-        new_vec = flint_malloc(nb * sizeof(acb_theta_ctx_z_struct));
-        for (j = 0; j < nb; j++)
-        {
-            acb_theta_ctx_z_init(&new_vec[j], g);
-        }
+        new_vec = acb_theta_ctx_z_vec_init(nb, g);
         res = _acb_vec_init(n * nb);
 
         for (a = 0; a < n; a++)
@@ -83,11 +79,7 @@ acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
             }
         }
 
-        for (j = 0; j < nb; j++)
-        {
-            acb_theta_ctx_z_clear(&new_vec[j]);
-        }
-        flint_free(new_vec);
+        acb_theta_ctx_z_vec_clear(new_vec, nb);
         _acb_vec_clear(res, n * nb);
     }
 }

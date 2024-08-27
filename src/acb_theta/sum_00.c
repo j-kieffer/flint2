@@ -10,6 +10,7 @@
 */
 
 #include "acb.h"
+#include "arb_mat.h"
 #include "acb_mat.h"
 #include "acb_modular.h"
 #include "acb_theta.h"
@@ -64,7 +65,8 @@ acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
         {
             for (j = 0; j < nb; j++)
             {
-                acb_theta_sum_work(&th[j], 1, acb_theta_ctx_exp_2z(&vec[j]), acb_theta_ctx_exp_2z_inv(&vec[j]), 1,
+                acb_theta_sum_work(&th[j], 1, acb_theta_ctx_exp_2z(&vec[j]),
+                    acb_theta_ctx_exp_2z_inv(&vec[j]), 1,
                     acb_theta_ctx_exp_tau(ctx_tau), acb_theta_ctx_exp_tau_inv(ctx_tau), E, 0,
                     prec, acb_theta_sum_00_worker);
                 acb_mul(&th[j], &th[j], acb_theta_ctx_c(&vec[j]), prec);

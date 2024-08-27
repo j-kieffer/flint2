@@ -40,7 +40,6 @@ void acb_theta_sum_jet_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong 
         for (j = 0; j < nb; j++)
         {
             /* acb_modular_theta_sum recomputes the inverse of exp_z */
-            /* todo: store w_is_unit as part of context */
             acb_modular_theta_sum(res, res + nbth, res + 2 * nbth, res + 3 * nbth,
                 acb_theta_ctx_exp_z(&vec[j]), acb_theta_ctx_is_real(&vec[j]),
                 acb_mat_entry(acb_theta_ctx_exp_tau(ctx_tau), 0, 0), ord + 1, prec);
