@@ -89,20 +89,11 @@ acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau
         arb_mat_vector_mul_col(acb_theta_ctx_v(ctx), acb_theta_ctx_cho(ctx_tau), t, prec);
     }
 
-    /* new_z is z - tau * r; we further reduce its x-coordinate mod 4 */
+    /* new_z is z - tau * r */
     _arb_vec_zero(t, g);
     _acb_vec_set_real_imag(new_z, r, t, g);
     acb_mat_vector_mul_col(new_z, acb_theta_ctx_tau(ctx_tau), new_z, prec);
     _acb_vec_sub(new_z, z, new_z, g, prec);
-
-    _acb_vec_get_real(t, new_z, g);
-    _arb_vec_scalar_mul_2exp_si(t, t, g, -2);
-    acb_theta_ctx_round(t, t, g);
-    _arb_vec_scalar_mul_2exp_si(t, t, g, 2);
-    for (k = 0; k < g; k++)
-    {
-        acb_sub_arb(&new_z[k], &new_z[k], &t[k], prec);
-    }
 
     /* Set z_is_real, exp_z, exp_z_inv, exp_2z, exp_2z_inv */
     for (k = 0; k < g; k++)
@@ -120,6 +111,7 @@ acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau
         }
     }
     _acb_vec_set(acb_theta_ctx_z(ctx), new_z, g);
+    acb_theta_ctx_is_real(ctx) = _acb_vec_is_real(new_z, g);
 
     /* c is exp(- i pi r^T (z + new_z)); use new_z as temp */
     _acb_vec_add(new_z, new_z, z, g, prec);

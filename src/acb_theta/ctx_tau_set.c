@@ -49,8 +49,9 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
             acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau(ctx), j, k),
                 acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), j, k), prec);
 
-            if (k > j && g > 1)
+            if (g > 1)
             {
+                /* Diagonal entries are also needed in shift_a0. */
                 b = acb_is_real(acb_mat_entry(tau, j, k));
                 acb_theta_ctx_exp_inv(acb_mat_entry(acb_theta_ctx_exp_tau_div_4_inv(ctx), j, k),
                     acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), x, b, prec);

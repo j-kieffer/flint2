@@ -57,7 +57,7 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
             *acb_theta_ctx_exp_tau_inv(ctx));
         for (j = 0; j < g; j++)
         {
-            for (k = j + 1; k < g; k++)
+            for (k = j; k < g; k++)
             {
                 acb_theta_ctx_sqr_inv(acb_mat_entry(acb_theta_ctx_exp_tau_inv(ctx), j, k),
                     acb_mat_entry(acb_theta_ctx_exp_tau_div_2_inv(ctx), j, k),
@@ -70,7 +70,7 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
         ctx->exp_tau_a_div_2 = ctx->exp_tau_a;
         ctx->exp_tau_a = temp;
         temp = ctx->exp_tau_a_div_2_inv;
-        ctx->exp_tau_a_div_2_inv = ctx->exp_tau_a;
+        ctx->exp_tau_a_div_2_inv = ctx->exp_tau_a_inv;
         ctx->exp_tau_a_inv = temp;
         for (j = 0; j < n * g; j++)
         {

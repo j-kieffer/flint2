@@ -28,6 +28,9 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx1,
     acb_init(x);
 
     /* Copy things */
+    _acb_vec_get_real(t_real, acb_theta_ctx_z(ctx_real), g);
+    _acb_vec_add(acb_theta_ctx_z(res), acb_theta_ctx_z(ctx1),
+        acb_theta_ctx_z(ctx_real), g, prec);
     _arb_vec_set(acb_theta_ctx_r(res), acb_theta_ctx_r(ctx1), g);
     acb_theta_ctx_is_real(res) = acb_theta_ctx_is_real(ctx1);
     if (g > 1)
@@ -54,7 +57,6 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx1,
     }
 
     /* The factor c gets multiplied by exp(-2 pi i r^T t) */
-    _acb_vec_get_real(t_real, acb_theta_ctx_z(ctx_real), g);
     arb_dot(acb_realref(x), NULL, 1, acb_theta_ctx_r(ctx1), 1, t_real, 1, g, prec);
     acb_mul_2exp_si(x, x, 1);
     acb_exp_pi_i(x, x, prec);
