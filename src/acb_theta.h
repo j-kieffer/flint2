@@ -311,15 +311,18 @@ void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong
 /* Quasilinear algorithms on exact input */
 
 slong acb_theta_ql_nb_steps(slong* split, const acb_theta_ctx_tau_t ctx_tau, slong prec);
-int acb_theta_ql_setup(acb_ptr rts, acb_ptr t,  slong * guard, slong * easy_steps,
+int acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     acb_srcptr zs, slong nb, const acb_mat_t tau, arb_srcptr distances,
     slong nb_steps, int all, int sqr, slong prec);
-/* int acb_theta_ql_steps(acb_ptr th, const slong * t_indices, acb_srcptr rts,
-    acb_srcptr th_init, slong nb_steps, int all, int sqr, slong prec);
-int acb_theta_ql_split(acb_ptr th, acb_srcptr ts, const slong * t_indices,
-    acb_srcptr zs, slong nb, int all, slong prec);
+void acb_theta_ql_steps(acb_ptr th, acb_ptr th_init, acb_srcptr rts,
+    slong nb, slong nb_steps, arb_srcptr distances, const slong * easy_steps,
+    slong g, slong prec);
 int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
-int all, int sqr, slong prec); */
+    int all, int sqr, slong prec);
+
+
+/* int acb_theta_ql_split(acb_ptr th, acb_srcptr ts, const slong * t_indices,
+   acb_srcptr zs, slong nb, int all, slong prec); */
 
 /* Main functions */
 

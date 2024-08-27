@@ -13,127 +13,109 @@
 #include "acb_mat.h"
 #include "acb_theta.h"
 
-/* int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, */
-/*     int sqr, slong prec) */
-/* { */
-/*     slong g = acb_mat_nrows(tau); */
-/*     slong n = 1 << g; */
-/*     acb_theta_ctx_t ctx; */
-/*     acb_ptr t, rts, zero; */
-/*     slong split, nb_steps, nb_ts, nb_rts; */
-/*     slong guard = 16; */
-/*     int found_t; */
+int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
+    int all, int sqr, slong prec)
+{
+    slong g = acb_mat_nrows(tau);
+    slong n = 1 << g;
+    acb_theta_ctx_tau_t ctx_tau;
+    acb_ptr rts, th_init, t;
+    arb_ptr distances;
+    slong split, nb_steps, guard;
+    slong * easy_steps;
+    slong lp = ACB_THETA_LOW_PREC;
+    slong hp;
+    slong j;
+    int res;
 
-/*     if (nb <= 0) */
-/*     { */
-/*         return; */
-/*     } */
+    if (nb <= 0)
+    {
+        return 1;
+    }
 
-/*     /\* In the worst case, we could use as much as 1 + 5 * nb values of z, */
-/*        nb distinct values of t, 4 * n * nb * nb_steps entries of rts, */
-/*        and ... values of theta. *\/ */
-/*     acb_theta_ctx_init(ctx, 1 + 5 * nb, g); */
-/*     t = _acb_vec_init(nb * g); */
-/*     zero = _acb_vec_init(g); */
+    acb_theta_ctx_tau_init(ctx_tau, g);
+    acb_theta_ctx_tau_set(ctx_tau, tau, lp);
+    nb_steps = acb_theta_ql_nb_steps(&split, ctx_tau, lp);
 
-/*     /\* Find out whether to split now. *\/ */
-/*     acb_theta_ctx_set_tau(ctx, tau, guard); */
-/*     nb_steps = acb_theta_nb_steps(&split, ctx, prec); */
+    if (nb_steps == 0)
+    {
+        /* fall back to summation algorithm, return 0? (no error handling in that case) */
+    }
 
-/*     if (split > 0) */
-/*     { */
-/*         ??? */
-/*     } */
-/*     else if (nb_steps == 0) */
-/*     { */
-/*         ??? */
-/*     } */
+    rts = _acb_vec_init(3 * n * nb * nb_steps);
+    t = _acb_vec_init(g);
+    th_init = _acb_vec_init(3 * n * nb);
+    distances = _arb_vec_init(n * nb);
+    easy_steps = flint_malloc(nb * sizeof(slong));
 
-/*     /\* Assume nb_steps is at least 1 and split is 0. *\/ */
+    /* Setup */
+    for (j = 0; j < nb; j++)
+    {
+        acb_theta_dist_a0(distances + j * n, zs + j * n, tau, lp);
+    }
+    res = acb_theta_ql_setup(rts, t, &guard, easy_steps, zs, nb, tau, distances,
+        nb_steps, all, sqr, prec);
+    hp = prec + nb_steps * guard;
 
-/*     nb_rts = 4 * n * nb_steps; /\* not right, we forget the very first step *\/ */
-/*     rts = _acb_vec_init(nb * nb_rts); */
+    /* Set th_init */
+    if (res && (split == 0))
+    {
+        /* Use sum_a0 */
+        acb_theta_ctx_tau_t ctx;
+        acb_theta_ctx_z_struct * aux;
+        acb_theta_ctx_z_t ctxt;
+        acb_mat_t new_tau;
+        acb_ptr new_z;
+        arb_ptr d;
 
-/*     /\* Choose vectors t, a common guard, and compute roots. */
-/*        In the worst case, there could be as much as nb distinct values of t. *\/ */
-/*     t = _acb_vec_init(nb * g); */
+        acb_theta_ctx_tau_init(ctx, g);
+        aux = acb_theta_ctx_z_vec_init(3, g);
+        acb_mat_init(new_tau, g, g);
+        new_z = _acb_vec_init(g);
+        d = _arb_vec_init(n);
+        if (easy_steps[0] < nb_steps)
+        {
+            acb_theta_ctx_z_init(ctxt, g);
+        }
 
-/*     found_t = 0; */
-/*     for (guard = 16; (guard < prec) && !found_t; guard *= 2) */
-/*     { */
-/*         /\* Set context at precision guard *\/ */
-/*         acb_theta_ctx_set_tau(ctx, tau, guard); */
-/*         acb_theta_ctx_set_z(ctx, zero, 0, guard); */
-/*         /\* For each z, we will possibly store t, 2t, z, z+t, z+2t *\/ */
-/*         for (j = 0; j < nb; j++) */
-/*         { */
-/*             acb_theta_ctx_set_z(ctx, z, 3 + 5 * j, guard); */
-/*         } */
+        acb_mat_scalar_mul_2exp_si(new_tau, tau, nb_steps);
+        acb_theta_ctx_tau_set(ctx_tau, new_tau, hp);
+        if (easy_steps[0] < nb_steps)
+        {
+            _acb_vec_scalar_mul_2exp_si(new_z, t, g, nb_steps);
+            acb_theta_ctx_z_set(ctxt, new_z, ctx_tau, hp);
+        }
 
-/*         _acb_vec_zero(t, nb * g); */
-/*         nb_ts = 1; /\* Always have the zero vector. *\/ */
-/*         found_t = 1; */
-/*         for (j = 0; (j < nb) && found_t; j++) */
-/*         { */
-/*             found_t = 0; */
-/*             for (k = 0; (k < nb_ts) && !found_t; k++) */
-/*             { */
-/*                 /\* Attempt to compute roots for zj, tk at current guard. *\/ */
-/*                 /\* Set z + t, z + 2t; we already know 0, t, 2t. *\/ */
-/*                 /\* Nothing to be done if k = 0, ie t corresponds to zero vector. *\/ */
-/*                 acb_theta_ctx_set_ql_translates(ctx, j, k, guard); */
-/*                 found_t = acb_theta_ql_roots_z(rts + j * nb_rts, ctx, j, k, guard); */
-/*             } */
-/*             if (found_t) /\* We are happy. k was increased before exiting loop. *\/ */
-/*             { */
-/*                 ctx->t_indices[j] = k - 1; */
-/*             } */
-/*             else */
-/*             { */
-/*                 /\* We did not find any t that works. Pick a few new ones *\/ */
-/*                 /\* k is nb_ts *\/ */
-/*                 for (l = 0; (l < 10) && !found_t; l++) */
-/*                 { */
-/*                     for (m = 0; m < g; m++) */
-/*                     { */
-/*                         arb_urandom(acb_realref(&t[g * k + k])); */
-/*                     } */
-/*                     /\* Use slots 1 + 5 * k, 2 + 5 * k for t and 2t *\/ */
-/*                     acb_theta_ctx_set_t(ctx, t, 1 + 5 * k, guard); */
-/*                     found_t = acb_theta_ql_roots_0(ctx, k, guard); */
-/*                     if (!found_t) */
-/*                     { */
-/*                         continue; */
-/*                     } */
-/*                     /\* This choice of t just worked for roots at t, 2t. *\/ */
-/*                     acb_theta_ctx_set_ql_translates(ctx, j, k, guard); */
-/*                     found_t = acb_theta_ql_roots_z(rts + j * nb_rts, ctx, j, k, guard); */
-/*                 } */
-/*                 if (found_t) */
-/*                 { */
-/*                     ctx->t_indices[j] = k; */
-/*                 } */
-/*                 nb_ts += 1; */
-/*             } */
-/*             /\* Now either we found t, and we happily continue the loop on j; */
-/*                or we didn't, exit the loop on j, and increase guard. *\/ */
-/*         } */
-/*     } */
+        for (j = 0; j < nb; j++)
+        {
+            _acb_vec_scalar_mul_2exp_si(new_z, zs + j * g, g, nb_steps);
+            acb_theta_ctx_z_set(&aux[0], new_z, ctx_tau, hp);
+            _arb_vec_scalar_mul_2exp_si(d, distances + j * n, n, nb_steps);
+            if (easy_steps[j] == nb_steps)
+            {
+                acb_theta_sum_a0(th_init + 3 * n * j, aux, 1, ctx_tau, d, hp);
+            }
+            else
+            {
+                acb_theta_ctx_z_add_real(&aux[1], &aux[0], ctxt, hp);
+                acb_theta_ctx_z_add_real(&aux[2], &aux[1], ctxt, hp);
+                acb_theta_sum_a0(th_init + 3 * n * j, aux, 3, ctx_tau, d, hp);
+            }
+        }
 
-/*     if (found_t) */
-/*     { */
-/*         /\* We have our choice of ts, guards, and all the relevant roots have been computed. *\/ */
+        /* clear */
+    }
+    else if (res)
+    {
+        /* Use splitting strategy */
+    }
 
-/*         /\* Strip z, tau of error bounds *\/ */
+    if (res)
+    {
+        acb_theta_ql_steps(th, th_init, rts, nb, nb_steps, distances, easy_steps, g, hp);
+    }
 
-/*         /\* Initialize theta high up. *\/ */
-/*         acb_theta_ql_initialize(th, ...); */
+    /* clear */
 
-/*         /\* Duplication steps *\/ */
-/*         /\* Precision may decrease slightly at each step, but doesn't matter too much. *\/ */
-
-/*         /\* Final duplication step is special. *\/ */
-
-/*         /\* Finally, add error bounds coming from radii of tau, z, nothing fancy. *\/ */
-/*     } */
-/* } */
+    return res;
+}
