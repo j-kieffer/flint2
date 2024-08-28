@@ -84,9 +84,19 @@ acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau
         arb_const_pi(acb_theta_ctx_u(ctx), prec);
         arb_mul(acb_theta_ctx_u(ctx), acb_theta_ctx_u(ctx), u, prec);
         arb_exp(acb_theta_ctx_u(ctx), acb_theta_ctx_u(ctx), prec);
+        arb_inv(acb_theta_ctx_uinv(ctx), acb_theta_ctx_u(ctx), prec);
 
         _arb_vec_sub(t, t, r, g, prec);
         arb_mat_vector_mul_col(acb_theta_ctx_v(ctx), acb_theta_ctx_cho(ctx_tau), t, prec);
+    }
+    else
+    {
+        arb_sqr(acb_theta_ctx_uinv(ctx), y, prec);
+        arb_const_pi(u, prec);
+        arb_mul(u, u, acb_mat_entry(acb_theta_ctx_yinv(ctx_tau), 0, 0), prec);
+        arb_neg(u, u);
+        arb_mul(acb_theta_ctx_uinv(ctx), acb_theta_ctx_uinv(ctx), u, prec);
+        arb_exp(acb_theta_ctx_uinv(ctx), acb_theta_ctx_uinv(ctx), prec);
     }
 
     /* new_z is z - tau * r */

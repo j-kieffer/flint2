@@ -22,6 +22,7 @@ acb_theta_ctx_z_clear(acb_theta_ctx_z_t ctx)
     _acb_vec_clear(acb_theta_ctx_exp_z(ctx), g);
     acb_clear(acb_theta_ctx_c(ctx));
     _arb_vec_clear(acb_theta_ctx_r(ctx), g);
+    arb_clear(acb_theta_ctx_uinv(ctx));
 
     if (g > 1)
     {

@@ -60,7 +60,7 @@ int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     /* Set th_init */
     if (res && (split == 0))
     {
-        /* Use sum_a0 */
+        /* Use sum_a0_tilde */
         acb_theta_ctx_tau_t ctx;
         acb_theta_ctx_z_struct * aux;
         acb_theta_ctx_z_t ctxt;
@@ -93,17 +93,17 @@ int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
             _arb_vec_scalar_mul_2exp_si(d, distances + j * n, n, nb_steps);
             if (easy_steps[j] == nb_steps)
             {
-                acb_theta_sum_a0(th_init + 3 * n * j, aux, 1, ctx_tau, d, hp);
+                acb_theta_sum_a0_tilde(th_init + 3 * n * j, aux, 1, ctx_tau, d, hp);
             }
             else
             {
                 acb_theta_ctx_z_add_real(&aux[1], &aux[0], ctxt, hp);
                 acb_theta_ctx_z_add_real(&aux[2], &aux[1], ctxt, hp);
-                acb_theta_sum_a0(th_init + 3 * n * j, aux, 3, ctx_tau, d, hp);
+                acb_theta_sum_a0_tilde(th_init + 3 * n * j, aux, 3, ctx_tau, d, hp);
             }
         }
 
-        /* clear */
+        /* clear; don't forget ctxt */
     }
     else if (res)
     {

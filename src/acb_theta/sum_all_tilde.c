@@ -15,7 +15,7 @@
 #include "acb_theta.h"
 
 void
-acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
+acb_theta_sum_all_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     const acb_theta_ctx_tau_t ctx_tau, arb_srcptr distances, slong prec)
 {
     slong g = acb_theta_ctx_g(ctx_tau);
@@ -48,6 +48,8 @@ acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
                 acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx_tau), 0, 0), prec);
             _acb_vec_scalar_mul(th + 4 * j, th + 4 * j, 4,
                 acb_theta_ctx_c(&vec[j]), prec);
+            _acb_vec_scalar_mul_arb(th + 4 * j, th + 4 * j, 4,
+                acb_theta_ctx_uinv(&vec[j]), prec);
         }
         _acb_vec_clear(res, 4);
     }
@@ -67,7 +69,8 @@ acb_theta_sum_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
             acb_theta_sum_0b(res, new_vec, nb, ctx_tau, new_prec);
             for (j = 0; j < nb; j++)
             {
-                _acb_vec_set(th + n * n * j + n * a, res + n * j, n);
+                _acb_vec_scalar_mul_arb(th + n * n * j + n * a, res + n * j, n,
+                    acb_theta_ctx_uinv(&vec[j]), prec);
             }
             for (b = 0; b < n; b++)
             {

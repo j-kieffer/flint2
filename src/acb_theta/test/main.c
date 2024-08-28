@@ -76,6 +76,8 @@
 #include "t-ql_a0_steps.c"
 #include "t-ql_all.c"
 #include "t-ql_reduce.c"
+#include "t-ql_setup.c"
+#include "t-ql_steps.c"
 #include "t-siegel_cocycle.c"
 #include "t-siegel_is_reduced.c"
 #include "t-siegel_reduce.c"
@@ -87,8 +89,8 @@
 #include "t-sp2gz_set_blocks.c"
 #include "t-sum_00.c"
 #include "t-sum_0b.c"
-#include "t-sum_a0.c"
-#include "t-sum_all.c"
+#include "t-sum_a0_tilde.c"
+#include "t-sum_all_tilde.c"
 #include "t-sum_jet_00.c"
 #include "t-sum_jet_all.c"
 #include "t-transform_char.c"
@@ -164,8 +166,10 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_ql_a0_split),
     TEST_FUNCTION(acb_theta_ql_a0_steps),
     TEST_FUNCTION(acb_theta_ql_all),
-    TEST_FUNCTION(acb_theta_ql_reduce),
-    TEST_FUNCTION(acb_theta_siegel_cocycle),
+    TEST_FUNCTION(acb_theta_ql_reduce), */
+    TEST_FUNCTION(acb_theta_ql_setup),
+    TEST_FUNCTION(acb_theta_ql_steps),
+/*    TEST_FUNCTION(acb_theta_siegel_cocycle),
     TEST_FUNCTION(acb_theta_siegel_is_reduced),
     TEST_FUNCTION(acb_theta_siegel_reduce),
     TEST_FUNCTION(acb_theta_siegel_transform),
@@ -176,8 +180,8 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sp2gz_set_blocks), */
     TEST_FUNCTION(acb_theta_sum_00),
     TEST_FUNCTION(acb_theta_sum_0b),
-    TEST_FUNCTION(acb_theta_sum_a0),
-    TEST_FUNCTION(acb_theta_sum_all),
+    TEST_FUNCTION(acb_theta_sum_a0_tilde),
+    TEST_FUNCTION(acb_theta_sum_all_tilde),
     TEST_FUNCTION(acb_theta_sum_jet_00),
     TEST_FUNCTION(acb_theta_sum_jet_all),
     /* TEST_FUNCTION(acb_theta_transform_char),

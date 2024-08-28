@@ -14,7 +14,7 @@
 #include "acb_mat.h"
 #include "acb_theta.h"
 
-#define ACB_THETA_QL_TRY 10
+#define ACB_THETA_QL_TRY 4
 
 static int
 _acb_vec_contains_zero(acb_srcptr vec, slong nb)
@@ -41,7 +41,7 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     slong g = acb_mat_nrows(tau);
     slong n = 1 << g;
     acb_theta_ctx_tau_t ctx_tau, ctx_tau_dupl;
-    acb_theta_ctx_z_t ctxt, ctx2t;
+    acb_theta_ctx_z_t ctxt;
     acb_theta_ctx_z_struct *vec, *aux;
     flint_rand_t state;
     arb_ptr d;
@@ -55,6 +55,11 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     /* Right now, all and sqr are ignored */
     if (nb_steps == 0)
     {
+        *guard = 0;
+        for (j = 0; j < nb; j++)
+        {
+            easy_steps[j] = 0;
+        }
         return 1;
     }
 
@@ -63,13 +68,13 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     vec = acb_theta_ctx_z_vec_init(nb, g);
     aux = acb_theta_ctx_z_vec_init(2, g);
     acb_theta_ctx_z_init(ctxt, g);
-    acb_theta_ctx_z_init(ctx2t, g);
     d = _arb_vec_init(n);
     flint_rand_init(state);
 
     res = 0;
-    for (lowprec = 16 + g * nb_steps; (lowprec < prec) && !res; lowprec *= 2)
+    for (lowprec = 16 + 2 * g; (lowprec < prec) && !res; lowprec *= 2)
     {
+        *guard = lowprec;
         /* Set context at precision lowprec */
         /* Find out for which z we can use t=0 at this precision. */
         acb_theta_ctx_tau_set(ctx_tau, tau, lowprec);
@@ -90,8 +95,8 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
                 }
 
                 _arb_vec_scalar_mul_2exp_si(d, distances + j * n, n, k);
-                acb_theta_sum_a0(rts + j * (3 * n * nb_steps) + k * (3 * n),
-                    &vec[j], 1, ctx_tau, d, lowprec);
+                acb_theta_sum_a0_tilde(rts + j * (3 * n * nb_steps) + k * (3 * n),
+                    &vec[j], 1, ctx_tau_dupl, d, lowprec);
                 easy = !_acb_vec_contains_zero(rts + j * (3 * n * nb_steps) + k * (3 * n), n);
                 if (easy)
                 {
@@ -110,7 +115,7 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
             }
             if (k < nb_steps - 1)
             {
-                acb_theta_ctx_tau_dupl(ctx_tau, lowprec);
+                acb_theta_ctx_tau_dupl(ctx_tau_dupl, lowprec);
             }
         }
         /* At this point, for every j such that easy_steps[j] = nb_steps,
@@ -128,30 +133,38 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
             for (k = 0; k < g; k++)
             {
                 arb_urandom(acb_realref(&t[k]), state, prec);
+                acb_get_mid(&t[k], &t[k]);
             }
             /* Reinitialize contexts */
             acb_theta_ctx_tau_copy(ctx_tau_dupl, ctx_tau);
             acb_theta_ctx_z_set(ctxt, t, ctx_tau, lowprec);
-            acb_theta_ctx_z_copy(ctx2t, ctxt);
-            acb_theta_ctx_z_dupl(ctx2t, lowprec);
 
             /* Find out if roots are all nonzero */
             for (k = 0; (k < nb_steps) && res; k++)
             {
                 for (j = 0; (j < nb) && res; j++)
                 {
-                    if (easy_steps[j] <= k)
+                    if (k < easy_steps[j])
                     {
                         continue; /* this step was already handled. */
                     }
 
                     acb_theta_ctx_z_add_real(&aux[0], &vec[j], ctxt, lowprec);
-                    acb_theta_ctx_z_add_real(&aux[1], &vec[j], ctx2t, lowprec);
+                    acb_theta_ctx_z_add_real(&aux[1], &aux[0], ctxt, lowprec);
                     _arb_vec_scalar_mul_2exp_si(d, distances + j * n, n, l);
-                    acb_theta_sum_a0(rts + j * (3 * n * nb_steps) + k * (3 * n) + n,
-                        aux, 2, ctx_tau, d, lowprec);
+                    acb_theta_sum_a0_tilde(rts + j * (3 * n * nb_steps) + k * (3 * n) + n,
+                        aux, 2, ctx_tau_dupl, d, lowprec);
                     res = res && !_acb_vec_contains_zero(rts + j * (3 * n * nb_steps)
                         + k * (3 * n) + n, 2 * n);
+                    if (k < nb_steps - 1)
+                    {
+                        acb_theta_ctx_z_dupl(&vec[j], lowprec);
+                    }
+                }
+                if (k < nb_steps - 1)
+                {
+                    acb_theta_ctx_tau_dupl(ctx_tau_dupl, lowprec);
+                    acb_theta_ctx_z_dupl(ctxt, lowprec);
                 }
             }
             /* If res, then all the roots are computed, and we are done.
@@ -173,14 +186,12 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
             }
         }
     }
-    *guard = lowprec;
 
     acb_theta_ctx_tau_clear(ctx_tau);
     acb_theta_ctx_tau_clear(ctx_tau_dupl);
     acb_theta_ctx_z_vec_clear(vec, nb);
     acb_theta_ctx_z_vec_clear(aux, 2);
     acb_theta_ctx_z_clear(ctxt);
-    acb_theta_ctx_z_clear(ctx2t);
     _arb_vec_clear(d, n);
     flint_rand_clear(state);
     return res;

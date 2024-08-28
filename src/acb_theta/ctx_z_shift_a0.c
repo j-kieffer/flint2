@@ -20,6 +20,7 @@ acb_theta_aj_is_zero(ulong a, slong j, slong g)
     return !((a >> (g - 1 - j)) & 1);
 }
 
+/* We ignore uinv here. */
 void
 acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
     const acb_theta_ctx_tau_t ctx_tau, ulong a, slong prec)

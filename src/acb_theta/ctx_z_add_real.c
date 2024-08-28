@@ -32,6 +32,7 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
     _acb_vec_add(acb_theta_ctx_z(res), acb_theta_ctx_z(ctx),
         acb_theta_ctx_z(ctx_real), g, prec);
     _arb_vec_set(acb_theta_ctx_r(res), acb_theta_ctx_r(ctx), g);
+    arb_set(acb_theta_ctx_uinv(res), acb_theta_ctx_uinv(ctx));
     acb_theta_ctx_is_real(res) = acb_theta_ctx_is_real(ctx);
     if (g > 1)
     {

@@ -47,7 +47,9 @@ acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec)
         }
     }
 
+    /* Compute other quantities */
     acb_sqr(acb_theta_ctx_c(ctx), acb_theta_ctx_c(ctx), prec);
+    arb_sqr(acb_theta_ctx_uinv(ctx), acb_theta_ctx_uinv(ctx), prec);
     /* r does not change. */
     if (g > 1)
     {
