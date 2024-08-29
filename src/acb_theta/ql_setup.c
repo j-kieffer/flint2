@@ -36,7 +36,7 @@ _acb_vec_contains_zero(acb_srcptr vec, slong nb)
 int
 acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     acb_srcptr zs, slong nb, const acb_mat_t tau, arb_srcptr distances,
-    slong nb_steps, int all, int sqr, slong prec)
+    slong nb_steps, int all, slong prec)
 {
     slong g = acb_mat_nrows(tau);
     slong n = 1 << g;
@@ -52,7 +52,7 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     FLINT_ASSERT(nb >= 1);
     FLINT_ASSERT(_acb_vec_is_zero(zs, g));
 
-    /* Right now, all and sqr are ignored */
+    /* Right now, all is ignored */
     if (nb_steps == 0)
     {
         *guard = 0;

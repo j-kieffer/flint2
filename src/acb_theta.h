@@ -315,7 +315,7 @@ void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong
 slong acb_theta_ql_nb_steps(slong* split, const acb_theta_ctx_tau_t ctx_tau, slong prec);
 int acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     acb_srcptr zs, slong nb, const acb_mat_t tau, arb_srcptr distances,
-    slong nb_steps, int all, int sqr, slong prec);
+    slong nb_steps, int all, slong prec);
 int acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
     arf_t err, slong * fullprec, acb_srcptr z, const acb_mat_t tau,
     arb_srcptr distances, slong s, ulong a, slong prec);
@@ -323,7 +323,7 @@ void acb_theta_ql_steps(acb_ptr th, acb_ptr th_init, acb_srcptr rts,
     slong nb, slong nb_steps, arb_srcptr distances, const slong * easy_steps,
     slong g, slong prec);
 int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
-    int all, int sqr, slong prec);
+    int all, int shifted_prec, slong prec);
 
 /* Main functions */
 

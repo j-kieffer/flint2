@@ -73,9 +73,9 @@ TEST_FUNCTION_START(acb_theta_ql_setup, state)
             acb_theta_dist_a0(distances + j * n, zs + j * g, tau, prec);
         }
 
-        /* For now, all = sqr = 0 */
+        /* For now, all = 0 */
         res = acb_theta_ql_setup(rts, t, &guard, easy_steps, zs, nb, tau,
-            distances, nb_steps, 0, 0, prec);
+            distances, nb_steps, 0, prec);
 
         if (res)
         {
