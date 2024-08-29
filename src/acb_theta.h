@@ -234,6 +234,7 @@ typedef struct
     acb_ptr exp_z;
     acb_struct c;
     arb_ptr r;
+    arb_struct u;
     arb_struct uinv;
     int is_real;
 
@@ -242,7 +243,6 @@ typedef struct
     acb_ptr exp_z_inv;
     acb_ptr exp_2z_inv;
     arb_ptr v;
-    arb_struct u;
 }
 acb_theta_ctx_z_struct;
 
@@ -316,7 +316,7 @@ slong acb_theta_ql_nb_steps(slong* split, const acb_theta_ctx_tau_t ctx_tau, slo
 int acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     acb_srcptr zs, slong nb, const acb_mat_t tau, arb_srcptr distances,
     slong nb_steps, int all, int sqr, slong prec);
-int acb_theta_ql_lower_dim(acb_ptr new_zs, acb_ptr cofactors, slong * nb,
+int acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
     arf_t err, slong * fullprec, acb_srcptr z, const acb_mat_t tau,
     arb_srcptr distances, slong s, ulong a, slong prec);
 void acb_theta_ql_steps(acb_ptr th, acb_ptr th_init, acb_srcptr rts,
@@ -324,10 +324,6 @@ void acb_theta_ql_steps(acb_ptr th, acb_ptr th_init, acb_srcptr rts,
     slong g, slong prec);
 int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     int all, int sqr, slong prec);
-
-
-/* int acb_theta_ql_split(acb_ptr th, acb_srcptr ts, const slong * t_indices,
-   acb_srcptr zs, slong nb, int all, slong prec); */
 
 /* Main functions */
 

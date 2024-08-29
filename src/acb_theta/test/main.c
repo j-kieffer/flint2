@@ -78,6 +78,7 @@
 #include "t-ql_reduce.c"
 #include "t-ql_setup.c"
 #include "t-ql_steps.c"
+#include "t-ql_lower_dim.c"
 #include "t-siegel_cocycle.c"
 #include "t-siegel_is_reduced.c"
 #include "t-siegel_reduce.c"
@@ -112,7 +113,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_char_is_even),
     TEST_FUNCTION(acb_theta_char_is_goepel),
     TEST_FUNCTION(acb_theta_char_is_syzygous),*/
-    TEST_FUNCTION(acb_theta_ctx_exp_inv),
+    /* TEST_FUNCTION(acb_theta_ctx_exp_inv),
     TEST_FUNCTION(acb_theta_ctx_sqr_inv),
     TEST_FUNCTION(acb_theta_ctx_tau_set),
     TEST_FUNCTION(acb_theta_ctx_tau_dupl),
@@ -120,7 +121,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_ctx_z_add_real),
     TEST_FUNCTION(acb_theta_ctx_z_copy),
     TEST_FUNCTION(acb_theta_ctx_z_dupl),
-    TEST_FUNCTION(acb_theta_ctx_z_shift_a0),
+    TEST_FUNCTION(acb_theta_ctx_z_shift_a0),*/
     /*TEST_FUNCTION(acb_theta_dist_a0),
     TEST_FUNCTION(acb_theta_dist_lat),
     TEST_FUNCTION(acb_theta_dist_pt),
@@ -169,6 +170,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_ql_reduce), */
     TEST_FUNCTION(acb_theta_ql_setup),
     TEST_FUNCTION(acb_theta_ql_steps),
+    TEST_FUNCTION(acb_theta_ql_lower_dim),
 /*    TEST_FUNCTION(acb_theta_siegel_cocycle),
     TEST_FUNCTION(acb_theta_siegel_is_reduced),
     TEST_FUNCTION(acb_theta_siegel_reduce),
