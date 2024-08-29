@@ -10,6 +10,7 @@
 */
 
 #include "acb.h"
+#include "arb_mat.h"
 #include "acb_mat.h"
 #include "acb_theta.h"
 
@@ -375,9 +376,9 @@ int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 {
     slong g = acb_mat_nrows(tau);
     slong n = 1 << g;
-    acb_theta_ctx_tau_t ctx_tau;
+    arb_mat_t cho;
     arb_ptr distances;
-    slong split, nb_steps;
+    slong nb_steps, split;
     slong lp = ACB_THETA_LOW_PREC;
     slong j;
     int res = 1;
@@ -387,16 +388,16 @@ int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         return 1;
     }
 
-    acb_theta_ctx_tau_init(ctx_tau, g);
+    arb_mat_init(cho, g, g);
     distances = _arb_vec_init(n * nb);
 
-    acb_theta_ctx_tau_set(ctx_tau, tau, lp);
-    nb_steps = acb_theta_ql_nb_steps(&split, ctx_tau, lp);
+    acb_siegel_cho(cho, tau, lp);
+    nb_steps = acb_theta_ql_nb_steps(&split, cho, lp);
     if (nb_steps > 0 || shifted_prec)
     {
         for (j = 0; j < nb; j++)
         {
-            acb_theta_dist_a0(distances + j * n, zs + j * n, tau, lp);
+            acb_theta_dist_a0(distances + j * n, zs + j * g, tau, lp);
         }
     }
 
@@ -415,7 +416,7 @@ int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         res = acb_theta_ql_exact_steps(th, zs, nb, tau, split, distances, nb_steps, all, prec);
     }
 
-    acb_theta_ctx_tau_clear(ctx_tau);
+    arb_mat_clear(cho);
     _arb_vec_clear(distances, n * nb);
     return res;
 }

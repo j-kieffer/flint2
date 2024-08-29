@@ -25,6 +25,8 @@ acb_theta_ql_split(const arb_mat_t cho)
 
     arb_init(cmp);
 
+    arb_mat_printd(cho, 5);
+
     for (k = g - 1; k >= 1; k--)
     {
         arb_mul_2exp_si(cmp, arb_mat_entry(cho, k - 1, k - 1),
@@ -40,9 +42,9 @@ acb_theta_ql_split(const arb_mat_t cho)
 }
 
 slong
-acb_theta_ql_nb_steps(slong * split, const acb_theta_ctx_tau_t ctx, slong prec)
+acb_theta_ql_nb_steps(slong * split, const arb_mat_t cho, slong prec)
 {
-    slong g = acb_theta_ctx_g(ctx);
+    slong g = arb_mat_nrows(cho);
     slong lp = ACB_THETA_LOW_PREC;
     arb_t x, t;
     slong s, res;
@@ -50,10 +52,10 @@ acb_theta_ql_nb_steps(slong * split, const acb_theta_ctx_tau_t ctx, slong prec)
     arb_init(x);
     arb_init(t);
 
-    s = acb_theta_ql_split(acb_theta_ctx_cho(ctx));
+    s = acb_theta_ql_split(cho);
     *split = s;
 
-    arb_sqr(x, arb_mat_entry(acb_theta_ctx_cho(ctx), s, s), lp);
+    arb_sqr(x, arb_mat_entry(cho, s, s), lp);
     arb_const_log2(t, lp);
     arb_div(x, x, t, lp);
     arb_div_si(x, x, prec, lp);

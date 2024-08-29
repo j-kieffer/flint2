@@ -73,8 +73,6 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
             acb_theta_dist_a0(d0, z0s + j * s, tau0, ACB_THETA_LOW_PREC);
             acb_theta_ctx_z_set(ctx_z0, z0s + j * s, ctx_tau0, prec);
             acb_theta_sum_a0_tilde(th0s + j * n0, ctx_z0, 1, ctx_tau0, d0, prec);
-            _acb_vec_scalar_mul_arb(th0s + j * n0, th0s + j * n0, n0,
-                acb_theta_ctx_u(ctx_z0), prec);
             _acb_vec_scalar_mul(th0s + j * n0, th0s + j * n0, n0, &cofactors[j], prec);
         }
 

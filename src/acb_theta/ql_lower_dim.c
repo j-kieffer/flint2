@@ -74,9 +74,9 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
     arb_srcptr distances, slong s, ulong a, slong prec)
 {
     slong g = acb_mat_nrows(tau);
-    arb_mat_t C, C1, Yinv;
+    arb_mat_t C, C1, Yinv, Y0inv;
     acb_mat_t tau0, star, tau1;
-    arb_ptr y, v, w;
+    arb_ptr y, v, w, new_y, new_w;
     acb_ptr u, x;
     acb_t f;
     slong * pts;
@@ -87,6 +87,7 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
 
     arb_mat_init(C, g, g);
     arb_mat_init(Yinv, g, g);
+    arb_mat_init(Y0inv, s, s);
     acb_mat_window_init(tau0, tau, 0, 0, s, s);
     acb_mat_window_init(star, tau, 0, s, s, g);
     acb_mat_window_init(tau1, tau, s, s, g, g);
@@ -95,9 +96,12 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
     w = _arb_vec_init(g);
     u = _acb_vec_init(g - s);
     x = _acb_vec_init(g - s);
+    new_y = _arb_vec_init(s);
+    new_w = _arb_vec_init(s);
     acb_init(f);
 
     acb_siegel_yinv(Yinv, tau, prec);
+    acb_siegel_yinv(Y0inv, tau0, prec);
     acb_siegel_cho(C, tau, prec);
     arb_mat_window_init(C1, C, s, s, g, g);
     _acb_vec_get_imag(y, z, g);
@@ -124,13 +128,19 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
         acb_mul_2exp_si(f, f, 1);
         acb_mat_vector_mul_col(x, tau1, u, prec);
         acb_dot(f, f, 0, x, 1, u, 1, g - s, prec);
+
         arb_dot(acb_imagref(f), acb_imagref(f), 0, y, 1, w, 1, g, prec);
+        _acb_vec_get_imag(new_y, *new_zs + k * s, s);
+        arb_mat_vector_mul_col(new_w, Y0inv, new_y, prec);
+        arb_dot(acb_imagref(f), acb_imagref(f), 1, new_y, 1, new_w, 1, s, prec);
+
         acb_exp_pi_i(*cofactors + k, f, prec);
     }
 
     arb_mat_clear(C);
     arb_mat_window_clear(C1);
     arb_mat_clear(Yinv);
+    arb_mat_clear(Y0inv);
     acb_mat_window_clear(tau0);
     acb_mat_window_clear(star);
     acb_mat_window_clear(tau1);
@@ -139,6 +149,8 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
     _arb_vec_clear(w, g);
     _acb_vec_clear(u, g - s);
     _acb_vec_clear(x, g - s);
+    _arb_vec_clear(new_y, s);
+    _arb_vec_clear(new_w, s);
     acb_clear(f);
     flint_free(pts);
     return res;

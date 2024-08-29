@@ -312,7 +312,7 @@ void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong
 
 /* Quasilinear algorithms */
 
-slong acb_theta_ql_nb_steps(slong* split, const acb_theta_ctx_tau_t ctx_tau, slong prec);
+slong acb_theta_ql_nb_steps(slong* split, const arb_mat_t cho, slong prec);
 int acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     acb_srcptr zs, slong nb, const acb_mat_t tau, arb_srcptr distances,
     slong nb_steps, int all, slong prec);
