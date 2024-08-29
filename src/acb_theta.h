@@ -310,7 +310,7 @@ void acb_theta_sum_jet_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong 
 void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     const acb_theta_ctx_tau_t ctx_tau, slong ord, slong prec);
 
-/* Quasilinear algorithms on exact input */
+/* Quasilinear algorithms */
 
 slong acb_theta_ql_nb_steps(slong* split, const acb_theta_ctx_tau_t ctx_tau, slong prec);
 int acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
@@ -324,6 +324,9 @@ void acb_theta_ql_steps(acb_ptr th, acb_ptr th_init, acb_srcptr rts,
     slong g, slong prec);
 int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     int all, int shifted_prec, slong prec);
+
+void acb_theta_jet_error_bounds(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
+    acb_srcptr dth, slong ord, slong prec);
 int acb_theta_ql_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     int sqr, slong prec);
 
@@ -381,8 +384,6 @@ void acb_theta_jet_naive_fixed_ab(acb_ptr dth, ulong ab, acb_srcptr z, const acb
 void acb_theta_jet_naive_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau,
     slong ord, slong prec);
 
-void acb_theta_jet_error_bounds(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
-    acb_srcptr dth, slong ord, slong prec);
 
 /* Quasi-linear algorithms on the reduced domain */
 

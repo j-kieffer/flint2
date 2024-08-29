@@ -43,6 +43,57 @@ acb_theta_ql_dupl(acb_ptr th2, acb_srcptr th0, acb_srcptr th, slong g, slong pre
     _acb_vec_clear(v, n);
 }
 
+static void
+acb_theta_ql_add_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
+    int sqr, slong prec)
+{
+    slong g = acb_mat_nrows(tau);
+    slong n = 1 << g;
+    slong lp = 8;
+    slong nb_der = acb_theta_jet_nb(2, g);
+    acb_ptr dth;
+    acb_theta_ctx_tau_t ctx_tau;
+    acb_theta_ctx_z_struct * vec;
+    arb_t err, x;
+    slong j, k;
+
+    dth = _acb_vec_init(n * n * nb * nb_der);
+    acb_theta_ctx_tau_init(ctx_tau, g);
+    vec = acb_theta_ctx_z_vec_init(nb, g);
+    arb_init(err);
+    arb_init(x);
+
+    acb_theta_ctx_tau_set(ctx_tau, tau, lp);
+    for (j = 0; j < nb; j++)
+    {
+        acb_theta_ctx_z_set(&vec[j], zs + j * g, ctx_tau, lp);
+    }
+
+    acb_theta_sum_jet_all(dth, vec, nb, ctx_tau, 2, lp);
+
+    for (j = 0; j < nb; j++)
+    {
+        for (k = 0; k < n * n; k++)
+        {
+            acb_theta_jet_error_bounds(err, zs + j * g, tau,
+                dth + j * (n * n * nb_der) + k * nb_der, 0, lp);
+            if (sqr)
+            {
+                acb_abs(x, &th[j * n * n + k], lp);
+                arb_mul_2exp_si(x, x, 1);
+                arb_add(x, x, err, lp);
+                arb_mul(err, x, err, lp);
+            }
+            acb_add_error_arb(&th[j * n * n + k], err);
+        }
+    }
+
+    _acb_vec_clear(dth, n * n * nb * nb_der);
+    acb_theta_ctx_tau_clear(ctx_tau);
+    acb_theta_ctx_z_vec_clear(vec, nb);
+    arb_clear(err);
+    arb_clear(x);
+}
 
 int
 acb_theta_ql_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
@@ -118,6 +169,11 @@ acb_theta_ql_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     }
 
     /* Add error bounds and clear */
+
+    if (res)
+    {
+        acb_theta_ql_add_err(th, zs, nb, tau, sqr, prec);
+    }
 
     return res;
 }

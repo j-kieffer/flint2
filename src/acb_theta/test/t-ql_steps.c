@@ -77,9 +77,9 @@ TEST_FUNCTION_START(acb_theta_ql_steps, state)
             acb_theta_dist_a0(distances + j * n, zs + j * g, tau, prec);
         }
 
-        /* For now, all = sqr = 0 */
+        /* For now, all = 0 */
         res = acb_theta_ql_setup(rts, t, &guard, easy_steps, zs, nb, tau,
-            distances, nb_steps, 0, 0, prec);
+            distances, nb_steps, 0, prec);
 
         /* flint_printf("\n\ng = %wd, prec = %wd, nb = %wd, nb_steps = %wd\n", g, prec, nb, nb_steps);
            acb_mat_printd(tau, 5);
