@@ -324,6 +324,8 @@ void acb_theta_ql_steps(acb_ptr th, acb_ptr th_init, acb_srcptr rts,
     slong g, slong prec);
 int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     int all, int shifted_prec, slong prec);
+int acb_theta_ql_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
+    int sqr, slong prec);
 
 /* Main functions */
 
