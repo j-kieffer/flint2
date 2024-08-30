@@ -86,9 +86,9 @@ TEST_FUNCTION_START(acb_theta_ql_steps, state)
         res = acb_theta_ql_setup(rts, rts_all, t, &guard, easy_steps, zs, nb, tau,
             distances, nb_steps, all, prec);
 
-         flint_printf("\n\ng = %wd, prec = %wd, nb = %wd, nb_steps = %wd, all = %wd\n", g, prec, nb, nb_steps, all);
+        /* flint_printf("\n\ng = %wd, prec = %wd, nb = %wd, nb_steps = %wd, all = %wd\n", g, prec, nb, nb_steps, all);
            acb_mat_printd(tau, 5);
-           _acb_vec_printd(zs, nb * g, 5); 
+           _acb_vec_printd(zs, nb * g, 5); */
         hp = prec + guard * nb_steps;
 
         if (res)
@@ -154,10 +154,10 @@ TEST_FUNCTION_START(acb_theta_ql_steps, state)
                 }
             }
 
-            flint_printf("After %wd steps:\n", nb_steps);
+            /* flint_printf("After %wd steps:\n", nb_steps);
                _acb_vec_printd(th, nb * nbth, 5);
                flint_printf("Result of sum:\n");
-               _acb_vec_printd(test, nb * nbth, 5);
+               _acb_vec_printd(test, nb * nbth, 5); */
 
             if (!_acb_vec_overlaps(th, test, nb * nbth))
             {

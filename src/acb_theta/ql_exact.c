@@ -240,7 +240,7 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
     res = acb_theta_ql_setup(rts, rts_all, t, &guard, easy_steps, zs, nb, tau, distances,
         nb_steps, all, prec);
 
-    /* flint_printf("(ql_exact_steps) result of setup: %wd, easy_steps[0] = %wd\n", res, easy_steps[0]); */
+    flint_printf("(ql_exact_steps) result of setup: %wd, easy_steps[0] = %wd\n", res, easy_steps[0]);
     hp = prec + nb_steps * guard;
     acb_mat_scalar_mul_2exp_si(new_tau, tau, nb_steps);
 
@@ -405,6 +405,7 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
         acb_theta_ql_steps(th, th_init, rts, rts_all, nb, nb_steps, distances,
             easy_steps, all, g, hp);
     }
+
     else /* setup did not succeed: fall back to summation */
     {
         flint_printf("WARNING: ql_setup failed, falling back to summation\n");

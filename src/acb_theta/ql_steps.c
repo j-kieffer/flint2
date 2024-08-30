@@ -94,8 +94,8 @@ acb_theta_ql_steps(acb_ptr th, acb_ptr th_init, acb_srcptr rts,
                 /* Compute all theta_ab with a harder step */
                 /* Store theta_ab(2t, tau) in aux */
                 acb_theta_ql_dupl_all_tight(aux, th_init,
-                    th_init + 3 * j * n + 2 * n, d0, d0, g, prec);
-                acb_theta_agm_sqrt(aux, aux, rts_all, n * n, prec);
+                    th_init + 3 * j * n + 2 * n, d0, d, g, prec);
+                acb_theta_agm_sqrt(aux, aux, rts_all + j * n * n, n * n, prec);
                 acb_theta_ql_dupl_all_tight(th + j * n * n, th_init + n,
                     th_init + 3 * j * n + n, d0, d, g, prec);
                 for (a = 0; a < n * n; a++)

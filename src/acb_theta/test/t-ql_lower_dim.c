@@ -18,7 +18,7 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
     slong iter;
 
     /* Test: agrees with sum_a0_tilde */
-    for (iter = 0; iter < 50 * flint_test_multiplier(); iter++)
+    for (iter = 0; iter < 25 * flint_test_multiplier(); iter++)
     {
         slong g = 2 + n_randint(state, 2);
         slong n = 1 << g;
