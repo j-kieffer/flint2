@@ -22,11 +22,12 @@ TEST_FUNCTION_START(acb_theta_ql_exact, state)
     {
         slong g = 1 + n_randint(state, 3);
         slong n = 1 << g;
-        slong prec = 100 + n_randint(state, 200);
+        slong prec = 500 + n_randint(state, 1000);
         slong bits = n_randint(state, 4);
         slong nb = 1 + n_randint(state, 4);
+        slong * pattern;
         int all = 0;
-        int shifted_prec = 1;
+        int shifted_prec = n_randint(state, 2);
         acb_mat_t tau;
         acb_ptr zs, th, test;
         acb_theta_ctx_tau_t ctx_tau;
@@ -42,9 +43,14 @@ TEST_FUNCTION_START(acb_theta_ql_exact, state)
         acb_theta_ctx_tau_init(ctx_tau, g);
         vec = acb_theta_ctx_z_vec_init(nb, g);
         distances = _arb_vec_init(nb * n);
+        pattern = flint_malloc(g * sizeof(slong));
 
         acb_siegel_randtest_reduced(tau, state, prec, bits);
         acb_siegel_randtest_vec(zs + g, state, (nb - 1) * g, prec);
+        for (j = 0; j < g; j++)
+        {
+            pattern[j] = n_randint(state, 4);
+        }
 
         /* Strip tau, z of errors */
         for (j = 0; j < g; j++)
@@ -64,10 +70,10 @@ TEST_FUNCTION_START(acb_theta_ql_exact, state)
         for (j = 0; j < nb; j++)
         {
             acb_theta_ctx_z_set(&vec[j], zs + j * g, ctx_tau, prec);
-            if (shifted_prec)
-            {
-                acb_theta_dist_a0(distances + j * n, zs + j * g, tau, prec);
-            }
+            //if (shifted_prec)
+            //{
+            acb_theta_dist_a0(distances + j * n, zs + j * g, tau, prec);
+            //}
         }
         acb_theta_sum_a0_tilde(test, vec, nb, ctx_tau, distances, prec);
 
@@ -77,16 +83,24 @@ TEST_FUNCTION_START(acb_theta_ql_exact, state)
         _acb_vec_printd(zs, nb * g, 5);
         flint_printf("sum_a0_tilde:\n");
         _acb_vec_printd(test, n * nb, 5);
+        flint_printf("pattern:\n");
+        for (j = 0; j < g; j++)
+        {
+            flint_printf("%wd -> %wd\n", j, pattern[j]);
+        }
 
         /* For now, all = 0 */
-        res = acb_theta_ql_exact(th, zs, nb, tau, all, shifted_prec, prec);
+        res = acb_theta_ql_exact(th, zs, nb, tau, pattern, all, shifted_prec, prec);
 
-        flint_printf("result of ql_exact: %wd, got theta:\n", res);
+        flint_printf("\nresult of ql_exact: %wd, got theta:\n", res);
         _acb_vec_printd(th, n * nb, 5);
 
         if (res && !_acb_vec_overlaps(th, test, nb * n))
         {
             flint_printf("FAIL\n");
+            flint_printf("difference:\n");
+            _acb_vec_sub(th, th, test, nb * n, prec);
+            _acb_vec_printd(th, nb * n, 5);
             flint_abort();
         }
 
@@ -97,6 +111,7 @@ TEST_FUNCTION_START(acb_theta_ql_exact, state)
         acb_theta_ctx_tau_clear(ctx_tau);
         acb_theta_ctx_z_vec_clear(vec, nb);
         _arb_vec_clear(distances, nb * n);
+        flint_free(pattern);
     }
 
     TEST_FUNCTION_END(state);

@@ -15,8 +15,9 @@
 #include "acb_theta.h"
 
 static int
-acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
-    slong s, arb_srcptr distances, int all, int shifted_prec, slong prec)
+acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, arb_srcptr distances, slong s,
+    const slong * pattern, int all, int shifted_prec, slong prec)
 {
     slong g = acb_mat_nrows(tau);
     slong nba = 1 << (g - s);
@@ -89,7 +90,8 @@ acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_
         }
 
         /* Call acb_theta_ql_exact in dimension s */
-        res = acb_theta_ql_exact(th0, z0s, nb0, tau0, 0, shifted_prec, prec);
+        flint_printf("(ql_exact_lower_dim) calling ql_exact on %wd vectors in dimension %wd\n", nb0, s);
+        res = acb_theta_ql_exact(th0, z0s, nb0, tau0, pattern, 0, shifted_prec, prec);
     }
 
     if (res)
@@ -176,7 +178,7 @@ acb_theta_ql_exact_sum(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     }
     else
     {
-        /* distances are all set to zero */
+        /* distances are all set to zero; use one ellipsoid */
         acb_theta_sum_a0_tilde(th, vec, nb, ctx_tau, distances, prec);
     }
 
@@ -185,17 +187,21 @@ acb_theta_ql_exact_sum(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 }
 
 static int
-acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
-    slong split, arb_srcptr distances, slong nb_steps, int all, slong prec)
+acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
+    const acb_mat_t tau, arb_srcptr distances, slong split,
+    const slong * pattern, int all, slong prec)
 {
     slong g = acb_mat_nrows(tau);
     slong n = 1 << g;
+    slong nb_steps = pattern[g - 1];
     acb_ptr rts, th_init, t;
     slong * easy_steps;
     acb_mat_t new_tau;
     slong guard, hp;
     slong j, k;
     int res;
+
+    FLINT_ASSERT(nb_steps > 0);
 
     rts = _acb_vec_init(3 * n * nb * nb_steps);
     t = _acb_vec_init(g);
@@ -205,6 +211,12 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
 
     res = acb_theta_ql_setup(rts, t, &guard, easy_steps, zs, nb, tau, distances,
         nb_steps, all, prec);
+
+    flint_printf("(ql_exact_steps) result of setup: %wd, easy_steps:\n", res);
+    for (j = 0; j < nb; j++)
+    {
+        flint_printf("%wd -> %wd\n", j, easy_steps[j]);
+    }
     hp = prec + nb_steps * guard;
     acb_mat_scalar_mul_2exp_si(new_tau, tau, nb_steps);
 
@@ -271,8 +283,8 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
         _arb_vec_scalar_mul_2exp_si(new_distances, new_distances, new_nb * n, nb_steps);
 
         /* Recursive call */
-        res = acb_theta_ql_exact_lower_dim(new_th, new_z, new_nb, new_tau, split,
-            new_distances, 0, 1, hp);
+        res = acb_theta_ql_exact_lower_dim(new_th, new_z, new_nb, new_tau,
+            new_distances, split, pattern, 0, 1, hp);
 
         /* Set up th_init from computed data */
         new_nb = 0;
@@ -304,7 +316,6 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
         acb_theta_ctx_tau_t ctx_tau;
         acb_theta_ctx_z_struct * aux;
         acb_theta_ctx_z_t ctxt;
-        acb_mat_t new_tau;
         acb_ptr new_z;
         arb_ptr d;
 
@@ -372,27 +383,28 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
 }
 
 int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
-    int all, int shifted_prec, slong prec)
+    const slong * pattern, int all, int shifted_prec, slong prec)
 {
     slong g = acb_mat_nrows(tau);
     slong n = 1 << g;
-    arb_mat_t cho;
     arb_ptr distances;
     slong nb_steps, split;
     slong lp = ACB_THETA_LOW_PREC;
     slong j;
     int res = 1;
 
-    if (nb <= 0)
-    {
-        return 1;
-    }
+    FLINT_ASSERT(nb >= 1);
+    FLINT_ASSERT(_acb_vec_is_zero(zs, g));
 
-    arb_mat_init(cho, g, g);
     distances = _arb_vec_init(n * nb);
 
-    acb_siegel_cho(cho, tau, lp);
-    nb_steps = acb_theta_ql_nb_steps(&split, cho, lp);
+    nb_steps = pattern[g - 1];
+    split = g - 2;
+    while ((split > 0) && (pattern[split] <= nb_steps))
+    {
+        split --;
+    }
+
     if (nb_steps > 0 || shifted_prec)
     {
         for (j = 0; j < nb; j++)
@@ -409,14 +421,14 @@ int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     }
     else if (nb_steps == 0 && split > 0)
     {
-        res = acb_theta_ql_exact_lower_dim(th, zs, nb, tau, split, distances, all, shifted_prec, prec);
+        res = acb_theta_ql_exact_lower_dim(th, zs, nb, tau, distances, split,
+            pattern, all, shifted_prec, prec);
     }
     else
     {
-        res = acb_theta_ql_exact_steps(th, zs, nb, tau, split, distances, nb_steps, all, prec);
+        res = acb_theta_ql_exact_steps(th, zs, nb, tau, distances, split, pattern, all, prec);
     }
 
-    arb_mat_clear(cho);
     _arb_vec_clear(distances, n * nb);
     return res;
 }
