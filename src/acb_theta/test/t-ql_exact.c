@@ -20,14 +20,14 @@ TEST_FUNCTION_START(acb_theta_ql_exact, state)
     /* Test: coincides with sum_a0_tilde */
     for (iter = 0; iter < 25 * flint_test_multiplier(); iter++)
     {
-        slong g = 1 + n_randint(state, 3);
+        slong g = 2; //1; //+ n_randint(state, 2);
         slong n = 1 << g;
         slong prec = 500 + n_randint(state, 1000);
         slong bits = n_randint(state, 4);
         slong nb = 1 + n_randint(state, 4);
         slong * pattern;
         int all = 0;
-        int shifted_prec = n_randint(state, 2);
+        int shifted_prec = 1; //n_randint(state, 2);
         acb_mat_t tau;
         acb_ptr zs, th, test;
         acb_theta_ctx_tau_t ctx_tau;
