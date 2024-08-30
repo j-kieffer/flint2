@@ -39,13 +39,27 @@ acb_theta_ql_exact_sum(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     {
         for (j = 0; j < nb; j++)
         {
-            acb_theta_sum_a0_tilde(th + j * n, &vec[j], 1, ctx_tau, distances + j * n, prec);
+            if (all)
+            {
+                acb_theta_sum_all_tilde(th + j * n * n, &vec[j], 1, ctx_tau, distances + j * n, prec);
+            }
+            else
+            {
+                acb_theta_sum_a0_tilde(th + j * n, &vec[j], 1, ctx_tau, distances + j * n, prec);
+            }
         }
     }
     else
     {
         /* distances are all set to zero; use one ellipsoid */
-        acb_theta_sum_a0_tilde(th, vec, nb, ctx_tau, distances, prec);
+        if (all)
+        {
+            acb_theta_sum_all_tilde(th, vec, nb, ctx_tau, distances, prec);
+        }
+        else
+        {
+            acb_theta_sum_a0_tilde(th, vec, nb, ctx_tau, distances, prec);
+        }
     }
 
     acb_theta_ctx_tau_clear(ctx_tau);
@@ -61,28 +75,32 @@ acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb,
     slong nba = 1 << (g - s);
     slong n0 = 1 << s;
     slong n = 1 << g;
+    slong nbth = (all ? n * n : n);
     acb_ptr * new_zs;
     acb_ptr * cofactors;
     slong * nb_pts;
+    slong ** pts;
     slong * fullprec;
     arf_struct * err;
     acb_ptr th0, z0s;
-    slong nb0;
+    slong nb0, nbth0;
     acb_mat_t tau0;
-    ulong a, a0;
-    slong j, k, index;
+    acb_t x;
+    slong j, a, index;
     int res = 1;
 
     new_zs = flint_malloc(nb * nba * sizeof(acb_ptr));
     cofactors = flint_malloc(nb * nba * sizeof(acb_ptr));
     nb_pts = flint_malloc(nb * nba * sizeof(slong));
     err = flint_malloc(nb * nba * sizeof(arf_struct));
+    pts = flint_malloc(nb * nba * sizeof(slong *));
     for (j = 0; j < nb * nba; j++)
     {
         arf_init(&err[j]);
     }
     fullprec = flint_malloc(nb * nba * sizeof(arf_struct));
     acb_mat_window_init(tau0, tau, 0, 0, s, s);
+    acb_init(x);
 
     nb0 = 1; /* always start with zero vector */
     for (j = 0; j < nb; j++)
@@ -92,7 +110,7 @@ acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb,
             if (res)
             {
                 res = acb_theta_ql_lower_dim(&new_zs[j * nba + a], &cofactors[j * nba + a],
-                    &nb_pts[j * nba + a], &err[j * nba + a], &fullprec[j * nba + a],
+                    &pts[j * nba + a], &nb_pts[j * nba + a], &err[j * nba + a], &fullprec[j * nba + a],
                     zs + j * g, tau, distances + j * n, s, a, prec);
                 nb0 += nb_pts[j * nba + a];
             }
@@ -103,6 +121,7 @@ acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb,
                 cofactors[j * nba + a] = _acb_vec_init(0);
                 nb_pts[j * nba + a] = 0;
                 fullprec[j * nba + a] = 0;
+                pts[j * nba + a] = flint_malloc(0);
             }
         }
     }
@@ -112,7 +131,8 @@ acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb,
         nb0 = 0;
     }
     z0s = _acb_vec_init(nb0 * s);
-    th0 = _acb_vec_init(nb0 * n0);
+    nbth0 = (all ? n0 * n0 : n0);
+    th0 = _acb_vec_init(nb0 * nbth0);
 
     if (res)
     {
@@ -128,38 +148,39 @@ acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb,
         }
 
         /* Call acb_theta_ql_exact in dimension s */
-        flint_printf("(ql_exact_lower_dim) calling ql_exact on %wd vectors in dimension %wd\n", nb0, s);
-        res = acb_theta_ql_exact(th0, z0s, nb0, tau0, pattern, 0, shifted_prec, prec);
+        /* flint_printf("(ql_exact_lower_dim) calling ql_exact on %wd vectors in dimension %wd\n", nb0, s); */
+        res = acb_theta_ql_exact(th0, z0s, nb0, tau0, pattern, all, shifted_prec, prec);
     }
 
     if (res)
     {
-        /* Rescale using cofactors and sum into th */
+        /* Recombine into th */
         index = 1; /* do not use result from zero vector */
-        _acb_vec_zero(th, nb * n);
+        _acb_vec_zero(th, nb * nbth);
         for (j = 0; j < nb; j++)
         {
             for (a = 0; a < nba; a++)
             {
-                for (k = 0; k < nb_pts[j * nba + a]; k++)
-                {
-                    _acb_vec_scalar_mul(th0 + index * n0, th0 + index * n0,
-                        n0, &cofactors[j * nba + a][k], prec);
-                    for (a0 = 0; a0 < n0; a0++)
-                    {
-                        acb_add(&th[j * n + (a0 << (g - s)) + a],
-                            &th[j * n + (a0 << (g - s)) + a],
-                            &th0[index * n0 + a0], fullprec[j * nba + a]);
-                    }
-                    index += 1;
-                }
-                for (a0 = 0; a0 < n0; a0++)
-                {
-                    acb_add_error_arf(&th[j * n + (a0 << (g - s)) + a],
-                        &err[j * nba + a]);
-                }
+                acb_theta_ql_recombine(th + j * nbth, th0 + index * nbth0, cofactors[j * nba + a],
+                    pts[j * nba + a], nb_pts[j * nba + a], &err[j * nba + a], fullprec[j * nba + a],
+                    s, a, all, g, prec);
+                index += nb_pts[j * nba + a];
             }
         }
+    }
+    else
+    {
+        flint_printf("WARNING: ql_lower_dim failed, falling back to summation\n");
+        flint_printf("g = %wd, nb = %wd, tau:\n", g, nb);
+        acb_mat_printd(tau, 5);
+        flint_printf("zs:\n");
+        for (j = 0; j < nb; j++)
+        {
+            _acb_vec_printd(zs + j * g, g, 5);
+        }
+
+        acb_theta_ql_exact_sum(th, zs, nb, tau, distances, all, shifted_prec, prec);
+        res = 1;
     }
 
     /* Clear */
@@ -177,12 +198,15 @@ acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb,
     for (j = 0; j < nb * nba; j++)
     {
         arf_clear(&err[j]);
+        flint_free(pts[j]);
     }
+    flint_free(pts);
     flint_free(err);
     flint_free(fullprec);
     acb_mat_window_clear(tau0);
     _acb_vec_clear(z0s, nb0 * s);
-    _acb_vec_clear(th0, nb0 * n0);
+    _acb_vec_clear(th0, nb0 * nbth0);
+    acb_clear(x);
     return res;
 }
 
@@ -194,7 +218,7 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
     slong g = acb_mat_nrows(tau);
     slong n = 1 << g;
     slong nb_steps = pattern[g - 1];
-    acb_ptr rts, th_init, t;
+    acb_ptr rts, th_init, t, rts_all;
     slong * easy_steps;
     acb_mat_t new_tau;
     slong guard, hp;
@@ -208,11 +232,15 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
     th_init = _acb_vec_init(3 * n * nb);
     easy_steps = flint_malloc(nb * sizeof(slong));
     acb_mat_init(new_tau, g, g);
+    if (all)
+    {
+        rts_all = _acb_vec_init(nb * n * n);
+    }
 
-    res = acb_theta_ql_setup(rts, t, &guard, easy_steps, zs, nb, tau, distances,
+    res = acb_theta_ql_setup(rts, rts_all, t, &guard, easy_steps, zs, nb, tau, distances,
         nb_steps, all, prec);
 
-    flint_printf("(ql_exact_steps) result of setup: %wd, easy_steps[0] = %wd\n", res, easy_steps[0]);
+    /* flint_printf("(ql_exact_steps) result of setup: %wd, easy_steps[0] = %wd\n", res, easy_steps[0]); */
     hp = prec + nb_steps * guard;
     acb_mat_scalar_mul_2exp_si(new_tau, tau, nb_steps);
 
@@ -374,7 +402,8 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
 
     if (res) /* th_init is set; now perform steps */
     {
-        acb_theta_ql_steps(th, th_init, rts, nb, nb_steps, distances, easy_steps, g, hp);
+        acb_theta_ql_steps(th, th_init, rts, rts_all, nb, nb_steps, distances,
+            easy_steps, all, g, hp);
     }
     else /* setup did not succeed: fall back to summation */
     {
@@ -396,6 +425,10 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
     _acb_vec_clear(th_init, 3 * n * nb);
     flint_free(easy_steps);
     acb_mat_clear(new_tau);
+    if (all)
+    {
+        _acb_vec_clear(rts_all, nb * n * n);
+    }
     return res;
 }
 
@@ -429,8 +462,6 @@ int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
             acb_theta_dist_a0(distances + j * n, zs + j * g, tau, lp);
         }
     }
-
-    flint_printf("(ql_exact) using nb_steps = %wd, split = %wd\n", nb_steps, split);
 
     if (nb_steps == 0 && split == 0)
     {

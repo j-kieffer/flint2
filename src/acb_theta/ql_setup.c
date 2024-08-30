@@ -34,7 +34,7 @@ _acb_vec_contains_zero(acb_srcptr vec, slong nb)
 /* Assume that zs always starts with zero. */
 
 int
-acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
+acb_theta_ql_setup(acb_ptr rts, acb_ptr rts_all, acb_ptr t, slong * guard, slong * easy_steps,
     acb_srcptr zs, slong nb, const acb_mat_t tau, arb_srcptr distances,
     slong nb_steps, int all, slong prec)
 {
@@ -52,7 +52,6 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
     FLINT_ASSERT(nb >= 1);
     FLINT_ASSERT(_acb_vec_is_zero(zs, g));
 
-    /* Right now, all is ignored */
     if (nb_steps == 0)
     {
         *guard = 0;
@@ -95,9 +94,18 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
                 }
 
                 _arb_vec_scalar_mul_2exp_si(d, distances + j * n, n, k);
-                acb_theta_sum_a0_tilde(rts + j * (3 * n * nb_steps) + k * (3 * n),
-                    &vec[j], 1, ctx_tau_dupl, d, lowprec);
-                easy = !_acb_vec_contains_zero(rts + j * (3 * n * nb_steps) + k * (3 * n), n);
+                if (k == 0 && all)
+                {
+                    acb_theta_sum_all_tilde(rts_all + j * n * n, &vec[j], 1,
+                        ctx_tau_dupl, d, lowprec);
+                    easy = !_acb_vec_contains_zero(rts_all + j * n * n, n * n);
+                }
+                else
+                {
+                    acb_theta_sum_a0_tilde(rts + j * (3 * n * nb_steps) + k * (3 * n),
+                        &vec[j], 1, ctx_tau_dupl, d, lowprec);
+                    easy = !_acb_vec_contains_zero(rts + j * (3 * n * nb_steps) + k * (3 * n), n);
+                }
                 if (easy)
                 {
                     easy_steps[j]++;
@@ -109,8 +117,6 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
                 else
                 {
                     res = 0; /* trigger search for t */
-                    /* cleanup: these roots are useless */
-                    _acb_vec_zero(rts + j * (3 * n * nb_steps) + k * (3 * n), n);
                 }
             }
             if (k < nb_steps - 1)
@@ -152,10 +158,20 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr t, slong * guard, slong * easy_steps,
                     acb_theta_ctx_z_add_real(&aux[0], &vec[j], ctxt, lowprec);
                     acb_theta_ctx_z_add_real(&aux[1], &aux[0], ctxt, lowprec);
                     _arb_vec_scalar_mul_2exp_si(d, distances + j * n, n, l);
-                    acb_theta_sum_a0_tilde(rts + j * (3 * n * nb_steps) + k * (3 * n) + n,
-                        aux, 2, ctx_tau_dupl, d, lowprec);
-                    res = res && !_acb_vec_contains_zero(rts + j * (3 * n * nb_steps)
-                        + k * (3 * n) + n, 2 * n);
+                    if (k == 0 && all)
+                    {
+                        /* We just need roots for z + 2t */
+                        acb_theta_sum_all_tilde(rts_all + j * n * n, aux + 1,
+                            1, ctx_tau_dupl, d, lowprec);
+                        res = res && !_acb_vec_contains_zero(rts_all + j * n * n, n * n);
+                    }
+                    else
+                    {
+                        acb_theta_sum_a0_tilde(rts + j * (3 * n * nb_steps) + k * (3 * n) + n,
+                            aux, 2, ctx_tau_dupl, d, lowprec);
+                        res = res && !_acb_vec_contains_zero(rts + j * (3 * n * nb_steps)
+                            + k * (3 * n) + n, 2 * n);
+                    }
                     if (k < nb_steps - 1)
                     {
                         acb_theta_ctx_z_dupl(&vec[j], lowprec);

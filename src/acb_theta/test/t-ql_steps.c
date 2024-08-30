@@ -25,9 +25,11 @@ TEST_FUNCTION_START(acb_theta_ql_steps, state)
         slong prec = 100 + n_randint(state, 200);
         slong bits = n_randint(state, 4);
         slong nb = 1 + n_randint(state, 4);
-        slong nb_steps = n_randint(state, 6);
+        slong nb_steps = 1 + n_randint(state, 4);
+        int all = n_randint(state, 2);
+        slong nbth = (all ? n * n : n);
         acb_mat_t tau;
-        acb_ptr zs, t, rts;
+        acb_ptr zs, t, rts, rts_all;
         acb_ptr th, th_init, test;
         arb_ptr distances;
         arb_t y;
@@ -40,9 +42,13 @@ TEST_FUNCTION_START(acb_theta_ql_steps, state)
         zs = _acb_vec_init(nb * g);
         t = _acb_vec_init(g);
         rts = _acb_vec_init(nb * 3 * n * nb_steps);
-        th = _acb_vec_init(n * nb);
+        if (all)
+        {
+            rts_all = _acb_vec_init(n * n * nb);
+        }
+        th = _acb_vec_init(nb * nbth);
         th_init = _acb_vec_init(3 * n * nb);
-        test = _acb_vec_init(n * nb);
+        test = _acb_vec_init(nb * nbth);
         distances = _arb_vec_init(nb * n);
         arb_init(y);
         easy_steps = flint_malloc(nb * sizeof(slong));
@@ -77,13 +83,12 @@ TEST_FUNCTION_START(acb_theta_ql_steps, state)
             acb_theta_dist_a0(distances + j * n, zs + j * g, tau, prec);
         }
 
-        /* For now, all = 0 */
-        res = acb_theta_ql_setup(rts, t, &guard, easy_steps, zs, nb, tau,
-            distances, nb_steps, 0, prec);
+        res = acb_theta_ql_setup(rts, rts_all, t, &guard, easy_steps, zs, nb, tau,
+            distances, nb_steps, all, prec);
 
-        /* flint_printf("\n\ng = %wd, prec = %wd, nb = %wd, nb_steps = %wd\n", g, prec, nb, nb_steps);
+         flint_printf("\n\ng = %wd, prec = %wd, nb = %wd, nb_steps = %wd, all = %wd\n", g, prec, nb, nb_steps, all);
            acb_mat_printd(tau, 5);
-           _acb_vec_printd(zs, nb * g, 5); */
+           _acb_vec_printd(zs, nb * g, 5); 
         hp = prec + guard * nb_steps;
 
         if (res)
@@ -132,24 +137,34 @@ TEST_FUNCTION_START(acb_theta_ql_steps, state)
                 }
             }
 
-            acb_theta_ql_steps(th, th_init, rts, nb, nb_steps, distances,
-                easy_steps, g, hp);
+            acb_theta_ql_steps(th, th_init, rts, rts_all, nb, nb_steps, distances,
+                easy_steps, all, g, hp);
 
             acb_theta_ctx_tau_set(ctx, tau, prec);
             for (j = 0; j < nb; j++)
             {
                 acb_theta_ctx_z_set(aux, zs + j * g, ctx, prec);
-                acb_theta_sum_a0_tilde(test + j * n, aux, 1, ctx, distances + j * n, prec);
+                if (all)
+                {
+                    acb_theta_sum_all_tilde(test + j * nbth, aux, 1, ctx, distances + j * n, prec);
+                }
+                else
+                {
+                    acb_theta_sum_a0_tilde(test + j * nbth, aux, 1, ctx, distances + j * n, prec);
+                }
             }
 
-            /* flint_printf("After %wd steps:\n", nb_steps);
-               _acb_vec_printd(th, nb * n, 5);
-               flint_printf("Result of sum_a0_tilde:\n");
-               _acb_vec_printd(test, nb * n, 5); */
+            flint_printf("After %wd steps:\n", nb_steps);
+               _acb_vec_printd(th, nb * nbth, 5);
+               flint_printf("Result of sum:\n");
+               _acb_vec_printd(test, nb * nbth, 5);
 
-            if (!_acb_vec_overlaps(th, test, nb * n))
+            if (!_acb_vec_overlaps(th, test, nb * nbth))
             {
                 flint_printf("FAIL\n");
+                flint_printf("difference:\n");
+                _acb_vec_sub(th, th, test, nb * nbth, prec);
+                _acb_vec_printd(th, nb * nbth, 5);
                 flint_abort();
             }
 
@@ -169,9 +184,13 @@ TEST_FUNCTION_START(acb_theta_ql_steps, state)
         _acb_vec_clear(zs, nb * g);
         _acb_vec_clear(t, g);
         _acb_vec_clear(rts, nb * 3 * n * nb_steps);
-        _acb_vec_clear(th, n * nb);
+        if (all)
+        {
+            _acb_vec_clear(rts_all, n * n * nb);
+        }
+        _acb_vec_clear(th, nbth * nb);
         _acb_vec_clear(th_init, 3 * n * nb);
-        _acb_vec_clear(test, n * nb);
+        _acb_vec_clear(test, nbth * nb);
         _arb_vec_clear(distances, nb * n);
         arb_clear(y);
         flint_free(easy_steps);

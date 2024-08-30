@@ -69,8 +69,8 @@ acb_theta_ql_eld_points(slong ** pts, slong * nb_pts, arb_ptr v,
 }
 
 int
-acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
-    arf_t err, slong * fullprec, acb_srcptr z, const acb_mat_t tau,
+acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong ** pts,
+    slong * nb, arf_t err, slong * fullprec, acb_srcptr z, const acb_mat_t tau,
     arb_srcptr distances, slong s, ulong a, slong prec)
 {
     slong g = acb_mat_nrows(tau);
@@ -79,7 +79,6 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
     arb_ptr y, v, w, new_y, new_w;
     acb_ptr u, x;
     acb_t f;
-    slong * pts;
     slong j, k;
     int res;
 
@@ -107,7 +106,7 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
     _acb_vec_get_imag(y, z, g);
     arb_mat_vector_mul_col(w, Yinv, y, prec);
 
-    res = acb_theta_ql_eld_points(&pts, nb, v, fullprec,
+    res = acb_theta_ql_eld_points(pts, nb, v, fullprec,
         err, distances, a, w, C, C1, prec);
     *new_zs = _acb_vec_init((*nb) * s);
     *cofactors = _acb_vec_init(*nb);
@@ -118,7 +117,7 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
         acb_theta_char_get_acb(u, a, g - s);
         for (j = 0; j < g - s; j++)
         {
-            acb_add_si(&u[j], &u[j], pts[k * (g - s) + j], prec);
+            acb_add_si(&u[j], &u[j], (*pts)[k * (g - s) + j], prec);
         }
 
         /* Get new_z and cofactor at 0 */
@@ -152,6 +151,5 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong * nb,
     _arb_vec_clear(new_y, s);
     _arb_vec_clear(new_w, s);
     acb_clear(f);
-    flint_free(pts);
     return res;
 }

@@ -26,8 +26,9 @@ TEST_FUNCTION_START(acb_theta_ql_setup, state)
         slong bits = n_randint(state, 4);
         slong nb = 1 + n_randint(state, 4);
         slong nb_steps = n_randint(state, 6);
+        int all = n_randint(state, 2);
         acb_mat_t tau;
-        acb_ptr zs, t, rts;
+        acb_ptr zs, t, rts, rts_all;
         arb_ptr distances;
         arb_t y;
         slong * easy_steps;
@@ -39,6 +40,7 @@ TEST_FUNCTION_START(acb_theta_ql_setup, state)
         zs = _acb_vec_init(nb * g);
         t = _acb_vec_init(g);
         rts = _acb_vec_init(nb * 3 * n * nb_steps);
+        rts_all = _acb_vec_init(nb * n * n);
         distances = _arb_vec_init(nb * n);
         arb_init(y);
         easy_steps = flint_malloc(nb * sizeof(slong));
@@ -73,9 +75,8 @@ TEST_FUNCTION_START(acb_theta_ql_setup, state)
             acb_theta_dist_a0(distances + j * n, zs + j * g, tau, prec);
         }
 
-        /* For now, all = 0 */
-        res = acb_theta_ql_setup(rts, t, &guard, easy_steps, zs, nb, tau,
-            distances, nb_steps, 0, prec);
+        res = acb_theta_ql_setup(rts, rts_all, t, &guard, easy_steps, zs, nb, tau,
+            distances, nb_steps, all, prec);
 
         if (res)
         {
@@ -94,28 +95,45 @@ TEST_FUNCTION_START(acb_theta_ql_setup, state)
             {
                 for (k = 0; k < nb_steps; k++)
                 {
-                    for (a = 0; a < n; a++)
+                    if (all && (k == 0))
                     {
-                        if ((k < easy_steps[j])
-                            && acb_contains_zero(&rts[j * (3 * n * nb_steps) + k * (3 * n) + a]))
+                        for (a = 0; a < n * n; a++)
                         {
-                            flint_printf("FAIL (root 1)\n");
-                            flint_abort();
+                            if (acb_contains_zero(&rts_all[j * n * n + a]))
+                            {
+                                flint_printf("FAIL (rts_all)\n");
+                                flint_printf("j = %wd, k = %wd, a = %wd, all = %wd\n", j, k, a, all);
+                                acb_printd(&rts_all[j * n * n + a], 5);
+                                flint_printf("\n");
+                                flint_abort();
+                            }
                         }
-                        if (k >= easy_steps[j]
-                            && acb_contains_zero(&rts[j * (3 * n * nb_steps) + k * (3 * n) + n + a]))
+                    }
+                    else
+                    {
+                        for (a = 0; a < n; a++)
                         {
-                            flint_printf("FAIL (root 2)\n");
-                            flint_printf("j = %wd, k = %wd, a = %wd\n", j, k, a);
-                            acb_printd(&rts[j * (3 * n * nb_steps) + k * (3 * n) + n + a], 5);
-                            flint_printf("\n");
-                            flint_abort();
-                        }
-                        if (k >= easy_steps[j]
-                            && acb_contains_zero(&rts[j * (3 * n * nb_steps) + k * (3 * n) + 2 * n + a]))
-                        {
-                            flint_printf("FAIL (root 3)\n");
-                            flint_abort();
+                            if ((k < easy_steps[j])
+                                && acb_contains_zero(&rts[j * (3 * n * nb_steps) + k * (3 * n) + a]))
+                            {
+                                flint_printf("FAIL (root 1)\n");
+                                flint_abort();
+                            }
+                            if (k >= easy_steps[j]
+                                && acb_contains_zero(&rts[j * (3 * n * nb_steps) + k * (3 * n) + n + a]))
+                            {
+                                flint_printf("FAIL (root 2)\n");
+                                flint_printf("j = %wd, k = %wd, a = %wd\n", j, k, a);
+                                acb_printd(&rts[j * (3 * n * nb_steps) + k * (3 * n) + n + a], 5);
+                                flint_printf("\n");
+                                flint_abort();
+                            }
+                            if (k >= easy_steps[j]
+                                && acb_contains_zero(&rts[j * (3 * n * nb_steps) + k * (3 * n) + 2 * n + a]))
+                            {
+                                flint_printf("FAIL (root 3)\n");
+                                flint_abort();
+                            }
                         }
                     }
                 }
@@ -126,6 +144,7 @@ TEST_FUNCTION_START(acb_theta_ql_setup, state)
         _acb_vec_clear(zs, nb * g);
         _acb_vec_clear(t, g);
         _acb_vec_clear(rts, nb * 3 * n * nb_steps);
+        _acb_vec_clear(rts_all, nb * n * n);
         _arb_vec_clear(distances, nb * n);
         arb_clear(y);
         flint_free(easy_steps);

@@ -24,6 +24,7 @@ TEST_FUNCTION_START(acb_theta_sum_a0_tilde, state)
         slong g = 1 + n_randint(state, 3);
         slong n = 1 << g;
         slong prec = 100 + n_randint(state, 100);
+        slong hp = prec + 100;
         slong mag_bits = n_randint(state, 4);
         acb_mat_t tau;
         acb_ptr z;
@@ -41,8 +42,8 @@ TEST_FUNCTION_START(acb_theta_sum_a0_tilde, state)
         th1 = _acb_vec_init(n);
         th2 = _acb_vec_init(n);
 
-        acb_siegel_randtest_reduced(tau, state, prec, mag_bits);
-        acb_siegel_randtest_vec(z, state, g, prec);
+        acb_siegel_randtest_reduced(tau, state, hp, mag_bits);
+        acb_siegel_randtest_vec(z, state, g, hp);
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
         acb_theta_ctx_z_set(ctx, z, ctx_tau, prec);
         acb_theta_dist_a0(d, z, tau, prec);
@@ -50,7 +51,7 @@ TEST_FUNCTION_START(acb_theta_sum_a0_tilde, state)
         acb_theta_sum_a0_tilde(th1, ctx, 1, ctx_tau, d, prec);
         for (a = 0; a < n; a++)
         {
-            acb_theta_naive_fixed_ab(&th2[a], a << g, z, 1, tau, prec);
+            acb_theta_naive_fixed_ab(&th2[a], a << g, z, 1, tau, hp);
         }
         _acb_vec_scalar_mul_arb(th2, th2, n, acb_theta_ctx_uinv(ctx), prec);
 

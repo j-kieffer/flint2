@@ -15,7 +15,7 @@
 #include "acb_theta.h"
 
 static void
-acb_theta_ql_dupl(acb_ptr th2, acb_srcptr th0, acb_srcptr th, slong g, slong prec)
+acb_theta_ql_dupl_all(acb_ptr th2, acb_srcptr th0, acb_srcptr th, slong g, slong prec)
 {
     slong n = 1 << g;
     acb_ptr v;
@@ -137,7 +137,7 @@ acb_theta_ql_all_sum(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         acb_theta_sum_a0_tilde(new_th, vec, nb, ctx_tau, distances, prec);
         for (j = 0; j < nb; j++)
         {
-            acb_theta_ql_dupl(th + j * n * n, new_th,
+            acb_theta_ql_dupl_all(th + j * n * n, new_th,
                 new_th + j * n, g, prec);
         }
 
@@ -204,7 +204,7 @@ acb_theta_ql_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
         {
             for (j = 0; j < nb; j++)
             {
-                acb_theta_ql_dupl(th + j * n * n, new_th,
+                acb_theta_ql_dupl_all(th + j * n * n, new_th,
                     new_th + (j + add_zero) * n, g, prec);
             }
         }

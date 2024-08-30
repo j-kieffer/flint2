@@ -28,17 +28,20 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         ulong a = n_randint(state, nba);
         slong prec = 100 + n_randint(state, 100);
         slong bits = n_randint(state, 4);
+        int all = n_randint(state, 2);
+        slong nbth = (all ? n * n : n);
+        slong nbth0 = (all ? n0 * n0 : n0);
         acb_mat_t tau, tau0;
         acb_ptr z;
         arb_ptr d, d0;
         acb_ptr z0s, cofactors;
+        slong * pts;
         arf_t err;
         acb_theta_ctx_tau_t ctx_tau, ctx_tau0;
         acb_theta_ctx_z_t ctx_z, ctx_z0;
-        acb_ptr th, th0s;
-        acb_t test;
+        acb_ptr th, th0s, test;
         slong nb, fullprec;
-        slong j, a0;
+        slong j;
         int res;
 
         acb_mat_init(tau, g, g);
@@ -49,9 +52,9 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         acb_theta_ctx_tau_init(ctx_tau0, s);
         acb_theta_ctx_z_init(ctx_z, g);
         acb_theta_ctx_z_init(ctx_z0, s);
-        th = _acb_vec_init(n);
+        th = _acb_vec_init(nbth);
+        test = _acb_vec_init(nbth);
         arf_init(err);
-        acb_init(test);
 
         acb_siegel_randtest_reduced(tau, state, prec, bits);
         acb_siegel_randtest_vec(z, state, g, prec);
@@ -59,12 +62,25 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
         acb_theta_ctx_z_set(ctx_z, z, ctx_tau, prec);
         acb_theta_dist_a0(d, z, tau, ACB_THETA_LOW_PREC);
-        acb_theta_sum_a0_tilde(th, ctx_z, 1, ctx_tau, d, prec);
+        if (all)
+        {
+            acb_theta_sum_all_tilde(th, ctx_z, 1, ctx_tau, d, prec);
+        }
+        else
+        {
+            acb_theta_sum_a0_tilde(th, ctx_z, 1, ctx_tau, d, prec);
+        }
 
-        res = acb_theta_ql_lower_dim(&z0s, &cofactors, &nb, err,
+        /* flint_printf("\n\ng = %wd, s = %wd, all = %wd, a = %wd, tau, z:\n", g, s, all, a);
+           acb_mat_printd(tau, 5);
+           _acb_vec_printd(z, g, 5); */
+
+        res = acb_theta_ql_lower_dim(&z0s, &cofactors, &pts, &nb, err,
             &fullprec, z, tau, d, s, a, prec);
 
-        th0s = _acb_vec_init(nb * n0);
+        /* flint_printf("ql_lower_dim: got res = %wd, nb = %wd, fullprec = %wd\n", res, nb, fullprec); */
+
+        th0s = _acb_vec_init(nb * nbth0);
         acb_mat_window_init(tau0, tau, 0, 0, s, s);
 
         acb_theta_ctx_tau_set(ctx_tau0, tau0, prec);
@@ -72,31 +88,44 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         {
             acb_theta_dist_a0(d0, z0s + j * s, tau0, ACB_THETA_LOW_PREC);
             acb_theta_ctx_z_set(ctx_z0, z0s + j * s, ctx_tau0, prec);
-            acb_theta_sum_a0_tilde(th0s + j * n0, ctx_z0, 1, ctx_tau0, d0, prec);
-            _acb_vec_scalar_mul(th0s + j * n0, th0s + j * n0, n0, &cofactors[j], prec);
+            if (all)
+            {
+                acb_theta_sum_all_tilde(th0s + j * nbth0, ctx_z0, 1, ctx_tau0, d0, prec);
+            }
+            else
+            {
+                acb_theta_sum_a0_tilde(th0s + j * nbth0, ctx_z0, 1, ctx_tau0, d0, prec);
+            }
         }
 
         if (res)
         {
-            for (a0 = 0; a0 < n0; a0++)
+            acb_theta_ql_recombine(test, th0s, cofactors, pts, nb, err, fullprec,
+                s, a, all, g, prec);
+            /* _acb_vec_printd(th, nbth, 5);
+               _acb_vec_printd(test, nbth, 5); */
+            if (all)
             {
-                acb_zero(test);
-                for (j = 0; j < nb; j++)
+                for (j = 0; j < n * n; j++)
                 {
-                    acb_add(test, test, &th0s[j * n0 + a0], prec);
+                    if ((j >> g) % (1 << (g - s)) == a
+                        && !acb_overlaps(&test[j], &th[j]))
+                    {
+                        flint_printf("FAIL (all, ab = %wd)\n", j);
+                        flint_abort();
+                    }
                 }
-                acb_add_error_arf(test, err);
-
-                if (!acb_overlaps(test, &th[(a0 << (g - s)) + a]))
+            }
+            else
+            {
+                for (j = 0; j < n; j++)
                 {
-                    flint_printf("FAIL\n");
-                    flint_printf("a0 = %wd, a = %wd\n", a0, a);
-                    flint_printf("th: ");
-                    acb_printd(&th[(a0 << (g - s)) + a], 5);
-                    flint_printf("\ntest: ");
-                    acb_printd(test, 5);
-                    flint_printf("\n");
-                    flint_abort();
+                    if (j % (1 << (g - s)) == a
+                        && !acb_overlaps(&test[j], &th[j]))
+                    {
+                        flint_printf("FAIL (a = %wd)\n", j);
+                        flint_abort();
+                    }
                 }
             }
         }
@@ -113,9 +142,10 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         acb_theta_ctx_tau_clear(ctx_tau0);
         acb_theta_ctx_z_clear(ctx_z);
         acb_theta_ctx_z_clear(ctx_z0);
-        _acb_vec_clear(th, n);
-        _acb_vec_clear(th0s, nb * n0);
-        acb_clear(test);
+        _acb_vec_clear(th, nbth);
+        _acb_vec_clear(test, nbth);
+        _acb_vec_clear(th0s, nb * nbth0);
+        flint_free(pts);
     }
 
     TEST_FUNCTION_END(state);
