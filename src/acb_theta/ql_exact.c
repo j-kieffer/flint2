@@ -170,14 +170,14 @@ acb_theta_ql_exact_lower_dim(acb_ptr th, acb_srcptr zs, slong nb,
     }
     else
     {
-        flint_printf("WARNING: ql_lower_dim failed, falling back to summation\n");
-        flint_printf("g = %wd, nb = %wd, tau:\n", g, nb);
-        acb_mat_printd(tau, 5);
+        /* flint_printf("WARNING: ql_lower_dim failed, falling back to summation\n");
+           flint_printf("g = %wd, nb = %wd, tau:\n", g, nb);
+           acb_mat_printd(tau, 5);
         flint_printf("zs:\n");
         for (j = 0; j < nb; j++)
         {
             _acb_vec_printd(zs + j * g, g, 5);
-        }
+            } */
 
         acb_theta_ql_exact_sum(th, zs, nb, tau, distances, all, shifted_prec, prec);
         res = 1;
@@ -240,7 +240,14 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
     res = acb_theta_ql_setup(rts, rts_all, t, &guard, easy_steps, zs, nb, tau, distances,
         nb_steps, all, prec);
 
-    flint_printf("(ql_exact_steps) result of setup: %wd, easy_steps[0] = %wd\n", res, easy_steps[0]);
+    /* flint_printf("(ql_exact_steps) result of setup: %wd\n", res);
+    if (easy_steps[0] < nb_steps)
+    {
+        for (j = 0; j < nb; j++)
+        {
+            flint_printf("%wd -> %wd\n", j, easy_steps[j]);
+        }
+        } */
     hp = prec + nb_steps * guard;
     acb_mat_scalar_mul_2exp_si(new_tau, tau, nb_steps);
 
@@ -294,7 +301,7 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
             else if (easy_steps[j] < nb_steps)
             {
                 _acb_vec_add(new_z + new_nb * g, zs + j * g, t, g, hp);
-                _acb_vec_add(new_z + (new_nb + 1) * g, new_z + (new_nb + 1) * g, t, g, hp);
+                _acb_vec_add(new_z + (new_nb + 1) * g, new_z + new_nb * g, t, g, hp);
                 add = 2;
             }
             else
@@ -408,14 +415,14 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
 
     else /* setup did not succeed: fall back to summation */
     {
-        flint_printf("WARNING: ql_setup failed, falling back to summation\n");
+        /* flint_printf("WARNING: ql_setup failed, falling back to summation\n");
         flint_printf("g = %wd, nb = %wd, tau:\n", g, nb);
         acb_mat_printd(tau, 5);
         flint_printf("zs:\n");
         for (j = 0; j < nb; j++)
         {
             _acb_vec_printd(zs + j * g, g, 5);
-        }
+            } */
 
         acb_theta_ql_exact_sum(th, zs, nb, tau, distances, all, 1, prec);
         res = 1;
