@@ -239,17 +239,20 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
 
     res = acb_theta_ql_setup(rts, rts_all, t, &guard, easy_steps, zs, nb, tau, distances,
         nb_steps, all, prec);
+    hp = prec + nb_steps * guard;
+    acb_mat_scalar_mul_2exp_si(new_tau, tau, nb_steps);
 
-    /* flint_printf("(ql_exact_steps) result of setup: %wd\n", res);
-    if (easy_steps[0] < nb_steps)
+    flint_printf("(ql_exact_steps) g = %wd, split = %wd, setup: %wd, nb_steps = %wd, guard = %wd, prec = %wd, hp = %wd\n",
+        g, split, res, nb_steps, guard, prec, hp);
+    /* if (easy_steps[0] < nb_steps)
     {
         for (j = 0; j < nb; j++)
         {
             flint_printf("%wd -> %wd\n", j, easy_steps[j]);
         }
-        } */
-    hp = prec + nb_steps * guard;
-    acb_mat_scalar_mul_2exp_si(new_tau, tau, nb_steps);
+    }
+    flint_printf("distances:\n");
+    _arb_vec_printd(distances, nb * n, 5); */
 
     if (res && (split > 0))
     {
@@ -366,12 +369,18 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
             acb_theta_ctx_z_init(ctxt, g);
         }
 
+        /* flint_printf("(ql_exact_steps) guard = %wd, nb_steps = %wd, hp = %wd, new_tau, new_zs:\n", guard, nb_steps, hp);
+           acb_mat_printd(new_tau, 5);*/
+
         acb_theta_ctx_tau_set(ctx_tau, new_tau, hp);
         if (easy_steps[0] < nb_steps)
         {
             _acb_vec_scalar_mul_2exp_si(new_z, t, g, nb_steps);
             acb_theta_ctx_z_set(ctxt, new_z, ctx_tau, hp);
+
+            /* _acb_vec_printd(new_z, g, 5);*/
         }
+
 
         for (j = 0; j < nb; j++)
         {
@@ -409,6 +418,9 @@ acb_theta_ql_exact_steps(acb_ptr th, acb_srcptr zs, slong nb,
 
     if (res) /* th_init is set; now perform steps */
     {
+        /* flint_printf("(ql_exact_steps) got th_init:\n");
+           _acb_vec_printd(th_init, 3 * n * nb, 5);*/
+
         acb_theta_ql_steps(th, th_init, rts, rts_all, nb, nb_steps, distances,
             easy_steps, all, g, hp);
     }

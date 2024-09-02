@@ -163,7 +163,7 @@ acb_theta_ql_all_sum(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     _arb_vec_clear(distances, n);
 }
 
-static int
+static void
 acb_theta_ql_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     const slong * pattern, int sqr, slong prec)
 {
@@ -204,7 +204,7 @@ acb_theta_ql_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
     }
     for (j = 0; j < nb * g; j++)
     {
-        acb_get_mid(&new_z[j], &zs[g * add_zero + j]);
+        acb_get_mid(&new_z[g * add_zero + j], &zs[j]);
     }
 
     /* Call ql_exact, with an extra duplication step if sqr is set */
@@ -234,6 +234,13 @@ acb_theta_ql_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
         new_th = _acb_vec_init((nb + add_zero) * n * n);
 
         res = acb_theta_ql_exact(new_th, new_z, nb + add_zero, new_tau, pattern, 1, 0, prec);
+
+        /*flint_printf("(all_notransform) result of ql_exact: %wd, add_zero = %wd, got values\n",res, add_zero);
+        _acb_vec_printd(new_th, (nb + add_zero) * n * n, 5);
+        flint_printf("input:\n");
+        acb_mat_printd(new_tau, 5);
+        _acb_vec_printd(new_z, (nb + add_zero) * g, 5);*/
+
         if (res)
         {
             _acb_vec_set(th, new_th + add_zero * n * n, nb * n * n);
@@ -242,27 +249,30 @@ acb_theta_ql_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
         _acb_vec_clear(new_th, (nb + add_zero) * n * n);
     }
 
-    /* Multiply by exp(pi y^T Yinv y) */
-    acb_siegel_yinv(Yinv, tau, prec);
-    arb_const_pi(pi, prec);
-    for (j = 0; j < nb; j++)
-    {
-        _acb_vec_get_imag(y, zs + j * g, g);
-        arb_mat_vector_mul_col(w, Yinv, y, prec);
-        arb_dot(u, NULL, 0, y, 1, w, 1, g, prec);
-        arb_mul(u, u, pi, prec);
-        if (sqr)
-        {
-            arb_mul_2exp_si(u, u, 1);
-        }
-        arb_exp(u, u, prec);
-        _acb_vec_scalar_mul_arb(th + j * n * n, th + j * n * n, n * n, u, prec);
-    }
-
-    /* Add error bounds and clear */
     if (res)
     {
+        /* Multiply by exp(pi y^T Yinv y) */
+        acb_siegel_yinv(Yinv, tau, prec);
+        arb_const_pi(pi, prec);
+        for (j = 0; j < nb; j++)
+        {
+            _acb_vec_get_imag(y, zs + j * g, g);
+            arb_mat_vector_mul_col(w, Yinv, y, prec);
+            arb_dot(u, NULL, 0, y, 1, w, 1, g, prec);
+            arb_mul(u, u, pi, prec);
+            if (sqr)
+            {
+                arb_mul_2exp_si(u, u, 1);
+            }
+            arb_exp(u, u, prec);
+            _acb_vec_scalar_mul_arb(th + j * n * n, th + j * n * n, n * n, u, prec);
+        }
+        /* Add error bounds */
         acb_theta_ql_add_err(th, zs, nb, tau, sqr, prec);
+    }
+    else
+    {
+        _acb_vec_indeterminate(th, n * n * nb);
     }
 
     acb_mat_clear(new_tau);
@@ -272,14 +282,14 @@ acb_theta_ql_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
     _arb_vec_clear(w, g);
     arb_clear(u);
     arb_clear(pi);
-    return res;
 }
 
-int
-acb_theta_ql_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
+void
+acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     int sqr, slong prec)
 {
     slong g = acb_mat_nrows(tau);
+    slong n = 1 << g;
     slong lp = ACB_THETA_LOW_PREC;
     arb_mat_t cho;
     slong * pattern;
@@ -289,7 +299,7 @@ acb_theta_ql_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 
     if (nb <= 0)
     {
-        return 1;
+        return;
     }
 
     pattern = flint_malloc(g * sizeof(slong));
@@ -298,16 +308,19 @@ acb_theta_ql_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_siegel_cho(cho, tau, lp);
     res = acb_theta_ql_nb_steps(pattern, cho, prec);
 
-    /* flint_printf("(ql_all_new) pattern:\n");
+    flint_printf("(all_notransform) pattern:");
     for (j = 0; j < g; j++)
     {
-        flint_printf("%wd -> %wd\n", j, pattern[j]);
-        } */
+        flint_printf(" %wd", pattern[j]);
+    }
+    flint_printf("\n");
+
     if (!res)
     {
+        _acb_vec_indeterminate(th, n * n * nb);
         arb_mat_clear(cho);
         flint_free(pattern);
-        return 0;
+        return;
     }
 
     if (sqr) /* duplication formula means one step less */
@@ -332,10 +345,10 @@ acb_theta_ql_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     }
     else
     {
-        res = acb_theta_ql_all_mid_err(th, zs, nb, tau, pattern, sqr, prec);
+        acb_theta_ql_all_mid_err(th, zs, nb, tau, pattern, sqr, prec);
     }
 
     arb_mat_clear(cho);
     flint_free(pattern);
-    return res;
+    return;
 }

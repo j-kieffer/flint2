@@ -13,11 +13,11 @@
 #include "acb_mat.h"
 #include "acb_theta.h"
 
-TEST_FUNCTION_START(acb_theta_ql_all_new, state)
+TEST_FUNCTION_START(acb_theta_all_notransform, state)
 {
     slong iter;
 
-    /* Test: coincides with sum_a0_tilde */
+    /* Test: coincides with sum_all_tilde */
     for (iter = 0; iter < 50 * flint_test_multiplier(); iter++)
     {
         slong g = 1 + n_randint(state, 2);
@@ -80,13 +80,12 @@ TEST_FUNCTION_START(acb_theta_ql_all_new, state)
         flint_printf("result of sum:\n");
         _acb_vec_printd(test, n * n * nb, 5); */
 
-        res = acb_theta_ql_all_new(th, zs, nb, tau, sqr, prec);
+        acb_theta_all_notransform(th, zs, nb, tau, sqr, prec);
 
-        /* flint_printf("\nresult of ql_all_new: %wd, got theta:\n", res);
+        /* flint_printf("\nall_notransform: got theta:\n", res);
            _acb_vec_printd(th, n * n * nb, 5); */
 
-        if (!res
-            || !_acb_vec_overlaps(th, test, nb * n * n)
+        if (!_acb_vec_overlaps(th, test, nb * n * n)
             || (_acb_vec_is_finite(test, nb * n * n) && !_acb_vec_is_finite(th, nb * n * n)))
         {
             flint_printf("FAIL\n");

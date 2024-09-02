@@ -11,11 +11,13 @@
 
 /* Include functions *********************************************************/
 
+#include "t-00_notransform.c"
 #include "t-agm_hadamard.c"
 #include "t-agm_mul.c"
 #include "t-agm_mul_tight.c"
 #include "t-agm_sqrt.c"
 #include "t-all.c"
+#include "t-all_notransform.c"
 #include "t-char_dot.c"
 #include "t-char_get_a.c"
 #include "t-char_is_even.c"
@@ -51,7 +53,9 @@
 #include "t-g2_sextic_chi5.c"
 #include "t-g2_transvectant.c"
 #include "t-g2_transvectant_lead.c"
+#include "t-jet_00_notransform.c"
 #include "t-jet_all.c"
+#include "t-jet_all_notransform.c"
 #include "t-jet_compose.c"
 #include "t-jet_error_bounds.c"
 #include "t-jet_mul.c"
@@ -80,7 +84,6 @@
 #include "t-ql_steps.c"
 #include "t-ql_lower_dim.c"
 #include "t-ql_exact.c"
-#include "t-ql_all_new.c"
 #include "t-siegel_cocycle.c"
 #include "t-siegel_is_reduced.c"
 #include "t-siegel_reduce.c"
@@ -105,12 +108,14 @@
 
 test_struct tests[] =
 {
+    TEST_FUNCTION(acb_theta_00_notransform),
     /* TEST_FUNCTION(acb_theta_agm_hadamard),*/
     /* TEST_FUNCTION(acb_theta_agm_mul),
     TEST_FUNCTION(acb_theta_agm_mul_tight),
     TEST_FUNCTION(acb_theta_agm_sqrt),
-    TEST_FUNCTION(acb_theta_all),
-    TEST_FUNCTION(acb_theta_char_dot),
+    TEST_FUNCTION(acb_theta_all), */
+    TEST_FUNCTION(acb_theta_all_notransform),
+    /* TEST_FUNCTION(acb_theta_char_dot),
     TEST_FUNCTION(acb_theta_char_get_a),
     TEST_FUNCTION(acb_theta_char_is_even),
     TEST_FUNCTION(acb_theta_char_is_goepel),
@@ -144,9 +149,11 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_g2_sextic),
     TEST_FUNCTION(acb_theta_g2_sextic_chi5),
     TEST_FUNCTION(acb_theta_g2_transvectant),
-    TEST_FUNCTION(acb_theta_g2_transvectant_lead),
-    TEST_FUNCTION(acb_theta_jet_all),
-    TEST_FUNCTION(acb_theta_jet_compose),
+    TEST_FUNCTION(acb_theta_g2_transvectant_lead),*/
+    TEST_FUNCTION(acb_theta_jet_00_notransform),
+    /* TEST_FUNCTION(acb_theta_jet_all), */
+    TEST_FUNCTION(acb_theta_jet_all_notransform),
+    /* TEST_FUNCTION(acb_theta_jet_compose),
     TEST_FUNCTION(acb_theta_jet_error_bounds),
     TEST_FUNCTION(acb_theta_jet_mul),
     TEST_FUNCTION(acb_theta_jet_naive_00),
@@ -174,7 +181,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_ql_steps),
     TEST_FUNCTION(acb_theta_ql_lower_dim),
     TEST_FUNCTION(acb_theta_ql_exact),
-    TEST_FUNCTION(acb_theta_ql_all_new),
 /*    TEST_FUNCTION(acb_theta_siegel_cocycle),
     TEST_FUNCTION(acb_theta_siegel_is_reduced),
     TEST_FUNCTION(acb_theta_siegel_reduce),

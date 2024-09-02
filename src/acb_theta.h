@@ -69,6 +69,8 @@ int acb_siegel_is_reduced(const acb_mat_t tau, slong tol_exp, slong prec);
 void acb_siegel_randtest(acb_mat_t tau, flint_rand_t state, slong prec, slong mag_bits);
 void acb_siegel_randtest_reduced(acb_mat_t tau, flint_rand_t state, slong prec, slong mag_bits);
 void acb_siegel_randtest_vec(acb_ptr z, flint_rand_t state, slong g, slong prec);
+void acb_siegel_randtest_vec_reduced(acb_ptr z, flint_rand_t state,
+    const acb_mat_t tau, int exact, slong prec);
 
 /* Theta characteristics */
 
@@ -160,6 +162,9 @@ void acb_theta_jet_mul(acb_ptr res, acb_srcptr v1, acb_srcptr v2, slong ord,
 void acb_theta_jet_compose(acb_ptr res, acb_srcptr v, const acb_mat_t N,
     slong ord, slong prec);
 void acb_theta_jet_exp_pi_i(acb_ptr res, arb_srcptr a, slong ord, slong g, slong prec);
+
+void acb_theta_jet_error_bounds(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
+    acb_srcptr dth, slong ord, slong prec);
 
 /* Error bounds in summation algorithms */
 
@@ -310,9 +315,10 @@ void acb_theta_sum_jet_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong 
 void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     const acb_theta_ctx_tau_t ctx_tau, slong ord, slong prec);
 
-/* Quasilinear algorithms */
+/* Quasilinear algorithms on exact input */
 
 int acb_theta_ql_nb_steps(slong * pattern, const arb_mat_t cho, slong prec);
+
 int acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong ** pts,
     slong * nb, arf_t err, slong * fullprec, acb_srcptr z, const acb_mat_t tau,
     arb_srcptr distances, slong s, ulong a, slong prec);
@@ -328,14 +334,12 @@ void acb_theta_ql_steps(acb_ptr th, acb_ptr th_init, acb_srcptr rts,
 int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     const slong * pattern, int all, int shifted_prec, slong prec);
 
-void acb_theta_jet_error_bounds(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
-    acb_srcptr dth, slong ord, slong prec);
-int acb_theta_ql_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
-    int sqr, slong prec);
+void acb_theta_jet_ql_finite_diff(acb_ptr dth, const arf_t eps, const arf_t err,
+    const arb_t rho, acb_srcptr val, slong ord, slong g, slong prec);
 
 /* Main functions */
 
-/* void acb_theta_00_notransform(acb_ptr th, acb_srcptr zs, slong nb,
+void acb_theta_00_notransform(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slong prec);
 void acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, int sqr, slong prec);
@@ -344,13 +348,13 @@ void acb_theta_jet_00_notransform(acb_ptr th, acb_srcptr zs, slong nb,
 void acb_theta_jet_all_notransform(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slong ord, slong prec);
 
-void acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb,
+/* void acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slonc prec);
-void acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb,
+void acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, int sqr, slonc prec);
 void acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slong ord, slong prec);
-void acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb,
+void acb_theta_jet_all_new(acb_ptr th, acb_srcptr zs, slong nb,
 const acb_mat_t tau, slong ord, slong prec); */
 
 /* ************************************************************************* */
@@ -410,9 +414,6 @@ slong acb_theta_ql_reduce(acb_ptr x, acb_t c, arb_t u, slong * n1, acb_srcptr z,
 void acb_theta_ql_all(acb_ptr th, acb_srcptr z, const acb_mat_t tau, int sqr, slong prec);
 
 /* Quasi-linear algorithms for derivatives */
-
-void acb_theta_jet_ql_finite_diff(acb_ptr dth, const arf_t eps, const arf_t err,
-    const arb_t rho, acb_srcptr val, slong ord, slong g, slong prec);
 
 void acb_theta_jet_ql_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau, slong ord, slong prec);
 

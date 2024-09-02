@@ -157,13 +157,19 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr rts_all, acb_ptr t, slong * guard, slong
 
                     acb_theta_ctx_z_add_real(&aux[0], &vec[j], ctxt, lowprec);
                     acb_theta_ctx_z_add_real(&aux[1], &aux[0], ctxt, lowprec);
-                    _arb_vec_scalar_mul_2exp_si(d, distances + j * n, n, l);
+                    _arb_vec_scalar_mul_2exp_si(d, distances + j * n, n, k);
                     if (k == 0 && all)
                     {
                         /* We just need roots for z + 2t */
                         acb_theta_sum_all_tilde(rts_all + j * n * n, aux + 1,
                             1, ctx_tau_dupl, d, lowprec);
                         res = res && !_acb_vec_contains_zero(rts_all + j * n * n, n * n);
+
+                        /* if (!res)
+                        {
+                            flint_printf("(ql_setup) fail at guard = %wd (l = %wd, k = %wd, j = %wd)\n", lowprec, l, k, j);
+                            _acb_vec_printd(rts_all + j * n * j, n * n, 5);
+                            }*/
                     }
                     else
                     {
@@ -171,6 +177,12 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr rts_all, acb_ptr t, slong * guard, slong
                             aux, 2, ctx_tau_dupl, d, lowprec);
                         res = res && !_acb_vec_contains_zero(rts + j * (3 * n * nb_steps)
                             + k * (3 * n) + n, 2 * n);
+
+                        /*if (!res)
+                        {
+                            flint_printf("(ql_setup) fail at guard = %wd (l = %wd, k = %wd, j = %wd)\n", lowprec, l, k, j);
+                            _acb_vec_printd(rts + j * (3 * n * nb_steps) + k * (3 * n) + n, 2 * n, 5);
+                            }*/
                     }
                     if (k < nb_steps - 1)
                     {
