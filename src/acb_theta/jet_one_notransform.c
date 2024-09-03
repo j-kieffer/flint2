@@ -99,7 +99,7 @@ void acb_theta_jet_one_notransform(acb_ptr th, acb_srcptr zs, slong nb,
             _acb_vec_add(new_zs + j * g, zs + j * g, w, g, prec);
         }
 
-        acb_theta_jet_00_notransform(th, new_zs, nb, tau, prec);
+        acb_theta_jet_00_notransform(th, new_zs, nb, tau, ord, prec);
 
         acb_theta_char_dot_acb(c, a, v, g, prec);
         for (j = 0; j < nb; j++)

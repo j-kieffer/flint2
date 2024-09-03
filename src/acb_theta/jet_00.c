@@ -101,14 +101,13 @@ acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     slong ord, slong prec)
 {
     slong g = acb_mat_nrows(tau);
-    slong n2 = 1 << (2 * g);
     slong nbth = acb_theta_jet_nb(ord, g);
     fmpz_mat_t mat, gamma;
     acb_mat_t new_tau, c, cinv, N;
     acb_ptr new_zs, aux, units;
     acb_t s, t;
     ulong image_ab;
-    slong kappa, e;
+    slong kappa, e, j;
 
     fmpz_mat_init(mat, 2 * g, 2 * g);
     acb_mat_init(new_tau, g, g);
@@ -160,7 +159,7 @@ acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     }
     else
     {
-        _acb_vec_indeterminate(dth, nb * nbth);
+        _acb_vec_indeterminate(th, nb * nbth);
     }
 
     fmpz_mat_clear(mat);

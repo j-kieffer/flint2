@@ -110,7 +110,7 @@ acb_theta_jet_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     ulong ab;
     ulong * image_ab;
     slong * e;
-    slong kappa;
+    slong kappa, j;
 
     fmpz_mat_init(mat, 2 * g, 2 * g);
     acb_mat_init(new_tau, g, g);
@@ -157,13 +157,13 @@ acb_theta_jet_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 
         for (j = 0; j < nb; j++)
         {
-            acb_mul(t, s, &units[(kappa + e) % 8], prec);
             for (ab = 0; ab < n2; ab++)
             {
+                acb_mul(t, s, &units[(kappa + e[ab]) % 8], prec);
                 _acb_vec_scalar_mul(th + j * n2 * nbth + ab * nbth,
                     aux + j * n2 * nbth + image_ab[ab] * nbth, nbth, t, prec);
                 acb_theta_jet_compose(th + j * n2 * nbth + ab * nbth,
-                    th + j * n2 * nbth ab * nbth, cinv, ord, prec);
+                    th + j * n2 * nbth + ab * nbth, cinv, ord, prec);
             }
         }
 
@@ -179,7 +179,7 @@ acb_theta_jet_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     }
     else
     {
-        _acb_vec_indeterminate(dth, nb * n2 * nbth);
+        _acb_vec_indeterminate(th, nb * n2 * nbth);
     }
 
     fmpz_mat_clear(mat);

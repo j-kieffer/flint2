@@ -26,7 +26,7 @@ acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     ulong * image_ab;
     slong * e;
     slong kappa;
-    slong j;
+    slong j, ab;
 
     fmpz_mat_init(mat, 2 * g, 2 * g);
     acb_mat_init(new_tau, g, g);
@@ -79,7 +79,7 @@ acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
             image_ab[ab] = acb_theta_transform_char(&e[ab], mat, ab);
         }
 
-        acb_theta_all_notransform(all, new_zs, nb, new_tau, sqr, prec);
+        acb_theta_all_notransform(aux, new_zs, nb, new_tau, sqr, prec);
 
         for (j = 0; j < nb; j++)
         {
@@ -91,7 +91,7 @@ acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
             }
             acb_exp_pi_i(t, t, prec);
             acb_mul(t, t, s, prec);
-            acb_mul(t, t, &units[((sqr ? 2 : 1) * (kappa + e)) % 8], prec);
+            acb_mul(t, t, &units[((sqr ? 2 : 1) * (kappa + e[ab])) % 8], prec);
             for (ab = 0; ab < n2; ab++)
             {
                 acb_mul(&th[ab], &aux[image_ab[ab]], t, prec);

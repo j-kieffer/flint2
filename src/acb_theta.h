@@ -355,7 +355,7 @@ void acb_theta_jet_all_notransform(acb_ptr th, acb_srcptr zs, slong nb,
 void acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slong prec);
 void acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb,
-    const acb_mat_t tau, int sqr, slonc prec)
+    const acb_mat_t tau, int sqr, slong prec);
 void acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slong ord, slong prec);
 void acb_theta_jet_all_new(acb_ptr th, acb_srcptr zs, slong nb,
