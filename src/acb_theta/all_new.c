@@ -28,6 +28,11 @@ acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     slong kappa;
     slong j, ab;
 
+    if (nb <= 0)
+    {
+        return;
+    }
+
     fmpz_mat_init(mat, 2 * g, 2 * g);
     acb_mat_init(new_tau, g, g);
     acb_mat_init(c, g, g);
@@ -35,7 +40,7 @@ acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_mat_init(N, g, g);
     new_zs = _acb_vec_init(nb * g);
     y = _acb_vec_init(g);
-    aux = _acb_vec_init(n2);
+    aux = _acb_vec_init(n2 * nb);
     units = _acb_vec_init(8);
     image_ab = flint_malloc(n2 * sizeof(ulong));
     e = flint_malloc(n2 * sizeof(slong));
@@ -66,8 +71,7 @@ acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         if (sqr)
         {
             kappa = acb_theta_transform_kappa2(mat);
-            acb_mat_det(s, c, prec);
-            acb_inv(s, s, prec);
+            acb_mat_det(s, cinv, prec);
         }
         else
         {
@@ -91,16 +95,17 @@ acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
             }
             acb_exp_pi_i(t, t, prec);
             acb_mul(t, t, s, prec);
-            acb_mul(t, t, &units[((sqr ? 2 : 1) * (kappa + e[ab])) % 8], prec);
             for (ab = 0; ab < n2; ab++)
             {
-                acb_mul(&th[ab], &aux[image_ab[ab]], t, prec);
+                acb_mul(&th[j * n2 + ab], &aux[j * n2 + image_ab[ab]], t, prec);
+                acb_mul(&th[j * n2 + ab], &th[j * n2 + ab],
+                    &units[((sqr ? 2 : 1) * (kappa + e[ab])) % 8], prec);
             }
         }
     }
     else
     {
-        _acb_vec_indeterminate(th, n2);
+        _acb_vec_indeterminate(th, n2 * nb);
     }
 
 
@@ -111,7 +116,7 @@ acb_theta_all_new(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_mat_clear(N);
     _acb_vec_clear(new_zs, nb * g);
     _acb_vec_clear(y, g);
-    _acb_vec_clear(aux, n2);
+    _acb_vec_clear(aux, n2 * nb);
     _acb_vec_clear(units, 8);
     acb_clear(s);
     acb_clear(t);

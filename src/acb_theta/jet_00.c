@@ -109,6 +109,11 @@ acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     ulong image_ab;
     slong kappa, e, j;
 
+    if (nb <= 0)
+    {
+        return;
+    }
+
     fmpz_mat_init(mat, 2 * g, 2 * g);
     acb_mat_init(new_tau, g, g);
     acb_mat_init(c, g, g);

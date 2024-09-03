@@ -17,6 +17,7 @@
 #include "t-agm_mul_tight.c"
 #include "t-agm_sqrt.c"
 #include "t-all.c"
+#include "t-all_new.c"
 #include "t-all_notransform.c"
 #include "t-char_dot.c"
 #include "t-char_get_a.c"
@@ -114,6 +115,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_agm_mul_tight),
     TEST_FUNCTION(acb_theta_agm_sqrt),
     TEST_FUNCTION(acb_theta_all), */
+    TEST_FUNCTION(acb_theta_all_new),
     TEST_FUNCTION(acb_theta_all_notransform),
     /* TEST_FUNCTION(acb_theta_char_dot),
     TEST_FUNCTION(acb_theta_char_get_a),
