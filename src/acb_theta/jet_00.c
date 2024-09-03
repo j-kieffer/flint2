@@ -130,7 +130,7 @@ acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     _acb_vec_unit_roots(units, 8, 8, prec);
 
     acb_mat_transpose(cinv, cinv);
-    for (j = 0; j < g; j++)
+    for (j = 0; j < nb; j++)
     {
         acb_mat_vector_mul_col(new_zs + j * g, cinv, zs + j * g, prec);
     }

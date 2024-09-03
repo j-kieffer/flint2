@@ -55,6 +55,7 @@
 #include "t-g2_sextic_chi5.c"
 #include "t-g2_transvectant.c"
 #include "t-g2_transvectant_lead.c"
+#include "t-jet_00.c"
 #include "t-jet_00_notransform.c"
 #include "t-jet_all.c"
 #include "t-jet_all_new.c"
@@ -140,7 +141,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_dist_lat),
     TEST_FUNCTION(acb_theta_dist_pt),
     TEST_FUNCTION(acb_theta_eld_border),
-    TEST_FUNCTION(acb_theta_eld_points),
+    TEST_FUNCTION(acb_theta_eld_points), */
     TEST_FUNCTION(acb_theta_g2_character),
     TEST_FUNCTION(acb_theta_g2_chi10),
     TEST_FUNCTION(acb_theta_g2_chi12),
@@ -156,7 +157,8 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_g2_sextic),
     TEST_FUNCTION(acb_theta_g2_sextic_chi5),
     TEST_FUNCTION(acb_theta_g2_transvectant),
-    TEST_FUNCTION(acb_theta_g2_transvectant_lead),*/
+    TEST_FUNCTION(acb_theta_g2_transvectant_lead),
+    TEST_FUNCTION(acb_theta_jet_00),
     TEST_FUNCTION(acb_theta_jet_00_notransform),
     /* TEST_FUNCTION(acb_theta_jet_all), */
     TEST_FUNCTION(acb_theta_jet_all_notransform),
