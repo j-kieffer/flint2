@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2023 Jean Kieffer
+    Copyright (C) 2024 Jean Kieffer
 
     This file is part of FLINT.
 
@@ -97,50 +97,59 @@ acb_theta_jet_exp_qf(acb_ptr res, acb_srcptr z, const acb_mat_t N, slong ord, sl
 }
 
 void
-acb_theta_jet_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau, slong ord, slong prec)
+acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
+    slong ord, slong prec)
 {
     slong g = acb_mat_nrows(tau);
     slong n2 = 1 << (2 * g);
-    slong nb = acb_theta_jet_nb(ord, g);
+    slong nbth = acb_theta_jet_nb(ord, g);
     fmpz_mat_t mat, gamma;
-    acb_mat_t w, c, cinv, N;
-    acb_ptr aux, x, units;
+    acb_mat_t new_tau, c, cinv, N;
+    acb_ptr new_zs, aux, units;
     acb_t s, t;
-    ulong ab, image_ab;
-    slong kappa, e;
+    ulong ab;
+    ulong * image_ab;
+    slong * e;
+    slong kappa, j;
+
+    if (nb <= 0)
+    {
+        return;
+    }
 
     fmpz_mat_init(mat, 2 * g, 2 * g);
-    acb_mat_init(w, g, g);
+    acb_mat_init(new_tau, g, g);
     acb_mat_init(c, g, g);
     acb_mat_init(cinv, g, g);
     acb_mat_init(N, g, g);
-    x = _acb_vec_init(g);
-    aux = _acb_vec_init(n2 * nb);
+    new_zs = _acb_vec_init(nb * g);
+    aux = _acb_vec_init(n2 * nb * nbth);
     units = _acb_vec_init(8);
     acb_init(s);
     acb_init(t);
+    image_ab = flint_malloc(n2 * sizeof(ulong));
+    e = flint_malloc(n2 * sizeof(slong));
 
     acb_siegel_reduce(mat, tau, prec);
-    acb_siegel_transform_cocycle_inv(w, c, cinv, mat, tau, prec);
+    acb_siegel_transform_cocycle_inv(new_tau, c, cinv, mat, tau, prec);
     _acb_vec_unit_roots(units, 8, 8, prec);
 
-    if (acb_siegel_is_reduced(w, -10, prec))
+    acb_mat_transpose(cinv, cinv);
+    for (j = 0; j < nb; j++)
     {
+        acb_mat_vector_mul_col(new_zs + j * g, cinv, zs + j * g, prec);
+    }
+
+    if (acb_siegel_is_reduced(new_tau, -10, prec))
+    {
+        /* todo: reduce z here */
+
         sp2gz_inv(mat, mat);
-        acb_mat_transpose(cinv, cinv);
-        acb_mat_vector_mul_col(x, cinv, z, prec);
-
-        acb_theta_jet_ql_all(aux, x, w, ord, prec);
-
-        kappa = acb_theta_transform_kappa(s, mat, w, prec);
+        kappa = acb_theta_transform_kappa(s, mat, new_tau, prec);
         for (ab = 0; ab < n2; ab++)
         {
-            image_ab = acb_theta_transform_char(&e, mat, ab);
-            acb_mul(t, s, &units[(kappa + e) % 8], prec);
-            _acb_vec_scalar_mul(dth + ab * nb, aux + image_ab * nb, nb, t, prec);
-            acb_theta_jet_compose(dth + ab * nb, dth + ab * nb, cinv, ord, prec);
+            image_ab[ab] = acb_theta_transform_char(&e[ab], mat, ab);
         }
-
         fmpz_mat_window_init(gamma, mat, g, 0, 2 * g, g);
         acb_mat_set_fmpz_mat(N, gamma);
         acb_mat_mul(N, N, cinv, prec);
@@ -149,27 +158,45 @@ acb_theta_jet_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau, slong ord, slo
         acb_mat_scalar_mul_acb(N, N, t, prec);
         fmpz_mat_window_clear(gamma);
 
-        acb_theta_jet_exp_qf(aux, z, N, ord, prec);
+        acb_theta_jet_all_notransform(aux, new_zs, nb, new_tau, ord, prec);
 
-        for (ab = 0; ab < n2; ab++)
+        for (j = 0; j < nb; j++)
         {
-            acb_theta_jet_mul(dth + ab * nb, dth + ab * nb, aux, ord, g, prec);
+            for (ab = 0; ab < n2; ab++)
+            {
+                acb_mul(t, s, &units[(kappa + e[ab]) % 8], prec);
+                _acb_vec_scalar_mul(th + j * n2 * nbth + ab * nbth,
+                    aux + j * n2 * nbth + image_ab[ab] * nbth, nbth, t, prec);
+                acb_theta_jet_compose(th + j * n2 * nbth + ab * nbth,
+                    th + j * n2 * nbth + ab * nbth, cinv, ord, prec);
+            }
+        }
+
+        for (j = 0; j < nb; j++)
+        {
+            acb_theta_jet_exp_qf(aux, zs + j * g, N, ord, prec);
+            for (ab = 0; ab < n2; ab++)
+            {
+                acb_theta_jet_mul(th + j * n2 * nbth + ab * nbth,
+                    th + j * n2 * nbth + ab * nbth, aux, ord, g, prec);
+            }
         }
     }
     else
     {
-        _acb_vec_indeterminate(dth, n2 * nb);
+        _acb_vec_indeterminate(th, nb * n2 * nbth);
     }
 
-
     fmpz_mat_clear(mat);
-    acb_mat_clear(w);
+    acb_mat_clear(new_tau);
     acb_mat_clear(c);
     acb_mat_clear(cinv);
     acb_mat_clear(N);
-    _acb_vec_clear(x, g);
-    _acb_vec_clear(aux, n2 * nb);
+    _acb_vec_clear(new_zs, nb * g);
+    _acb_vec_clear(aux, nb * n2 * nbth);
     _acb_vec_clear(units, 8);
     acb_clear(s);
     acb_clear(t);
+    flint_free(image_ab);
+    flint_free(e);
 }

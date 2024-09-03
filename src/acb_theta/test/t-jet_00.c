@@ -51,7 +51,7 @@ TEST_FUNCTION_START(acb_theta_jet_00, state)
         _acb_vec_printd(z, nb * g, 5);
 
         acb_theta_jet_00(th, z, nb, tau, ord, prec);
-        acb_theta_jet_all_new(all, z, nb, tau, ord, prec);
+        acb_theta_jet_all(all, z, nb, tau, ord, prec);
         for (k = 0; k < nb; k++)
         {
             _acb_vec_set(test + k * nbth, all + k * n2 * nbth, nbth);
