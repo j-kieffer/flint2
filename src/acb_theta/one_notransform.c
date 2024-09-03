@@ -21,7 +21,7 @@ void acb_theta_one_notransform(acb_ptr th, acb_srcptr zs, slong nb,
     slong j;
 
     FLINT_ASSERT(nb >= 0);
-    FLINT_ASSERT(ab >= 0 && ab < (1 << g));
+    FLINT_ASSERT(ab >= 0 && ab < (1 << (2 * g)));
 
     if (g == 1)
     {
@@ -74,7 +74,7 @@ void acb_theta_one_notransform(acb_ptr th, acb_srcptr zs, slong nb,
     {
         acb_ptr new_zs, v, w;
         acb_t c, x;
-        ulong b = ab % g;
+        ulong b = ab % (1 << g);
         ulong a = ab >> g;
         /* theta_ab(z, tau) = exp(pi i a^T tau a/4) exp(2 pi i a^T (z + b/2))
            theta_00(z + tau a/2 + b/2, tau) */

@@ -11,6 +11,7 @@
 
 /* Include functions *********************************************************/
 
+#include "t-00.c"
 #include "t-00_notransform.c"
 #include "t-agm_hadamard.c"
 #include "t-agm_mul.c"
@@ -56,7 +57,9 @@
 #include "t-g2_transvectant_lead.c"
 #include "t-jet_00_notransform.c"
 #include "t-jet_all.c"
+#include "t-jet_all_new.c"
 #include "t-jet_all_notransform.c"
+#include "t-jet_one_notransform.c"
 #include "t-jet_compose.c"
 #include "t-jet_error_bounds.c"
 #include "t-jet_mul.c"
@@ -76,6 +79,7 @@
 #include "t-naive_radius.c"
 #include "t-naive_reduce.c"
 #include "t-naive_term.c"
+#include "t-one_notransform.c"
 #include "t-ql_a0.c"
 #include "t-ql_a0_split.c"
 #include "t-ql_a0_steps.c"
@@ -109,6 +113,7 @@
 
 test_struct tests[] =
 {
+    TEST_FUNCTION(acb_theta_00),
     TEST_FUNCTION(acb_theta_00_notransform),
     /* TEST_FUNCTION(acb_theta_agm_hadamard),*/
     /* TEST_FUNCTION(acb_theta_agm_mul),
@@ -155,6 +160,8 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_jet_00_notransform),
     /* TEST_FUNCTION(acb_theta_jet_all), */
     TEST_FUNCTION(acb_theta_jet_all_notransform),
+    TEST_FUNCTION(acb_theta_jet_all_new),
+    TEST_FUNCTION(acb_theta_jet_one_notransform),
     /* TEST_FUNCTION(acb_theta_jet_compose),
     TEST_FUNCTION(acb_theta_jet_error_bounds),
     TEST_FUNCTION(acb_theta_jet_mul),
@@ -173,8 +180,9 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_naive_fixed_a),
     TEST_FUNCTION(acb_theta_naive_radius),
     TEST_FUNCTION(acb_theta_naive_reduce),
-    TEST_FUNCTION(acb_theta_naive_term),
-    TEST_FUNCTION(acb_theta_ql_a0),
+    TEST_FUNCTION(acb_theta_naive_term),*/
+    TEST_FUNCTION(acb_theta_one_notransform),
+    /* TEST_FUNCTION(acb_theta_ql_a0),
     TEST_FUNCTION(acb_theta_ql_a0_split),
     TEST_FUNCTION(acb_theta_ql_a0_steps),
     TEST_FUNCTION(acb_theta_ql_all),
