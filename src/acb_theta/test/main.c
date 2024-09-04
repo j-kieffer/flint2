@@ -151,9 +151,9 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_jet_all),
     TEST_FUNCTION(acb_theta_jet_all_notransform),
     TEST_FUNCTION(acb_theta_jet_one_notransform),
-    /* TEST_FUNCTION(acb_theta_jet_compose),
+    /* TEST_FUNCTION(acb_theta_jet_compose), */
     TEST_FUNCTION(acb_theta_jet_error_bounds),
-    TEST_FUNCTION(acb_theta_jet_mul),
+    /* TEST_FUNCTION(acb_theta_jet_mul),
     TEST_FUNCTION(acb_theta_jet_naive_00),
     TEST_FUNCTION(acb_theta_jet_naive_all),
     TEST_FUNCTION(acb_theta_jet_naive_radius),
