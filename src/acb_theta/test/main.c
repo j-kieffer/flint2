@@ -105,7 +105,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_char_is_even),
     TEST_FUNCTION(acb_theta_char_is_goepel),
     TEST_FUNCTION(acb_theta_char_is_syzygous),*/
-    /* TEST_FUNCTION(acb_theta_ctx_exp_inv),
+    TEST_FUNCTION(acb_theta_ctx_exp_inv),
     TEST_FUNCTION(acb_theta_ctx_sqr_inv),
     TEST_FUNCTION(acb_theta_ctx_tau_set),
     TEST_FUNCTION(acb_theta_ctx_tau_dupl),
@@ -113,12 +113,12 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_ctx_z_add_real),
     TEST_FUNCTION(acb_theta_ctx_z_copy),
     TEST_FUNCTION(acb_theta_ctx_z_dupl),
-    TEST_FUNCTION(acb_theta_ctx_z_shift_a0),*/
+    TEST_FUNCTION(acb_theta_ctx_z_shift_a0),
     /*TEST_FUNCTION(acb_theta_dist_a0),
     TEST_FUNCTION(acb_theta_dist_lat),
-    TEST_FUNCTION(acb_theta_dist_pt),
+    TEST_FUNCTION(acb_theta_dist_pt), */
     TEST_FUNCTION(acb_theta_eld_border),
-    TEST_FUNCTION(acb_theta_eld_points), */
+    TEST_FUNCTION(acb_theta_eld_points),
     TEST_FUNCTION(acb_theta_g2_character),
     TEST_FUNCTION(acb_theta_g2_chi10),
     TEST_FUNCTION(acb_theta_g2_chi12),

@@ -90,25 +90,15 @@ int acb_theta_char_is_syzygous(ulong ch1, ulong ch2, ulong ch3, slong g);
 
 /* Ellipsoids in summation algorithms */
 
-#define acb_theta_eld_dim(E) ((E)->dim)
-#define acb_theta_eld_ambient_dim(E) ((E)->ambient_dim)
-#define acb_theta_eld_coord(E, k) ((E)->last_coords[(k) - acb_theta_eld_dim(E)])
-#define acb_theta_eld_min(E) ((E)->min)
-#define acb_theta_eld_mid(E) ((E)->mid)
-#define acb_theta_eld_max(E) ((E)->max)
-#define acb_theta_eld_nr(E) ((E)->nr)
-#define acb_theta_eld_nl(E) ((E)->nl)
-#define acb_theta_eld_rchild(E, k) (&(E)->rchildren[(k)])
-#define acb_theta_eld_lchild(E, k) (&(E)->lchildren[(k)])
-#define acb_theta_eld_nb_pts(E) ((E)->nb_pts)
-#define acb_theta_eld_nb_border(E) ((E)->nb_border)
-#define acb_theta_eld_box(E, k) ((E)->box[(k)])
+#define acb_theta_eld_coord(E, k) ((E)->last_coords[(k) - (E)->dim])
 
 void acb_theta_eld_init(acb_theta_eld_t E, slong d, slong g);
 void acb_theta_eld_clear(acb_theta_eld_t E);
 
 int acb_theta_eld_set(acb_theta_eld_t E, const arb_mat_t C, const arf_t R2, arb_srcptr v);
+slong acb_theta_eld_nb_pts(const acb_theta_eld_t E);
 void acb_theta_eld_points(slong * pts, const acb_theta_eld_t E);
+slong acb_theta_eld_nb_border(const acb_theta_eld_t E);
 void acb_theta_eld_border(slong * pts, const acb_theta_eld_t E);
 int acb_theta_eld_contains(const acb_theta_eld_t E, const slong * pt);
 void acb_theta_eld_print(const acb_theta_eld_t E);
