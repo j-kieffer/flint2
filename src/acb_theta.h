@@ -333,13 +333,6 @@ void acb_theta_g2_sextic_chi5(acb_poly_t res, acb_t chi5, const acb_mat_t tau, s
 void acb_theta_g2_covariants(acb_poly_struct * res, const acb_poly_t f, slong prec);
 void acb_theta_g2_covariants_lead(acb_ptr res, const acb_poly_t f, slong prec);
 
-/* ************************************************************************* */
-
-/* Naive algorithms */
-
-void acb_theta_naive_reduce(arb_ptr v, acb_ptr new_zs, arb_ptr as, acb_ptr cs, arb_ptr us,
-    acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
-
 #ifdef __cplusplus
 }
 #endif

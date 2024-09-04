@@ -25,7 +25,7 @@ acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     acb_ptr aux;
     arb_t u;
     acb_t c;
-    slong j, k, l;
+    slong j, k;
 
     FLINT_ASSERT(nb >= 0);
     if (nb == 0)
