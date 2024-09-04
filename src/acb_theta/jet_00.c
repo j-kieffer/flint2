@@ -46,6 +46,7 @@ acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_init(s);
     acb_init(t);
 
+    /* Reduce tau then z */
     res = acb_theta_reduce_tau(new_zs, new_tau, mat, N, ct, exps, zs, nb, tau, prec);
     if (res)
     {

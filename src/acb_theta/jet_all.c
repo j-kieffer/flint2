@@ -22,7 +22,8 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     slong nbth = acb_theta_jet_nb(ord, g);
     fmpz_mat_t mat;
     acb_mat_t new_tau, N, ct;
-    acb_ptr new_zs, aux, units, exps;
+    acb_ptr new_zs, exps, cs, aux, units, jet;
+    arb_ptr rs, r;
     acb_t s, t;
     ulong ab;
     ulong * image_ab;
@@ -40,20 +41,27 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_mat_init(N, g, g);
     acb_mat_init(ct, g, g);
     new_zs = _acb_vec_init(nb * g);
-    aux = _acb_vec_init(n2 * nb * nbth);
     exps = _acb_vec_init(nb);
+    cs = _acb_vec_init(nb);
+    aux = _acb_vec_init(n2 * nb * nbth);
     units = _acb_vec_init(8);
+    jet = _acb_vec_init(nbth);
+    rs = _arb_vec_init(nb * g);
+    r = _arb_vec_init(g);
     acb_init(s);
     acb_init(t);
     image_ab = flint_malloc(n2 * sizeof(ulong));
     e = flint_malloc(n2 * sizeof(slong));
 
     res = acb_theta_reduce_tau(new_zs, new_tau, mat, N, ct, exps, zs, nb, tau, prec);
+    if (res)
+    {
+        res = acb_theta_reduce_z(new_zs, rs, cs, new_zs, nb, new_tau, prec);
+    }
 
     if (res)
     {
-        /* todo: reduce z here */
-
+        /* Setup */
         _acb_vec_unit_roots(units, 8, 8, prec);
         kappa = acb_theta_transform_kappa(s, mat, new_tau, prec);
         for (ab = 0; ab < n2; ab++)
@@ -63,8 +71,27 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 
         acb_theta_jet_all_notransform(aux, new_zs, nb, new_tau, ord, prec);
 
+        /* Account for reduce_z */
         for (j = 0; j < nb; j++)
         {
+            _acb_vec_scalar_mul(aux + j * n2 * nbth, aux + j * n2 * nbth,
+                n2 * nbth, &cs[j], prec);
+            _arb_vec_neg(r, rs + j * g, g);
+            _arb_vec_scalar_mul_2exp_si(r, r, g, 1);
+            acb_theta_jet_exp_pi_i(jet, r, ord, g, prec);
+            for (ab = 0; ab < n2; ab++)
+            {
+                acb_theta_jet_mul(aux + j * n2 * nbth + ab * nbth,
+                    aux + j * n2 * nbth + ab * nbth, jet, ord, g, prec);
+                /* No signs because 2r is divisible by 4 */
+            }
+        }
+
+        /* Account for reduce_tau */
+        for (j = 0; j < nb; j++)
+        {
+            acb_theta_jet_exp_qf(jet, zs + j * g, N, ord, prec);
+
             for (ab = 0; ab < n2; ab++)
             {
                 acb_mul(t, s, &units[(kappa + e[ab]) % 8], prec);
@@ -72,17 +99,8 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
                     aux + j * n2 * nbth + image_ab[ab] * nbth, nbth, t, prec);
                 acb_theta_jet_compose(th + j * n2 * nbth + ab * nbth,
                     th + j * n2 * nbth + ab * nbth, ct, ord, prec);
-            }
-        }
-
-        /* Reuse aux for exp_qf */
-        for (j = 0; j < nb; j++)
-        {
-            acb_theta_jet_exp_qf(aux, zs + j * g, N, ord, prec);
-            for (ab = 0; ab < n2; ab++)
-            {
                 acb_theta_jet_mul(th + j * n2 * nbth + ab * nbth,
-                    th + j * n2 * nbth + ab * nbth, aux, ord, g, prec);
+                    th + j * n2 * nbth + ab * nbth, jet, ord, g, prec);
             }
         }
     }
@@ -96,9 +114,13 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_mat_clear(N);
     acb_mat_clear(ct);
     _acb_vec_clear(new_zs, nb * g);
-    _acb_vec_clear(aux, nb * n2 * nbth);
     _acb_vec_clear(exps, nb);
+    _acb_vec_clear(cs, nb);
+    _acb_vec_clear(aux, nb * n2 * nbth);
     _acb_vec_clear(units, 8);
+    _acb_vec_clear(jet, nbth);
+    _arb_vec_clear(rs, nb * g);
+    _arb_vec_clear(r, g);
     acb_clear(s);
     acb_clear(t);
     flint_free(image_ab);
