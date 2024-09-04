@@ -365,23 +365,6 @@ void acb_theta_jet_naive_fixed_ab(acb_ptr dth, ulong ab, acb_srcptr z, const acb
 void acb_theta_jet_naive_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau,
     slong ord, slong prec);
 
-
-/* Quasi-linear algorithms on the reduced domain */
-
-typedef int (*acb_theta_ql_worker_t)(acb_ptr, acb_srcptr, acb_srcptr,
-    arb_srcptr, arb_srcptr, const acb_mat_t, slong, slong);
-
-int acb_theta_ql_a0_naive(acb_ptr th, acb_srcptr t, acb_srcptr z, arb_srcptr d0,
-    arb_srcptr d, const acb_mat_t tau, slong guard, slong prec);
-int acb_theta_ql_a0_split(acb_ptr th, acb_srcptr t, acb_srcptr z, arb_srcptr d,
-    const acb_mat_t tau, slong s, slong guard, slong prec, acb_theta_ql_worker_t worker);
-int acb_theta_ql_a0_steps(acb_ptr th, acb_srcptr t, acb_srcptr z, arb_srcptr d0,
-    arb_srcptr d, const acb_mat_t tau, slong nb_steps, slong s, slong guard,
-    slong prec, acb_theta_ql_worker_t worker);
-slong acb_theta_ql_a0_nb_steps(const arb_mat_t C, slong s, slong prec);
-int acb_theta_ql_a0(acb_ptr th, acb_srcptr t, acb_srcptr z, arb_srcptr d0,
-    arb_srcptr d, const acb_mat_t tau, slong guard, slong prec);
-
 #ifdef __cplusplus
 }
 #endif

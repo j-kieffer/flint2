@@ -78,9 +78,6 @@
 #include "t-naive_reduce.c"
 #include "t-naive_term.c"
 #include "t-one_notransform.c"
-#include "t-ql_a0.c"
-#include "t-ql_a0_split.c"
-#include "t-ql_a0_steps.c"
 #include "t-ql_setup.c"
 #include "t-ql_steps.c"
 #include "t-ql_lower_dim.c"
@@ -176,9 +173,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_naive_reduce),
     TEST_FUNCTION(acb_theta_naive_term),*/
     TEST_FUNCTION(acb_theta_one_notransform),
-    /* TEST_FUNCTION(acb_theta_ql_a0),
-    TEST_FUNCTION(acb_theta_ql_a0_split),
-    TEST_FUNCTION(acb_theta_ql_a0_steps), */
     TEST_FUNCTION(acb_theta_ql_setup),
     TEST_FUNCTION(acb_theta_ql_steps),
     TEST_FUNCTION(acb_theta_ql_lower_dim),
