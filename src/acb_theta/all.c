@@ -21,7 +21,8 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     slong n2 = 1 << (2 * g);
     fmpz_mat_t mat;
     acb_mat_t new_tau, N, ct;
-    acb_ptr new_zs, exps, aux, units;
+    acb_ptr new_zs, exps, cs, aux, units;
+    arb_ptr rs;
     acb_t s;
     ulong * image_ab;
     slong * e;
@@ -40,18 +41,24 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_mat_init(ct, g, g);
     new_zs = _acb_vec_init(nb * g);
     exps = _acb_vec_init(nb);
+    cs = _acb_vec_init(nb);
     aux = _acb_vec_init(n2 * nb);
     units = _acb_vec_init(8);
+    rs = _arb_vec_init(nb * g);
     image_ab = flint_malloc(n2 * sizeof(ulong));
     e = flint_malloc(n2 * sizeof(slong));
     acb_init(s);
 
+    /* Reduce tau then z */
     res = acb_theta_reduce_tau(new_zs, new_tau, mat, N, ct, exps, zs, nb, tau, prec);
+    if (res)
+    {
+        res = acb_theta_reduce_z(new_zs, rs, cs, new_zs, nb, new_tau, prec);
+    }
 
     if (res)
     {
-        /* todo: reduce z here */
-
+        /* Setup */
         _acb_vec_unit_roots(units, 8, 8, prec);
         if (sqr)
         {
@@ -70,6 +77,17 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 
         acb_theta_all_notransform(aux, new_zs, nb, new_tau, sqr, prec);
 
+        /* Account for reduce_z */
+        for (j = 0; j < nb; j++)
+        {
+            if (sqr)
+            {
+                acb_sqr(&cs[j], &cs[j], prec);
+            }
+            _acb_vec_scalar_mul(aux + j * n2, aux + j * n2, n2, &cs[j], prec);
+        }
+
+        /* Account for reduce_tau */
         for (j = 0; j < nb; j++)
         {
             if (sqr)
@@ -97,8 +115,10 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_mat_clear(N);
     _acb_vec_clear(new_zs, nb * g);
     _acb_vec_clear(exps, nb);
+    _acb_vec_clear(cs, nb);
     _acb_vec_clear(aux, n2 * nb);
     _acb_vec_clear(units, 8);
+    _arb_vec_clear(rs, nb * g);
     acb_clear(s);
     flint_free(e);
     flint_free(image_ab);

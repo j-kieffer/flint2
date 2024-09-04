@@ -22,7 +22,7 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
     acb_ptr new_zs, exps, cs, aux, units;
     arb_ptr rs;
     acb_t s;
-    slong kappa, e, ab, dot;
+    slong kappa, e, ab;
     slong j;
     int res;
 
@@ -52,20 +52,20 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
 
     if (res)
     {
+        /* Setup */
         ab = acb_theta_transform_char(&e, mat, 0);
+        _acb_vec_unit_roots(units, 8, 8, prec);
+        kappa = acb_theta_transform_kappa(s, mat, new_tau, prec);
+
         acb_theta_one_notransform(aux, new_zs, nb, new_tau, ab, prec);
 
         /* Account for reduce_z */
-        dot = acb_theta_char_dot(ab >> g, ab % (1 << g), g);
         for (j = 0; j < nb; j++)
         {
             acb_mul(&aux[j], &aux[j], &cs[j], prec);
-            acb_mul_i_pow_si(&aux[j], &aux[j], dot);
         }
 
         /* Account for reduce_tau */
-        _acb_vec_unit_roots(units, 8, 8, prec);
-        kappa = acb_theta_transform_kappa(s, mat, new_tau, prec);
         for (j = 0; j < nb; j++)
         {
             acb_mul(&th[j], &aux[j], &exps[j], prec);
