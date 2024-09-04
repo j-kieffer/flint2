@@ -359,8 +359,6 @@ void acb_theta_naive_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t ta
 
 void acb_theta_jet_naive_00(acb_ptr dth, acb_srcptr z, const acb_mat_t tau,
     slong ord, slong prec);
-void acb_theta_jet_naive_fixed_ab(acb_ptr dth, ulong ab, acb_srcptr z, const acb_mat_t tau,
-    slong ord, slong prec);
 void acb_theta_jet_naive_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau,
     slong ord, slong prec);
 
