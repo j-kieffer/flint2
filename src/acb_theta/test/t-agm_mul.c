@@ -25,7 +25,6 @@ TEST_FUNCTION_START(acb_theta_agm_mul, state)
         slong mprec = 100 + n_randint(state, 200);
         slong prec = mprec + 50;
         slong bits = n_randint(state, 2);
-
         acb_mat_t tau;
         acb_ptr z;
         acb_theta_ctx_tau_t ctx_tau;
