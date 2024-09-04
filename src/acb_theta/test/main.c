@@ -97,8 +97,8 @@ test_struct tests[] =
 {
     TEST_FUNCTION(acb_theta_00),
     /* TEST_FUNCTION(acb_theta_agm_hadamard),*/
-    /* TEST_FUNCTION(acb_theta_agm_mul),
-    TEST_FUNCTION(acb_theta_agm_mul_tight),
+    TEST_FUNCTION(acb_theta_agm_mul),
+    /* TEST_FUNCTION(acb_theta_agm_mul_tight),
     TEST_FUNCTION(acb_theta_agm_sqrt), */
     TEST_FUNCTION(acb_theta_all),
     TEST_FUNCTION(acb_theta_all_notransform),
