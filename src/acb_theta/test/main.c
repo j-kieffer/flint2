@@ -12,7 +12,6 @@
 /* Include functions *********************************************************/
 
 #include "t-00.c"
-#include "t-00_notransform.c"
 #include "t-agm_hadamard.c"
 #include "t-agm_mul.c"
 #include "t-agm_mul_tight.c"
@@ -100,7 +99,6 @@
 test_struct tests[] =
 {
     TEST_FUNCTION(acb_theta_00),
-    TEST_FUNCTION(acb_theta_00_notransform),
     /* TEST_FUNCTION(acb_theta_agm_hadamard),*/
     /* TEST_FUNCTION(acb_theta_agm_mul),
     TEST_FUNCTION(acb_theta_agm_mul_tight),
