@@ -70,6 +70,8 @@ TEST_FUNCTION_START(acb_theta_jet_all, state)
 
         acb_mat_clear(tau);
         _acb_vec_clear(z, nb * g);
+        acb_theta_ctx_tau_clear(ctx_tau);
+        acb_theta_ctx_z_vec_clear(vec, nb);
         _acb_vec_clear(th, nb * n2 * nbth);
         _acb_vec_clear(test, nb * n2 * nbth);
     }
