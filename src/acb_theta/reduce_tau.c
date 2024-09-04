@@ -15,11 +15,11 @@
 
 int
 acb_theta_reduce_tau(acb_ptr new_zs, acb_mat_t new_tau, fmpz_mat_t mat, acb_mat_t N,
-    acb_ptr exps, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec)
+    acb_mat_t ct, acb_ptr exps, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec)
 {
     slong g = acb_mat_nrows(tau);
     fmpz_mat_t gamma;
-    acb_mat_t c, cinv;
+    acb_mat_t c;
     acb_ptr y;
     acb_t ipi;
     slong j;
@@ -28,15 +28,14 @@ acb_theta_reduce_tau(acb_ptr new_zs, acb_mat_t new_tau, fmpz_mat_t mat, acb_mat_
     FLINT_ASSERT(nb >= 0);
 
     acb_mat_init(c, g, g);
-    acb_mat_init(cinv, g, g);
     y = _acb_vec_init(g);
     acb_init(ipi);
 
-    /* Set new_tau, mat, res */
+    /* Set new_tau, mat, ct, res */
     acb_siegel_reduce(mat, tau, prec);
-    acb_siegel_transform_cocycle_inv(new_tau, c, cinv, mat, tau, prec);
+    acb_siegel_transform_cocycle_inv(new_tau, c, ct, mat, tau, prec);
     sp2gz_inv(mat, mat);
-    acb_mat_transpose(cinv, cinv);
+    acb_mat_transpose(ct, ct);
     res = acb_siegel_is_reduced(new_tau, -10, prec);
 
     if (res)
@@ -44,7 +43,7 @@ acb_theta_reduce_tau(acb_ptr new_zs, acb_mat_t new_tau, fmpz_mat_t mat, acb_mat_
         /* Set N */
         fmpz_mat_window_init(gamma, mat, g, 0, 2 * g, g);
         acb_mat_set_fmpz_mat(N, gamma);
-        acb_mat_mul(N, N, cinv, prec);
+        acb_mat_mul(N, N, ct, prec);
         acb_const_pi(ipi, prec);
         acb_mul_onei(ipi, ipi);
         acb_mat_scalar_mul_acb(N, N, ipi, prec);
@@ -55,13 +54,12 @@ acb_theta_reduce_tau(acb_ptr new_zs, acb_mat_t new_tau, fmpz_mat_t mat, acb_mat_
             acb_mat_vector_mul_col(y, N, zs + j * g, prec);
             acb_dot(&exps[j], NULL, 0, zs + j * g, 1, y, 1, g, prec);
             acb_exp(&exps[j], &exps[j], prec);
-            acb_mat_vector_mul_col(new_zs + j * g, cinv, zs + j * g, prec);
+            acb_mat_vector_mul_col(new_zs + j * g, ct, zs + j * g, prec);
         }
     }
 
     fmpz_mat_window_clear(gamma);
     acb_mat_clear(c);
-    acb_mat_clear(cinv);
     _acb_vec_clear(y, g);
     acb_clear(ipi);
     return res;

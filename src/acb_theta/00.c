@@ -18,7 +18,7 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
 {
     slong g = acb_mat_nrows(tau);
     fmpz_mat_t mat;
-    acb_mat_t new_tau, N;
+    acb_mat_t new_tau, N, ct;
     acb_ptr new_zs, exps;
     acb_ptr aux, units;
     acb_t s;
@@ -34,13 +34,14 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
     fmpz_mat_init(mat, 2 * g, 2 * g);
     acb_mat_init(new_tau, g, g);
     acb_mat_init(N, g, g);
+    acb_mat_init(ct, g, g);
     new_zs = _acb_vec_init(nb * g);
     exps = _acb_vec_init(nb);
     aux = _acb_vec_init(nb);
     units = _acb_vec_init(8);
     acb_init(s);
 
-    res = acb_theta_reduce_tau(new_zs, new_tau, mat, N, exps, zs, nb, tau, prec);
+    res = acb_theta_reduce_tau(new_zs, new_tau, mat, N, ct, exps, zs, nb, tau, prec);
 
     if (res)
     {
@@ -68,6 +69,7 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
     fmpz_mat_clear(mat);
     acb_mat_clear(new_tau);
     acb_mat_clear(N);
+    acb_mat_clear(ct);
     _acb_vec_clear(new_zs, nb * g);
     _acb_vec_clear(exps, nb);
     _acb_vec_clear(aux, nb);

@@ -20,7 +20,7 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     slong g = acb_mat_nrows(tau);
     slong n2 = 1 << (2 * g);
     fmpz_mat_t mat;
-    acb_mat_t new_tau, N, c;
+    acb_mat_t new_tau, N, ct;
     acb_ptr new_zs, exps, aux, units;
     acb_t s;
     ulong * image_ab;
@@ -37,7 +37,7 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     fmpz_mat_init(mat, 2 * g, 2 * g);
     acb_mat_init(new_tau, g, g);
     acb_mat_init(N, g, g);
-    acb_mat_init(c, g, g);
+    acb_mat_init(ct, g, g);
     new_zs = _acb_vec_init(nb * g);
     exps = _acb_vec_init(nb);
     aux = _acb_vec_init(n2 * nb);
@@ -46,7 +46,7 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     e = flint_malloc(n2 * sizeof(slong));
     acb_init(s);
 
-    res = acb_theta_reduce_tau(new_zs, new_tau, mat, N, exps, zs, nb, tau, prec);
+    res = acb_theta_reduce_tau(new_zs, new_tau, mat, N, ct, exps, zs, nb, tau, prec);
 
     if (res)
     {
@@ -56,8 +56,7 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         if (sqr)
         {
             kappa = acb_theta_transform_kappa2(mat);
-            acb_siegel_cocycle(c, mat, new_tau, prec);
-            acb_mat_det(s, c, prec);
+            acb_mat_det(s, ct, prec);
         }
         else
         {
@@ -94,7 +93,7 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 
     fmpz_mat_clear(mat);
     acb_mat_clear(new_tau);
-    acb_mat_clear(c);
+    acb_mat_clear(ct);
     acb_mat_clear(N);
     _acb_vec_clear(new_zs, nb * g);
     _acb_vec_clear(exps, nb);

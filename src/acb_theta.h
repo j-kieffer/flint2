@@ -150,6 +150,7 @@ void acb_theta_jet_mul(acb_ptr res, acb_srcptr v1, acb_srcptr v2, slong ord,
 void acb_theta_jet_compose(acb_ptr res, acb_srcptr v, const acb_mat_t N,
     slong ord, slong prec);
 void acb_theta_jet_exp_pi_i(acb_ptr res, arb_srcptr a, slong ord, slong g, slong prec);
+void acb_theta_jet_exp_qf(acb_ptr res, acb_srcptr z, const acb_mat_t N, slong ord, slong prec);
 
 void acb_theta_jet_error_bounds(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
     acb_srcptr dth, slong ord, slong prec);
@@ -280,7 +281,7 @@ void acb_theta_jet_ql_finite_diff(acb_ptr dth, const arf_t eps, const arf_t err,
 /* Main functions */
 
 int acb_theta_reduce_tau(acb_ptr new_zs, acb_mat_t new_tau, fmpz_mat_t mat, acb_mat_t N,
-    acb_ptr exps, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
+    acb_mat_t ct, acb_ptr exps, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
 int acb_theta_reduce_z(acb_ptr res, arb_ptr rs, acb_ptr cs, acb_srcptr zs,
     slong nb, const acb_mat_t tau, slong prec);
 
