@@ -40,13 +40,13 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
     units = _acb_vec_init(8);
     acb_init(s);
 
-    _acb_vec_unit_roots(units, 8, 8, prec);
     res = acb_theta_reduce_tau(new_zs, new_tau, mat, N, exps, zs, nb, tau, prec);
 
     if (res)
     {
         /* todo: reduce z here. */
 
+        _acb_vec_unit_roots(units, 8, 8, prec);
         ab = acb_theta_transform_char(&e, mat, 0);
         kappa = acb_theta_transform_kappa(s, mat, new_tau, prec);
 
