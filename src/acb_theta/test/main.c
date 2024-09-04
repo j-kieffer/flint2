@@ -60,8 +60,6 @@
 #include "t-jet_compose.c"
 #include "t-jet_error_bounds.c"
 #include "t-jet_mul.c"
-#include "t-jet_naive_00.c"
-#include "t-jet_naive_all.c"
 #include "t-jet_naive_radius.c"
 #include "t-jet_ql_bounds.c"
 #include "t-jet_ql_finite_diff.c"
@@ -152,8 +150,6 @@ test_struct tests[] =
     /* TEST_FUNCTION(acb_theta_jet_compose), */
     TEST_FUNCTION(acb_theta_jet_error_bounds),
     /* TEST_FUNCTION(acb_theta_jet_mul),
-    TEST_FUNCTION(acb_theta_jet_naive_00),
-    TEST_FUNCTION(acb_theta_jet_naive_all),
     TEST_FUNCTION(acb_theta_jet_naive_radius),
     TEST_FUNCTION(acb_theta_jet_ql_bounds),
     TEST_FUNCTION(acb_theta_jet_ql_finite_diff),
