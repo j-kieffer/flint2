@@ -75,6 +75,7 @@ acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_mat_clear(ct);
     _acb_vec_clear(new_zs, nb * g);
     _acb_vec_clear(aux, nb * nbth);
+    _acb_vec_clear(exps, nb);
     _acb_vec_clear(units, 8);
     acb_clear(s);
     acb_clear(t);
