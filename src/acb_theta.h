@@ -308,7 +308,6 @@ void acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb,
 
 #define ACB_THETA_G2_COV_NB 26
 
-void acb_theta_g2_jet_naive_1(acb_ptr dth, const acb_mat_t tau, slong prec);
 void acb_theta_g2_detk_symj(acb_poly_t res, const acb_mat_t m, const acb_poly_t f,
     slong k, slong j, slong prec);
 void acb_theta_g2_transvectant(acb_poly_t res, const acb_poly_t g, const acb_poly_t h,

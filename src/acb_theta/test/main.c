@@ -47,7 +47,6 @@
 #include "t-g2_covariants.c"
 #include "t-g2_covariants_lead.c"
 #include "t-g2_detk_symj.c"
-#include "t-g2_jet_naive_1.c"
 #include "t-g2_psi4.c"
 #include "t-g2_psi6.c"
 #include "t-g2_sextic.c"
@@ -142,7 +141,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_g2_covariants),
     TEST_FUNCTION(acb_theta_g2_covariants_lead),
     TEST_FUNCTION(acb_theta_g2_detk_symj),
-    TEST_FUNCTION(acb_theta_g2_jet_naive_1),
     TEST_FUNCTION(acb_theta_g2_psi4),
     TEST_FUNCTION(acb_theta_g2_psi6),
     TEST_FUNCTION(acb_theta_g2_sextic),
