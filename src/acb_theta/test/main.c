@@ -64,7 +64,6 @@
 #include "t-jet_ql_finite_diff.c"
 #include "t-jet_ql_radius.c"
 #include "t-jet_tuples.c"
-#include "t-naive_00.c"
 #include "t-naive_all.c"
 #include "t-naive_radius.c"
 #include "t-naive_reduce.c"
@@ -151,7 +150,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_jet_ql_finite_diff),
     TEST_FUNCTION(acb_theta_jet_ql_radius),
     TEST_FUNCTION(acb_theta_jet_tuples),
-    TEST_FUNCTION(acb_theta_naive_00),
     TEST_FUNCTION(acb_theta_naive_all),
     TEST_FUNCTION(acb_theta_naive_radius),
     TEST_FUNCTION(acb_theta_naive_reduce),
