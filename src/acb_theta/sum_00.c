@@ -9,11 +9,27 @@
     (at your option) any later version.  See <https://www.gnu.org/licenses/>.
 */
 
+#include "fmpz.h"
 #include "acb.h"
 #include "arb_mat.h"
 #include "acb_mat.h"
 #include "acb_modular.h"
 #include "acb_theta.h"
+
+static void
+acb_theta_sum_00_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
+    const slong * precs, slong len, const acb_t cofactor, const slong * coords,
+    slong ord, slong g, slong prec, slong fullprec)
+{
+    acb_t sum;
+
+    acb_init(sum);
+
+    acb_dot(sum, NULL, 0, v1, 1, v2, 1, len, prec);
+    acb_addmul(th, sum, cofactor, fullprec);
+
+    acb_clear(sum);
+}
 
 void
 acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
