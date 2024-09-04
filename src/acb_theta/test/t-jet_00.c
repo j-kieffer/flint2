@@ -18,11 +18,11 @@ TEST_FUNCTION_START(acb_theta_jet_00, state)
     slong iter;
 
     /* Test: agrees with jet_all */
-    for (iter = 0; iter < 10 * flint_test_multiplier(); iter++)
+    for (iter = 0; iter < 25 * flint_test_multiplier(); iter++)
     {
         slong g = 1 + n_randint(state, 2);
         slong n2 = 1 << (2 * g);
-        slong nb = n_randint(state, 3);
+        slong nb = 1 + n_randint(state, 3);
         slong ord = n_randint(state, 3);
         slong prec = 100 + n_randint(state, 400);
         slong bits = n_randint(state, 4);

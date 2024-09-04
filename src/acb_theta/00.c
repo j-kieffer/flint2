@@ -19,7 +19,7 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
     slong g = acb_mat_nrows(tau);
     fmpz_mat_t mat;
     acb_mat_t new_tau, N, ct;
-    acb_ptr new_zs, exps, cs, aux, units;
+    acb_ptr new_zs, exps, cs, units;
     arb_ptr rs;
     acb_t s;
     slong kappa, e, ab;
@@ -38,7 +38,6 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
     new_zs = _acb_vec_init(nb * g);
     exps = _acb_vec_init(nb);
     cs = _acb_vec_init(nb);
-    aux = _acb_vec_init(nb);
     units = _acb_vec_init(8);
     rs = _arb_vec_init(nb * g);
     acb_init(s);
@@ -57,18 +56,18 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
         _acb_vec_unit_roots(units, 8, 8, prec);
         kappa = acb_theta_transform_kappa(s, mat, new_tau, prec);
 
-        acb_theta_one_notransform(aux, new_zs, nb, new_tau, ab, prec);
+        acb_theta_one_notransform(th, new_zs, nb, new_tau, ab, prec);
 
         /* Account for reduce_z */
         for (j = 0; j < nb; j++)
         {
-            acb_mul(&aux[j], &aux[j], &cs[j], prec);
+            acb_mul(&th[j], &th[j], &cs[j], prec);
         }
 
         /* Account for reduce_tau */
         for (j = 0; j < nb; j++)
         {
-            acb_mul(&th[j], &aux[j], &exps[j], prec);
+            acb_mul(&th[j], &th[j], &exps[j], prec);
             acb_mul(&th[j], &th[j], s, prec);
             acb_mul(&th[j], &th[j], &units[(kappa + e) % 8], prec);
         }
@@ -85,7 +84,6 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
     acb_mat_clear(ct);
     _acb_vec_clear(new_zs, nb * g);
     _acb_vec_clear(exps, nb);
-    _acb_vec_clear(aux, nb);
     _acb_vec_clear(cs, nb);
     _acb_vec_clear(units, 8);
     _arb_vec_clear(rs, nb * g);
