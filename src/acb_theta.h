@@ -282,7 +282,7 @@ void acb_theta_jet_ql_finite_diff(acb_ptr dth, const arf_t eps, const arf_t err,
 
 int acb_theta_reduce_tau(acb_ptr new_zs, acb_mat_t new_tau, fmpz_mat_t mat, acb_mat_t N,
     acb_mat_t ct, acb_ptr exps, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
-int acb_theta_reduce_z(acb_ptr res, arb_ptr rs, acb_ptr cs, acb_srcptr zs,
+int acb_theta_reduce_z(acb_ptr new_zs, arb_ptr rs, acb_ptr cs, acb_srcptr zs,
     slong nb, const acb_mat_t tau, slong prec);
 
 void acb_theta_00_notransform(acb_ptr th, acb_srcptr zs, slong nb,
