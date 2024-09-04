@@ -348,10 +348,6 @@ void acb_theta_naive_worker(acb_ptr th, slong len, acb_srcptr zs, slong nb,
 void acb_theta_naive_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
 void acb_theta_naive_0b(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
 
-void acb_theta_naive_fixed_ab(acb_ptr th, ulong ab, acb_srcptr zs, slong nb,
-    const acb_mat_t tau, slong prec);
-void acb_theta_naive_fixed_a(acb_ptr th, ulong a, acb_srcptr zs, slong nb,
-    const acb_mat_t tau, slong prec);
 void acb_theta_naive_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
 
 #ifdef __cplusplus
