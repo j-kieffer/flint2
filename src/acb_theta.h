@@ -382,15 +382,6 @@ slong acb_theta_ql_a0_nb_steps(const arb_mat_t C, slong s, slong prec);
 int acb_theta_ql_a0(acb_ptr th, acb_srcptr t, acb_srcptr z, arb_srcptr d0,
     arb_srcptr d, const acb_mat_t tau, slong guard, slong prec);
 
-slong acb_theta_ql_reduce(acb_ptr x, acb_t c, arb_t u, slong * n1, acb_srcptr z,
-    const acb_mat_t tau, slong prec);
-
-void acb_theta_ql_all(acb_ptr th, acb_srcptr z, const acb_mat_t tau, int sqr, slong prec);
-
-/* Quasi-linear algorithms for derivatives */
-
-void acb_theta_jet_ql_all(acb_ptr dth, acb_srcptr z, const acb_mat_t tau, slong ord, slong prec);
-
 #ifdef __cplusplus
 }
 #endif

@@ -66,7 +66,6 @@
 #include "t-jet_naive_all.c"
 #include "t-jet_naive_fixed_ab.c"
 #include "t-jet_naive_radius.c"
-#include "t-jet_ql_all.c"
 #include "t-jet_ql_bounds.c"
 #include "t-jet_ql_finite_diff.c"
 #include "t-jet_ql_radius.c"
@@ -82,8 +81,6 @@
 #include "t-ql_a0.c"
 #include "t-ql_a0_split.c"
 #include "t-ql_a0_steps.c"
-#include "t-ql_all.c"
-#include "t-ql_reduce.c"
 #include "t-ql_setup.c"
 #include "t-ql_steps.c"
 #include "t-ql_lower_dim.c"
@@ -167,7 +164,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_jet_naive_all),
     TEST_FUNCTION(acb_theta_jet_naive_fixed_ab),
     TEST_FUNCTION(acb_theta_jet_naive_radius),
-    TEST_FUNCTION(acb_theta_jet_ql_all),
     TEST_FUNCTION(acb_theta_jet_ql_bounds),
     TEST_FUNCTION(acb_theta_jet_ql_finite_diff),
     TEST_FUNCTION(acb_theta_jet_ql_radius),
@@ -182,9 +178,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_one_notransform),
     /* TEST_FUNCTION(acb_theta_ql_a0),
     TEST_FUNCTION(acb_theta_ql_a0_split),
-    TEST_FUNCTION(acb_theta_ql_a0_steps),
-    TEST_FUNCTION(acb_theta_ql_all),
-    TEST_FUNCTION(acb_theta_ql_reduce), */
+    TEST_FUNCTION(acb_theta_ql_a0_steps), */
     TEST_FUNCTION(acb_theta_ql_setup),
     TEST_FUNCTION(acb_theta_ql_steps),
     TEST_FUNCTION(acb_theta_ql_lower_dim),
