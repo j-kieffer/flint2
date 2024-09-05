@@ -23,7 +23,6 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
     slong j, k;
 
     acb_mat_scalar_mul_2exp_si(acb_theta_ctx_tau(ctx), acb_theta_ctx_tau(ctx), 1);
-    arb_mat_scalar_mul_2exp_si(acb_theta_ctx_y(ctx), acb_theta_ctx_y(ctx), 1);
     arb_mat_scalar_mul_2exp_si(acb_theta_ctx_yinv(ctx), acb_theta_ctx_yinv(ctx), -1);
     /* Swap matrices around */
     FLINT_SWAP(acb_mat_struct, *acb_theta_ctx_exp_tau_div_4(ctx),

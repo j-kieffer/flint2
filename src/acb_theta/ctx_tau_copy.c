@@ -24,7 +24,6 @@ acb_theta_ctx_tau_copy(acb_theta_ctx_tau_t res, const acb_theta_ctx_tau_t ctx)
     FLINT_ASSERT(acb_theta_ctx_g(res) == g);
 
     acb_mat_set(acb_theta_ctx_tau(res), acb_theta_ctx_tau(ctx));
-    arb_mat_set(acb_theta_ctx_y(res), acb_theta_ctx_y(ctx));
     arb_mat_set(acb_theta_ctx_yinv(res), acb_theta_ctx_yinv(ctx));
     acb_mat_set(acb_theta_ctx_exp_tau_div_4(res), acb_theta_ctx_exp_tau_div_4(ctx));
     acb_mat_set(acb_theta_ctx_exp_tau_div_2(res), acb_theta_ctx_exp_tau_div_2(ctx));

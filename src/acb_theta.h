@@ -156,8 +156,7 @@ void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr, int 
 
 #define acb_theta_ctx_g(ctx) (acb_mat_nrows(&(ctx)->tau))
 #define acb_theta_ctx_tau(ctx) (&(ctx)->tau)
-#define acb_theta_ctx_y(ctx) (&(ctx)->Y)
-#define acb_theta_ctx_yinv(ctx) (&(ctx)->Yinv)
+#define acb_theta_ctx_yinv(ctx) (&(ctx)->yinv)
 #define acb_theta_ctx_exp_tau_div_4(ctx) ((ctx)->exp_tau_div_4)
 #define acb_theta_ctx_exp_tau_div_2(ctx) ((ctx)->exp_tau_div_2)
 #define acb_theta_ctx_exp_tau(ctx) ((ctx)->exp_tau)

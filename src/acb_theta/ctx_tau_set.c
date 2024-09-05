@@ -34,7 +34,6 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
 
     /* Set tau, Y, exp_tau, and inverses */
     acb_mat_set(acb_theta_ctx_tau(ctx), tau);
-    acb_mat_get_imag(acb_theta_ctx_y(ctx), tau);
 
     for (j = 0; j < g; j++)
     {
@@ -69,7 +68,7 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
     if (g == 1)
     {
         arb_inv(arb_mat_entry(acb_theta_ctx_yinv(ctx), 0, 0),
-            arb_mat_entry(acb_theta_ctx_y(ctx), 0, 0), prec);
+            acb_imagref(acb_mat_entry(tau, 0, 0)), prec);
     }
     else
     {
