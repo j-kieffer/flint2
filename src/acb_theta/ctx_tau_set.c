@@ -73,21 +73,12 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
     }
     else
     {
-        arb_t pi;
-        arb_init(pi);
-
-        arb_const_pi(pi, prec);
-        acb_siegel_cho(acb_theta_ctx_cho(ctx), tau, prec); /* has a factor sqrt(pi) */
+        acb_siegel_cho_yinv(acb_theta_ctx_cho(ctx), acb_theta_ctx_yinv(ctx), tau, prec);
         b = arb_mat_inv(acb_theta_ctx_choinv(ctx), acb_theta_ctx_cho(ctx), prec);
         if (!b)
         {
             arb_mat_indeterminate(acb_theta_ctx_choinv(ctx));
         }
-        arb_mat_transpose(acb_theta_ctx_yinv(ctx), acb_theta_ctx_choinv(ctx));
-        arb_mat_mul(acb_theta_ctx_yinv(ctx), acb_theta_ctx_choinv(ctx), acb_theta_ctx_yinv(ctx), prec);
-        arb_mat_scalar_mul_arb(acb_theta_ctx_yinv(ctx), acb_theta_ctx_yinv(ctx), pi, prec);
-
-        arb_clear(pi);
     }
 
     /* Set exponentials for shifts */

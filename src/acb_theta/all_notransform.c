@@ -297,8 +297,6 @@ acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t t
 {
     slong g = acb_mat_nrows(tau);
     slong n = 1 << g;
-    slong lp = ACB_THETA_LOW_PREC;
-    arb_mat_t cho;
     slong * pattern;
     slong j;
     int use_sum = 1;
@@ -310,10 +308,8 @@ acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t t
     }
 
     pattern = flint_malloc(g * sizeof(slong));
-    arb_mat_init(cho, g, g);
 
-    acb_siegel_cho(cho, tau, lp);
-    res = acb_theta_ql_nb_steps(pattern, cho, prec);
+    res = acb_theta_ql_nb_steps(pattern, tau, prec);
 
     flint_printf("(all_notransform) pattern:");
     for (j = 0; j < g; j++)
@@ -325,7 +321,6 @@ acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t t
     if (!res)
     {
         _acb_vec_indeterminate(th, n * n * nb);
-        arb_mat_clear(cho);
         flint_free(pattern);
         return;
     }
@@ -355,7 +350,6 @@ acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t t
         acb_theta_all_mid_err(th, zs, nb, tau, pattern, sqr, prec);
     }
 
-    arb_mat_clear(cho);
     flint_free(pattern);
     return;
 }

@@ -235,7 +235,7 @@ void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong
 
 /* Quasilinear algorithms on exact input */
 
-int acb_theta_ql_nb_steps(slong * pattern, const arb_mat_t cho, slong prec);
+int acb_theta_ql_nb_steps(slong * pattern, const acb_mat_t tau, slong prec);
 
 int acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong ** pts,
     slong * nb, arf_t err, slong * fullprec, acb_srcptr z, const acb_mat_t tau,

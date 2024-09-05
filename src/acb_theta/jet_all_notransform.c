@@ -276,17 +276,13 @@ static int
 acb_theta_jet_all_use_sum(const acb_mat_t tau, slong prec)
 {
     slong g = acb_mat_nrows(tau);
-    slong lp = ACB_THETA_LOW_PREC;
-    arb_mat_t cho;
     slong * pattern;
     slong j;
     int b, res;
 
-    arb_mat_init(cho, g, g);
     pattern = flint_malloc(g * sizeof(slong));
 
-    acb_siegel_cho(cho, tau, lp);
-    b = acb_theta_ql_nb_steps(pattern, cho, prec);
+    b = acb_theta_ql_nb_steps(pattern, tau, prec);
 
     /* Do not use sum only when at least 3 steps are needed */
     res = 1;
@@ -301,7 +297,6 @@ acb_theta_jet_all_use_sum(const acb_mat_t tau, slong prec)
         }
     }
 
-    arb_mat_clear(cho);
     flint_free(pattern);
     return res;
 }
