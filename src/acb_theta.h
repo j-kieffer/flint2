@@ -65,6 +65,7 @@ int acb_siegel_is_reduced(const acb_mat_t tau, slong tol_exp, slong prec);
 
 void acb_siegel_randtest(acb_mat_t tau, flint_rand_t state, slong prec, slong mag_bits);
 void acb_siegel_randtest_reduced(acb_mat_t tau, flint_rand_t state, slong prec, slong mag_bits);
+void acb_siegel_randtest_compact(acb_mat_t tau, flint_rand_t state, int exact, slong prec);
 void acb_siegel_randtest_vec(acb_ptr z, flint_rand_t state, slong g, slong prec);
 void acb_siegel_randtest_vec_reduced(acb_ptr zs, flint_rand_t state,
     slong nb, const acb_mat_t tau, int exact, slong prec);
