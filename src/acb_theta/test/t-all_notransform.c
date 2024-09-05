@@ -23,20 +23,16 @@ TEST_FUNCTION_START(acb_theta_all_notransform, state)
         slong g = 1 + n_randint(state, 2);
         slong n = 1 << g;
         slong prec = 100 + n_randint(state, 500);
-        slong bits = n_randint(state, 4);
         slong nb = 1 + n_randint(state, 4);
         int sqr = n_randint(state, 2);
         acb_mat_t tau;
-        arb_t y;
         acb_ptr zs, th, test;
         arb_ptr distances;
         acb_theta_ctx_tau_t ctx_tau;
         acb_theta_ctx_z_struct * vec;
         slong j;
-        int res;
 
         acb_mat_init(tau, g, g);
-        arb_init(y);
         zs = _acb_vec_init(nb * g);
         th = _acb_vec_init(nb * n * n);
         test = _acb_vec_init(nb * n * n);
@@ -45,14 +41,8 @@ TEST_FUNCTION_START(acb_theta_all_notransform, state)
         distances = _arb_vec_init(n);
 
         /* Sample tau with reasonable imaginary part */
-        res = 0;
-        while(!res)
-        {
-            acb_siegel_randtest_reduced(tau, state, prec, bits);
-            arb_sub_si(y, acb_imagref(acb_mat_entry(tau, g - 1, g - 1)), 200, prec);
-            res = arb_is_negative(y);
-        }
-        acb_siegel_randtest_vec(zs + g, state, (nb - 1) * g, prec);
+        acb_siegel_randtest_compact(tau, state, 0, prec);
+        acb_siegel_randtest_vec_reduced(zs + g, state, nb - 1, tau, 0, prec);
 
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
         for (j = 0; j < nb; j++)
@@ -96,7 +86,6 @@ TEST_FUNCTION_START(acb_theta_all_notransform, state)
         }
 
         acb_mat_clear(tau);
-        arb_clear(y);
         _acb_vec_clear(zs, nb * g);
         _acb_vec_clear(th, n * n * nb);
         _acb_vec_clear(test, n * n * nb);
