@@ -19,7 +19,6 @@
 #include "t-all.c"
 #include "t-all_notransform.c"
 #include "t-char_dot.c"
-#include "t-char_get_a.c"
 #include "t-char_is_even.c"
 #include "t-char_is_goepel.c"
 #include "t-char_is_syzygous.c"
@@ -100,7 +99,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_all),
     TEST_FUNCTION(acb_theta_all_notransform),
     /* TEST_FUNCTION(acb_theta_char_dot),
-    TEST_FUNCTION(acb_theta_char_get_a),
     TEST_FUNCTION(acb_theta_char_is_even),
     TEST_FUNCTION(acb_theta_char_is_goepel),
     TEST_FUNCTION(acb_theta_char_is_syzygous),*/

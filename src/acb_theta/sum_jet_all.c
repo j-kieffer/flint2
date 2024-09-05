@@ -17,6 +17,21 @@
 
 /* Use a big ellipsoid to avoid complicated formulas for derivatives; this
    introduces powers of i in worker */
+static ulong
+acb_theta_char_get_a(const slong * n, slong g)
+{
+    slong k;
+    ulong a = 0;
+
+    for (k = 0; k < g; k++)
+    {
+        a *= 2;
+        a += ((n[k] % 2) + 2) % 2;
+    }
+
+    return a;
+}
+
 static void
 acb_theta_sum_jet_all_worker(acb_ptr th, acb_srcptr v1, acb_srcptr v2,
     const slong * precs, slong len, const acb_t cofactor, const slong * coords,
