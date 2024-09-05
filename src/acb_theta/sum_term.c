@@ -14,7 +14,7 @@
 #include "acb_theta.h"
 
 void
-acb_theta_naive_term(acb_t res, acb_srcptr z, const acb_mat_t tau,
+acb_theta_sum_term(acb_t res, acb_srcptr z, const acb_mat_t tau,
     const slong * tup, const slong * n, slong prec)
 {
     slong g = acb_mat_nrows(tau);

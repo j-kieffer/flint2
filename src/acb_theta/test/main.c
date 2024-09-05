@@ -56,7 +56,6 @@
 #include "t-jet_ql_bounds.c"
 #include "t-jet_tuples.c"
 #include "t-naive_radius.c"
-#include "t-naive_term.c"
 #include "t-one_notransform.c"
 #include "t-ql_setup.c"
 #include "t-ql_steps.c"
@@ -128,7 +127,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_jet_ql_bounds),
     /* TEST_FUNCTION(acb_theta_jet_tuples), */
     TEST_FUNCTION(acb_theta_naive_radius),
-    /* TEST_FUNCTION(acb_theta_naive_term),*/
     TEST_FUNCTION(acb_theta_one_notransform),
     TEST_FUNCTION(acb_theta_ql_setup),
     TEST_FUNCTION(acb_theta_ql_steps),

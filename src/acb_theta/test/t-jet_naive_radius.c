@@ -90,7 +90,7 @@ TEST_FUNCTION_START(acb_theta_jet_naive_radius, state)
             arb_zero(sum);
             for (k = 0; k < nb_pts; k++)
             {
-                acb_theta_naive_term(term, z, tau, tups + j * g, pts + k * g, prec);
+                acb_theta_sum_term(term, z, tau, tups + j * g, pts + k * g, prec);
                 acb_abs(abs, term, prec);
                 arb_add(sum, sum, abs, prec);
             }
