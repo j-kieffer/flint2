@@ -33,8 +33,8 @@ void acb_theta_sum_a0_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slon
     if (g == 1)
     {
         res = _acb_vec_init(4);
-        new_prec = FLINT_MAX(prec + acb_theta_dist_addprec(&distances[0]),
-            prec + acb_theta_dist_addprec(&distances[1]));
+        new_prec = FLINT_MAX(prec + acb_theta_agm_addprec(&distances[0]),
+            prec + acb_theta_agm_addprec(&distances[1]));
 
         for (j = 0; j < nb; j++)
         {
@@ -63,7 +63,7 @@ void acb_theta_sum_a0_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slon
             {
                 acb_theta_ctx_z_shift_a0(&new_vec[j], &vec[j], ctx_tau, a, prec);
             }
-            new_prec = prec + acb_theta_dist_addprec(&distances[a]);
+            new_prec = prec + acb_theta_agm_addprec(&distances[a]);
             acb_theta_sum_00(res, new_vec, nb, ctx_tau, new_prec);
             for (j = 0; j < nb; j++)
             {

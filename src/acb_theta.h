@@ -100,7 +100,6 @@ void acb_theta_eld_print(const acb_theta_eld_t E);
 
 /* Distances */
 
-slong acb_theta_dist_addprec(const arb_t d);
 
 /* AGM steps */
 
@@ -110,6 +109,7 @@ void acb_theta_agm_mul(acb_ptr res, acb_srcptr a1, acb_srcptr a2, slong g, slong
 
 void acb_theta_agm_distances(arb_ptr ds, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slong prec);
+slong acb_theta_agm_addprec(const arb_t d);
 void acb_theta_agm_mul_tight(acb_ptr res, acb_srcptr a0, acb_srcptr a,
     arb_srcptr d0, arb_srcptr d, slong g, slong prec);
 
