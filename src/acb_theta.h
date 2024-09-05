@@ -193,7 +193,6 @@ acb_theta_ctx_z_struct * acb_theta_ctx_z_vec_init(slong nb, slong g);
 void acb_theta_ctx_z_vec_clear(acb_theta_ctx_z_struct * vec, slong nb);
 
 void acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau_t ctx_tau, slong prec);
-void acb_theta_ctx_z_copy(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx);
 int acb_theta_ctx_z_overlaps(const acb_theta_ctx_z_t ctx1, const acb_theta_ctx_z_t ctx2);
 
 void acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
