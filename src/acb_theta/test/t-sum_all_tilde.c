@@ -52,7 +52,7 @@ TEST_FUNCTION_START(acb_theta_sum_all_tilde, state)
         }
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
 
-        acb_siegel_randtest_vec_reduced(z, state, tau, 0, prec);
+        acb_siegel_randtest_vec_reduced(z, state, 1, tau, 0, prec);
         acb_theta_ctx_z_set(ctx, z, ctx_tau, prec);
         acb_theta_agm_distances(d, z, 1, tau, prec);
 

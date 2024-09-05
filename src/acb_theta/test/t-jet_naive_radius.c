@@ -58,7 +58,7 @@ TEST_FUNCTION_START(acb_theta_jet_naive_radius, state)
         tups = flint_malloc(g * nb * sizeof(slong));
 
         acb_siegel_randtest_reduced(tau, state, prec, bits);
-        acb_siegel_randtest_vec_reduced(z, state, tau, 0, prec);
+        acb_siegel_randtest_vec_reduced(z, state, 1, tau, 0, prec);
 
         acb_siegel_cho_yinv(cho, yinv, tau, prec);
         _acb_vec_get_imag(y, z, g);

@@ -53,10 +53,7 @@ TEST_FUNCTION_START(acb_theta_sum_jet_all, state)
             acb_siegel_randtest_reduced(tau11, state, prec, bits);
             acb_set(acb_mat_entry(tau, j, j), acb_mat_entry(tau11, 0, 0));
         }
-        for (j = 0; j < nbz; j++)
-        {
-            acb_siegel_randtest_vec_reduced(zs + j * g, state, tau, 0, prec);
-        }
+        acb_siegel_randtest_vec_reduced(zs, state, nbz, tau, 0, prec);
 
         /* Call sum_jet_all at precision mprec */
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
