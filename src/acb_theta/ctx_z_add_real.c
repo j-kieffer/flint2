@@ -23,8 +23,6 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
     FLINT_ASSERT(res->g == g);
 
     /* Copy things */
-    _acb_vec_add(acb_theta_ctx_z(res), acb_theta_ctx_z(ctx),
-        acb_theta_ctx_z(ctx_real), g, prec);
     arb_set(acb_theta_ctx_u(res), acb_theta_ctx_u(ctx));
     arb_set(acb_theta_ctx_uinv(res), acb_theta_ctx_uinv(ctx));
     acb_theta_ctx_is_real(res) = acb_theta_ctx_is_real(ctx);

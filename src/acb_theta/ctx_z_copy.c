@@ -19,7 +19,6 @@ acb_theta_ctx_z_copy(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx)
 
     FLINT_ASSERT(res->g == g);
 
-    _acb_vec_set(acb_theta_ctx_z(res), acb_theta_ctx_z(ctx), g);
     _acb_vec_set(acb_theta_ctx_exp_z(res), acb_theta_ctx_exp_z(ctx), g);
     arb_set(acb_theta_ctx_u(res), acb_theta_ctx_u(ctx));
     arb_set(acb_theta_ctx_uinv(res), acb_theta_ctx_uinv(ctx));

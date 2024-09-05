@@ -19,7 +19,6 @@ acb_theta_ctx_z_init(acb_theta_ctx_z_t ctx, slong g)
     FLINT_ASSERT(g >= 1);
 
     ctx->g = g;
-    acb_theta_ctx_z(ctx) = _acb_vec_init(g);
     acb_theta_ctx_exp_z(ctx) = _acb_vec_init(g);
     arb_init(acb_theta_ctx_u(ctx));
     arb_init(acb_theta_ctx_uinv(ctx));

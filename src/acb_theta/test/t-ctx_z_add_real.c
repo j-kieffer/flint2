@@ -54,8 +54,6 @@ TEST_FUNCTION_START(acb_theta_ctx_z_add_real, state)
         if (!acb_theta_ctx_z_overlaps(ctx1, ctx2))
         {
             flint_printf("FAIL\n");
-            _acb_vec_printd(acb_theta_ctx_z(ctx1), g, 5);
-            _acb_vec_printd(acb_theta_ctx_z(ctx2), g, 5);
             _acb_vec_printd(acb_theta_ctx_exp_z(ctx1), g, 5);
             _acb_vec_printd(acb_theta_ctx_exp_z(ctx2), g, 5);
             if (g > 1)

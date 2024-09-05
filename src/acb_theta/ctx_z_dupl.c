@@ -20,8 +20,6 @@ acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec)
     acb_ptr temp;
     slong j;
 
-    _acb_vec_scalar_mul_2exp_si(acb_theta_ctx_z(ctx),
-        acb_theta_ctx_z(ctx), g, 1);
     /* Compute exponentials, swapping vectors around if g > 1 */
     if (g == 1)
     {

@@ -58,7 +58,6 @@ typedef struct acb_theta_ctx_tau_struct acb_theta_ctx_tau_t[1];
 typedef struct
 {
     slong g;
-    acb_ptr z;
     acb_ptr exp_z;
     arb_struct u;
     arb_struct uinv;
