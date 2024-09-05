@@ -51,10 +51,6 @@ TEST_FUNCTION_START(acb_theta_ctx_z_dupl, state)
             _acb_vec_printd(acb_theta_ctx_z(ctx2), g, 5);
             _acb_vec_printd(acb_theta_ctx_exp_z(ctx1), g, 5);
             _acb_vec_printd(acb_theta_ctx_exp_z(ctx2), g, 5);
-            acb_printd(acb_theta_ctx_c(ctx1), 5);
-            flint_printf("\n");
-            acb_printd(acb_theta_ctx_c(ctx2), 5);
-            flint_printf("\n");
             if (g > 1)
             {
                 _acb_vec_printd(acb_theta_ctx_exp_2z(ctx1), g, 5);

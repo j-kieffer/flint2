@@ -49,7 +49,4 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
                 acb_theta_ctx_is_real(ctx), prec);
         }
     }
-
-    /* The factor c gets multiplied by exp(-2 pi i r^T t), but now r = 0 */
-    acb_set(acb_theta_ctx_c(res), acb_theta_ctx_c(ctx));
 }

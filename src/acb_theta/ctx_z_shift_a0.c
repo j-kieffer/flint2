@@ -63,7 +63,6 @@ acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t
     acb_abs(abs, c, prec);
     arb_div(acb_theta_ctx_u(res), acb_theta_ctx_u(ctx), abs, prec);
     arb_mul(acb_theta_ctx_uinv(res), acb_theta_ctx_uinv(ctx), abs, prec);
-    acb_set(acb_theta_ctx_c(res), acb_theta_ctx_c(ctx));
 
     acb_theta_char_get_arb(v_shift, a, g);
     arb_mat_vector_mul_col(v_shift, acb_theta_ctx_cho(ctx_tau), v_shift, prec);
