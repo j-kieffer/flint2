@@ -17,21 +17,14 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
     const acb_theta_ctx_z_t ctx_real, slong prec)
 {
     slong g = ctx->g;
-    arb_ptr t_real;
-    acb_t x;
     slong j;
 
     FLINT_ASSERT(ctx_real->g == g);
     FLINT_ASSERT(res->g == g);
 
-    t_real = _arb_vec_init(g);
-    acb_init(x);
-
     /* Copy things */
-    _acb_vec_get_real(t_real, acb_theta_ctx_z(ctx_real), g);
     _acb_vec_add(acb_theta_ctx_z(res), acb_theta_ctx_z(ctx),
         acb_theta_ctx_z(ctx_real), g, prec);
-    _arb_vec_set(acb_theta_ctx_r(res), acb_theta_ctx_r(ctx), g);
     arb_set(acb_theta_ctx_u(res), acb_theta_ctx_u(ctx));
     arb_set(acb_theta_ctx_uinv(res), acb_theta_ctx_uinv(ctx));
     acb_theta_ctx_is_real(res) = acb_theta_ctx_is_real(ctx);
@@ -56,13 +49,4 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
                 acb_theta_ctx_is_real(ctx), prec);
         }
     }
-
-    /* The factor c gets multiplied by exp(-2 pi i r^T t) */
-    arb_dot(acb_realref(x), NULL, 1, acb_theta_ctx_r(ctx), 1, t_real, 1, g, prec);
-    acb_mul_2exp_si(x, x, 1);
-    acb_exp_pi_i(x, x, prec);
-    acb_mul(acb_theta_ctx_c(res), acb_theta_ctx_c(ctx), x, prec);
-
-    acb_clear(x);
-    _arb_vec_clear(t_real, g);
 }

@@ -27,7 +27,6 @@
 #include "t-ctx_sqr_inv.c"
 #include "t-ctx_tau_set.c"
 #include "t-ctx_tau_dupl.c"
-#include "t-ctx_z_set.c"
 #include "t-ctx_z_add_real.c"
 #include "t-ctx_z_copy.c"
 #include "t-ctx_z_dupl.c"
@@ -104,7 +103,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_ctx_sqr_inv),
     TEST_FUNCTION(acb_theta_ctx_tau_set),
     TEST_FUNCTION(acb_theta_ctx_tau_dupl),
-    TEST_FUNCTION(acb_theta_ctx_z_set),
     TEST_FUNCTION(acb_theta_ctx_z_add_real),
     TEST_FUNCTION(acb_theta_ctx_z_copy),
     TEST_FUNCTION(acb_theta_ctx_z_dupl),

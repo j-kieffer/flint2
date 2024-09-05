@@ -187,7 +187,6 @@ void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
 #define acb_theta_ctx_c(ctx) (&(ctx)->c)
 #define acb_theta_ctx_u(ctx) (&(ctx)->u)
 #define acb_theta_ctx_uinv(ctx) (&(ctx)->uinv)
-#define acb_theta_ctx_r(ctx) ((ctx)->r)
 #define acb_theta_ctx_v(ctx) ((ctx)->v)
 #define acb_theta_ctx_is_real(ctx) ((ctx)->is_real)
 
@@ -225,6 +224,13 @@ void acb_theta_sum_jet_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong 
 void acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     const acb_theta_ctx_tau_t ctx_tau, slong ord, slong prec);
 
+/* Reduction */
+
+int acb_theta_reduce_tau(acb_ptr new_zs, acb_mat_t new_tau, fmpz_mat_t mat, acb_mat_t N,
+    acb_mat_t ct, acb_ptr exps, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
+int acb_theta_reduce_z(acb_ptr new_zs, arb_ptr rs, acb_ptr cs, acb_srcptr zs,
+    slong nb, const acb_mat_t tau, slong prec);
+
 /* Quasilinear algorithms on exact input */
 
 int acb_theta_ql_nb_steps(slong * pattern, const acb_mat_t tau, slong prec);
@@ -245,11 +251,6 @@ int acb_theta_ql_exact(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     const slong * pattern, int all, int shifted_prec, slong prec);
 
 /* Main functions */
-
-int acb_theta_reduce_tau(acb_ptr new_zs, acb_mat_t new_tau, fmpz_mat_t mat, acb_mat_t N,
-    acb_mat_t ct, acb_ptr exps, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
-int acb_theta_reduce_z(acb_ptr new_zs, arb_ptr rs, acb_ptr cs, acb_srcptr zs,
-    slong nb, const acb_mat_t tau, slong prec);
 
 void acb_theta_00_notransform(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slong prec);

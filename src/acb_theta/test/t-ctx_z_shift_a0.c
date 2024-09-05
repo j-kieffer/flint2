@@ -49,44 +49,41 @@ TEST_FUNCTION_START(acb_theta_ctx_z_shift_a0, state)
         _acb_vec_add(z, z, z_shift, g, prec);
         acb_theta_ctx_z_set(ctx2, z, ctx_tau, prec);
 
-        /* Check: if the r vectors are identical, then content matches except c and u */
-        if (_arb_vec_equal(acb_theta_ctx_r(ctx1), acb_theta_ctx_r(ctx2), g))
+        /* Check: content matches except c and u */
+        if (!_acb_vec_overlaps(acb_theta_ctx_exp_z(ctx1),
+                acb_theta_ctx_exp_z(ctx2), g))
         {
-            if (!_acb_vec_overlaps(acb_theta_ctx_exp_z(ctx1),
-                    acb_theta_ctx_exp_z(ctx2), g))
-            {
-                flint_printf("FAIL (exp_z)\n");
-                _acb_vec_printd(acb_theta_ctx_exp_z(ctx1), g, 5);
-                _acb_vec_printd(acb_theta_ctx_exp_z(ctx2), g, 5);
-                flint_abort();
-            }
-            if (!_acb_vec_overlaps(acb_theta_ctx_exp_z_inv(ctx1),
-                    acb_theta_ctx_exp_z_inv(ctx2), g))
-            {
-                flint_printf("FAIL (exp_z_inv)\n");
-                flint_abort();
-            }
-            if (!_acb_vec_overlaps(acb_theta_ctx_exp_2z(ctx1),
-                    acb_theta_ctx_exp_2z(ctx2), g))
-            {
-                flint_printf("FAIL (exp_2z)\n");
-                flint_abort();
-            }
-            if (!_acb_vec_overlaps(acb_theta_ctx_exp_2z_inv(ctx1),
-                    acb_theta_ctx_exp_2z_inv(ctx2), g))
-            {
-                flint_printf("FAIL (exp_2z_inv)\n");
-                _acb_vec_printd(acb_theta_ctx_exp_2z_inv(ctx1), g, 5);
-                _acb_vec_printd(acb_theta_ctx_exp_2z_inv(ctx2), g, 5);
-                flint_abort();
-            }
-            if (!_arb_vec_overlaps(acb_theta_ctx_v(ctx1), acb_theta_ctx_v(ctx2), g))
-            {
-                flint_printf("FAIL (v)\n");
-                _arb_vec_printd(acb_theta_ctx_v(ctx1), g, 5);
-                _arb_vec_printd(acb_theta_ctx_v(ctx2), g, 5);
-                flint_abort();
-            }
+            flint_printf("FAIL (exp_z)\n");
+            _acb_vec_printd(acb_theta_ctx_exp_z(ctx1), g, 5);
+            _acb_vec_printd(acb_theta_ctx_exp_z(ctx2), g, 5);
+            flint_abort();
+        }
+        if (!_acb_vec_overlaps(acb_theta_ctx_exp_z_inv(ctx1),
+                acb_theta_ctx_exp_z_inv(ctx2), g))
+        {
+            flint_printf("FAIL (exp_z_inv)\n");
+            flint_abort();
+        }
+        if (!_acb_vec_overlaps(acb_theta_ctx_exp_2z(ctx1),
+                acb_theta_ctx_exp_2z(ctx2), g))
+        {
+            flint_printf("FAIL (exp_2z)\n");
+            flint_abort();
+        }
+        if (!_acb_vec_overlaps(acb_theta_ctx_exp_2z_inv(ctx1),
+                acb_theta_ctx_exp_2z_inv(ctx2), g))
+        {
+            flint_printf("FAIL (exp_2z_inv)\n");
+            _acb_vec_printd(acb_theta_ctx_exp_2z_inv(ctx1), g, 5);
+            _acb_vec_printd(acb_theta_ctx_exp_2z_inv(ctx2), g, 5);
+            flint_abort();
+        }
+        if (!_arb_vec_overlaps(acb_theta_ctx_v(ctx1), acb_theta_ctx_v(ctx2), g))
+        {
+            flint_printf("FAIL (v)\n");
+            _arb_vec_printd(acb_theta_ctx_v(ctx1), g, 5);
+            _arb_vec_printd(acb_theta_ctx_v(ctx2), g, 5);
+            flint_abort();
         }
 
         acb_mat_clear(tau);

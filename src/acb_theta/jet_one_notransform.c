@@ -70,16 +70,6 @@ void acb_theta_jet_one_notransform(acb_ptr th, acb_srcptr zs, slong nb,
             }
             _acb_vec_scalar_mul(th + j * nbth, th + j * nbth, nbth,
                 acb_theta_ctx_c(ctx), prec);
-
-            /* Adjust derivatives due to reduction */
-            _arb_vec_neg(r, acb_theta_ctx_r(ctx), g);
-
-            /* flint_printf("(jet_one_notransform) r: ");
-               _arb_vec_printd(r, g, 5); */
-
-            _arb_vec_scalar_mul_2exp_si(r, r, g, 1);
-            acb_theta_jet_exp_pi_i(res, r, ord, g, prec);
-            acb_theta_jet_mul(th + j * nbth, th + j * nbth, res, ord, g, prec);
         }
 
         acb_theta_ctx_tau_clear(ctx_tau);

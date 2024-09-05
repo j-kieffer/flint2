@@ -69,7 +69,6 @@ acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau
 
     /* To be removed */
     acb_one(acb_theta_ctx_c(ctx));
-    _arb_vec_zero(acb_theta_ctx_r(ctx), g);
 
     arb_clear(u);
     _arb_vec_clear(y, g);

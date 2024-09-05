@@ -133,10 +133,6 @@ acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     slong g = acb_theta_ctx_g(ctx_tau);
     slong n2 = 1 << (2 * g);
     slong nbth = acb_theta_jet_nb(ord, g);
-    arb_ptr r;
-    acb_ptr aux;
-    arb_t u;
-    acb_t c;
     slong j, k;
 
     FLINT_ASSERT(nb >= 0);
@@ -144,11 +140,6 @@ acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     {
         return;
     }
-
-    r = _arb_vec_init(g);
-    aux = _acb_vec_init(nbth);
-    arb_init(u);
-    acb_init(c);
 
     if (g == 1)
     {
@@ -179,6 +170,8 @@ acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
         arb_ptr v;
         slong * tups;
         fmpz_t m, t;
+        arb_t u;
+        acb_t c;
         int b;
 
         acb_theta_eld_init(E, g, g);
@@ -188,6 +181,8 @@ acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
         tups = flint_malloc(g * nbth * sizeof(slong));
         fmpz_init(m);
         fmpz_init(t);
+        arb_init(u);
+        acb_init(c);
 
         /* Take into account that everything is duplicated in worker */
         acb_theta_ctx_z_common_v(v, vec, nb, prec);
@@ -248,24 +243,7 @@ acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
         flint_free(tups);
         fmpz_clear(m);
         fmpz_clear(t);
+        arb_clear(u);
+        acb_clear(c);
     }
-
-    /* Both for genus 1 and higher, adjust derivatives after reduction */
-    for (j = 0; j < nb; j++)
-    {
-        _arb_vec_neg(r, acb_theta_ctx_r(&vec[j]), g);
-        _arb_vec_scalar_mul_2exp_si(r, r, g, 1);
-        acb_theta_jet_exp_pi_i(aux, r, ord, g, prec);
-        for (k = 0; k < n2; k++)
-        {
-            acb_theta_jet_mul(th + j * n2 * nbth + k * nbth, th + j * n2 * nbth + k * nbth,
-                aux, ord, g, prec);
-            /* No signs because 2r is divisible by 4 */
-        }
-    }
-
-    _acb_vec_clear(aux, nbth);
-    _arb_vec_clear(r, g);
-    arb_clear(u);
-    acb_clear(c);
 }

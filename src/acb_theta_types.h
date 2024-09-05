@@ -61,7 +61,6 @@ typedef struct
     acb_ptr z;
     acb_ptr exp_z;
     acb_struct c;
-    arb_ptr r;
     arb_struct u;
     arb_struct uinv;
     int is_real;

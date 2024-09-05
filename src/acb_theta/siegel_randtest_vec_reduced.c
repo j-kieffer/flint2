@@ -21,15 +21,15 @@ acb_siegel_randtest_vec_reduced(acb_ptr zs, flint_rand_t state, slong nb,
     arb_t t;
     slong j;
 
-    /* Sample z in [-2,2] + tau[-2,2] */
+    /* Sample z in [-1,1] + tau[-1,1] */
     arb_init(t);
 
     _acb_vec_zero(zs, nb * g);
     for (j = 0; j < nb * g; j++)
     {
         arb_urandom(acb_realref(&zs[j]), state, prec);
-        acb_mul_2exp_si(&zs[j], &zs[j], 2);
-        acb_sub_si(&zs[j], &zs[j], 2, prec);
+        acb_mul_2exp_si(&zs[j], &zs[j], 1);
+        acb_sub_si(&zs[j], &zs[j], 1, prec);
     }
     for (j = 0; j < nb; j++)
     {
@@ -38,8 +38,8 @@ acb_siegel_randtest_vec_reduced(acb_ptr zs, flint_rand_t state, slong nb,
     for (j = 0; j < nb * g; j++)
     {
         arb_urandom(t, state, prec);
-        arb_mul_2exp_si(t, t, 2);
-        arb_sub_si(t, t, 2, prec);
+        arb_mul_2exp_si(t, t, 1);
+        arb_sub_si(t, t, 1, prec);
         acb_add_arb(&zs[j], &zs[j], t, prec);
     }
 
