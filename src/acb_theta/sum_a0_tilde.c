@@ -19,7 +19,7 @@ void acb_theta_sum_a0_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slon
 {
     slong g = acb_theta_ctx_g(ctx_tau);
     slong n = 1 << g;
-    acb_ptr res;
+    acb_ptr res, cs;
     acb_theta_ctx_z_struct * new_vec;
     slong new_prec;
     slong a, j;
@@ -56,22 +56,25 @@ void acb_theta_sum_a0_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slon
         /* Update the context for each a, call sum_00 with the right precision */
         new_vec = acb_theta_ctx_z_vec_init(nb, g);
         res = _acb_vec_init(nb);
+        cs = _acb_vec_init(nb);
 
         for (a = 0; a < n; a++)
         {
             for (j = 0; j < nb; j++)
             {
-                acb_theta_ctx_z_shift_a0(&new_vec[j], &vec[j], ctx_tau, a, prec);
+                acb_theta_ctx_z_shift_a0(&new_vec[j], &cs[j], &vec[j], ctx_tau, a, prec);
             }
             new_prec = prec + acb_theta_agm_addprec(&distances[a]);
             acb_theta_sum_00(res, new_vec, nb, ctx_tau, new_prec);
             for (j = 0; j < nb; j++)
             {
+                acb_mul(&res[j], &res[j], &cs[j], prec);
                 acb_mul_arb(&th[n * j + a], &res[j], acb_theta_ctx_uinv(&vec[j]), prec);
             }
         }
 
         acb_theta_ctx_z_vec_clear(new_vec, nb);
         _acb_vec_clear(res, nb);
+        _acb_vec_clear(cs, nb);
     }
 }

@@ -42,17 +42,17 @@ TEST_FUNCTION_START(acb_theta_jet_00, state)
         acb_siegel_randtest_vec_reduced(z, state, nb, tau, 0, prec);
         _acb_vec_scalar_mul_2exp_si(z, z, nb * g, 1);
 
-        flint_printf("g = %wd, prec = %wd, nb = %wd, ord = %wd, tau, z:\n", g, prec, nb, ord);
+        /* flint_printf("g = %wd, prec = %wd, nb = %wd, ord = %wd, tau, z:\n", g, prec, nb, ord);
         acb_mat_printd(tau, 5);
-        _acb_vec_printd(z, nb * g, 5);
+        _acb_vec_printd(z, nb * g, 5); */
 
         /* Call jet_00 at precision mprec, compare with jet_00_notransform */
         acb_theta_jet_00(th, z, nb, tau, ord, prec);
         acb_theta_jet_00_notransform(test, z, nb, tau, ord, prec);
 
-        flint_printf("th, test:\n");
+        /* flint_printf("th, test:\n");
         _acb_vec_printd(th, nb * nbth, 5);
-        _acb_vec_printd(test, nb * nbth, 5);
+        _acb_vec_printd(test, nb * nbth, 5); */
 
         if (!_acb_vec_overlaps(th, test, nb * nbth))
         {

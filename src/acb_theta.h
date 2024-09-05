@@ -201,7 +201,7 @@ int acb_theta_ctx_z_overlaps(const acb_theta_ctx_z_t ctx1, const acb_theta_ctx_z
 void acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
     const acb_theta_ctx_z_t ctx_real, slong prec);
 void acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec);
-void acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
+void acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t ctx,
     const acb_theta_ctx_tau_t ctx_tau, ulong a, slong prec);
 void acb_theta_ctx_z_common_v(arb_ptr v, const acb_theta_ctx_z_struct * vec, slong nb, slong prec);
 

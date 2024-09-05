@@ -29,6 +29,7 @@ TEST_FUNCTION_START(acb_theta_ctx_z_shift_a0, state)
         acb_ptr z, z_shift;
         acb_theta_ctx_tau_t ctx_tau;
         acb_theta_ctx_z_t ctx1, ctx2;
+        acb_t c;
 
         acb_mat_init(tau, g, g);
         z = _acb_vec_init(g);
@@ -36,6 +37,7 @@ TEST_FUNCTION_START(acb_theta_ctx_z_shift_a0, state)
         acb_theta_ctx_tau_init(ctx_tau, g);
         acb_theta_ctx_z_init(ctx1, g);
         acb_theta_ctx_z_init(ctx2, g);
+        acb_init(c);
 
         acb_siegel_randtest_reduced(tau, state, prec, mag_bits);
         acb_siegel_randtest_vec(z, state, g, prec);
@@ -44,12 +46,12 @@ TEST_FUNCTION_START(acb_theta_ctx_z_shift_a0, state)
 
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
         acb_theta_ctx_z_set(ctx1, z, ctx_tau, prec);
-        acb_theta_ctx_z_shift_a0(ctx1, ctx1, ctx_tau, a, prec);
+        acb_theta_ctx_z_shift_a0(ctx1, c, ctx1, ctx_tau, a, prec);
 
         _acb_vec_add(z, z, z_shift, g, prec);
         acb_theta_ctx_z_set(ctx2, z, ctx_tau, prec);
 
-        /* Check: content matches except c and u */
+        /* Check: contexts match except u, uinv */
         if (!_acb_vec_overlaps(acb_theta_ctx_exp_z(ctx1),
                 acb_theta_ctx_exp_z(ctx2), g))
         {
@@ -92,6 +94,7 @@ TEST_FUNCTION_START(acb_theta_ctx_z_shift_a0, state)
         acb_theta_ctx_tau_clear(ctx_tau);
         acb_theta_ctx_z_clear(ctx1);
         acb_theta_ctx_z_clear(ctx2);
+        acb_clear(c);
     }
 
     TEST_FUNCTION_END(state);

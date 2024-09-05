@@ -21,19 +21,17 @@ acb_theta_aj_is_zero(ulong a, slong j, slong g)
 }
 
 void
-acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
+acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t ctx,
     const acb_theta_ctx_tau_t ctx_tau, ulong a, slong prec)
 {
     slong g = acb_theta_ctx_g(ctx_tau);
-    acb_t c;
-    arb_t abs;
     arb_ptr v_shift;
+    arb_t abs;
     slong j;
 
     FLINT_ASSERT(g > 1);
-    acb_init(c);
-    arb_init(abs);
     v_shift = _arb_vec_init(g);
+    arb_init(abs);
 
     /* Replace exp_z by analogs for z + tau a/2 */
     for (j = 0; j < g; j++)
@@ -59,18 +57,18 @@ acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
         }
         acb_mul(c, c, &acb_theta_ctx_exp_z(ctx)[j], prec);
     }
-    acb_mul(acb_theta_ctx_c(res), c, acb_theta_ctx_exp_a_tau_a_div_4(ctx_tau, a), prec);
+    acb_mul(c, c, acb_theta_ctx_exp_a_tau_a_div_4(ctx_tau, a), prec);
 
-    /* Compute c, r, v; u and uinv must be left invariant */
-    acb_abs(abs, acb_theta_ctx_c(res), prec);
-    arb_set(acb_theta_ctx_u(res), acb_theta_ctx_u(ctx));
-    acb_mul(acb_theta_ctx_c(res), acb_theta_ctx_c(res), acb_theta_ctx_c(ctx), prec);
+    /* Compute v; u and uinv must be multiplied by abs(c) */
+    acb_abs(abs, c, prec);
+    arb_div(acb_theta_ctx_u(res), acb_theta_ctx_u(ctx), abs, prec);
+    arb_mul(acb_theta_ctx_uinv(res), acb_theta_ctx_uinv(ctx), abs, prec);
+    acb_set(acb_theta_ctx_c(res), acb_theta_ctx_c(ctx));
 
     acb_theta_char_get_arb(v_shift, a, g);
     arb_mat_vector_mul_col(v_shift, acb_theta_ctx_cho(ctx_tau), v_shift, prec);
     _arb_vec_add(acb_theta_ctx_v(res), v_shift, acb_theta_ctx_v(ctx), g, prec);
 
-    acb_clear(c);
-    arb_clear(abs);
     _arb_vec_clear(v_shift, g);
+    arb_clear(abs);
 }
