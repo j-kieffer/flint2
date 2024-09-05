@@ -31,7 +31,6 @@ acb_theta_ctx_tau_init(acb_theta_ctx_tau_t ctx, slong g)
     if (g > 1)
     {
         arb_mat_init(acb_theta_ctx_cho(ctx), g, g);
-        arb_mat_init(acb_theta_ctx_choinv(ctx), g, g);
         acb_mat_init(acb_theta_ctx_exp_tau_div_4_inv(ctx), g, g);
         acb_mat_init(acb_theta_ctx_exp_tau_div_2_inv(ctx), g, g);
         acb_mat_init(acb_theta_ctx_exp_tau_inv(ctx), g, g);

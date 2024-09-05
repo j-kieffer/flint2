@@ -39,8 +39,6 @@ acb_theta_ctx_tau_overlaps(const acb_theta_ctx_tau_t ctx1, const acb_theta_ctx_t
     if (g > 1 && res)
     {
         res = arb_mat_overlaps(acb_theta_ctx_cho(ctx1), acb_theta_ctx_cho(ctx2))
-            && arb_mat_overlaps(acb_theta_ctx_choinv(ctx1),
-                acb_theta_ctx_choinv(ctx2))
             && acb_mat_overlaps(acb_theta_ctx_exp_tau_div_4_inv(ctx1),
                 acb_theta_ctx_exp_tau_div_4_inv(ctx2))
             && acb_mat_overlaps(acb_theta_ctx_exp_tau_div_2_inv(ctx1),

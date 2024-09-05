@@ -74,11 +74,6 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
     else
     {
         acb_siegel_cho_yinv(acb_theta_ctx_cho(ctx), acb_theta_ctx_yinv(ctx), tau, prec);
-        b = arb_mat_inv(acb_theta_ctx_choinv(ctx), acb_theta_ctx_cho(ctx), prec);
-        if (!b)
-        {
-            arb_mat_indeterminate(acb_theta_ctx_choinv(ctx));
-        }
     }
 
     /* Set exponentials for shifts */

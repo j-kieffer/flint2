@@ -41,8 +41,7 @@ struct acb_theta_ctx_tau_struct
     acb_mat_t exp_tau;
 
     /* g > 1 only */
-    arb_mat_struct C;
-    arb_mat_struct Cinv;
+    arb_mat_struct cho;
     acb_mat_t exp_tau_div_4_inv;
     acb_mat_t exp_tau_div_2_inv;
     acb_mat_t exp_tau_inv;

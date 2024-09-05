@@ -50,7 +50,6 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
         arb_sqrt(sqrt2, sqrt2, prec);
 
         arb_mat_scalar_mul_arb(acb_theta_ctx_cho(ctx), acb_theta_ctx_cho(ctx), sqrt2, prec);
-        arb_mat_scalar_div_arb(acb_theta_ctx_choinv(ctx), acb_theta_ctx_choinv(ctx), sqrt2, prec);
         FLINT_SWAP(acb_mat_struct, *acb_theta_ctx_exp_tau_div_4_inv(ctx),
             *acb_theta_ctx_exp_tau_div_2_inv(ctx));
         FLINT_SWAP(acb_mat_struct, *acb_theta_ctx_exp_tau_div_2_inv(ctx),

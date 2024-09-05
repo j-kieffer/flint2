@@ -149,7 +149,7 @@ void acb_theta_jet_ql_radius(arf_t eps, arf_t err, const arb_t c, const arb_t rh
 void acb_theta_naive_term(acb_t res, acb_srcptr z, const acb_mat_t tau, const slong * tup,
     const slong * n, slong prec);
 
-/* Context structures for theta function evaluations */
+/* Context for tau in summation algorithms */
 
 void acb_theta_ctx_exp_inv(acb_t exp_inv, const acb_t exp, const acb_t x, int is_real, slong prec);
 void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr, int is_real, slong prec);
@@ -161,8 +161,7 @@ void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr, int 
 #define acb_theta_ctx_exp_tau_div_4(ctx) ((ctx)->exp_tau_div_4)
 #define acb_theta_ctx_exp_tau_div_2(ctx) ((ctx)->exp_tau_div_2)
 #define acb_theta_ctx_exp_tau(ctx) ((ctx)->exp_tau)
-#define acb_theta_ctx_cho(ctx) (&(ctx)->C)
-#define acb_theta_ctx_choinv(ctx) (&(ctx)->Cinv)
+#define acb_theta_ctx_cho(ctx) (&(ctx)->cho)
 #define acb_theta_ctx_exp_tau_div_4_inv(ctx) ((ctx)->exp_tau_div_4_inv)
 #define acb_theta_ctx_exp_tau_div_2_inv(ctx) ((ctx)->exp_tau_div_2_inv)
 #define acb_theta_ctx_exp_tau_inv(ctx) ((ctx)->exp_tau_inv)
@@ -178,6 +177,8 @@ void acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong p
 void acb_theta_ctx_tau_copy(acb_theta_ctx_tau_t res, const acb_theta_ctx_tau_t ctx);
 int acb_theta_ctx_tau_overlaps(const acb_theta_ctx_tau_t ctx1, const acb_theta_ctx_tau_t ctx2);
 void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
+
+/* Context for z in summation algorithms */
 
 #define acb_theta_ctx_exp_z(ctx) ((ctx)->exp_z)
 #define acb_theta_ctx_exp_z_inv(ctx) ((ctx)->exp_z_inv)

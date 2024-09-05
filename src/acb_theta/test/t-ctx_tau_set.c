@@ -54,13 +54,6 @@ TEST_FUNCTION_START(acb_theta_ctx_tau_set, state)
 
         if (g > 1)
         {
-            arb_mat_mul(N, acb_theta_ctx_cho(ctx), acb_theta_ctx_choinv(ctx), prec);
-            if (!arb_mat_overlaps(N, id))
-            {
-                flint_printf("FAIL (choinv)\n");
-                flint_abort();
-            }
-
             arb_const_pi(pi, prec);
             arb_mat_transpose(N, acb_theta_ctx_cho(ctx));
             arb_mat_mul(N, N, acb_theta_ctx_cho(ctx), prec);
