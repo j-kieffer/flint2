@@ -100,8 +100,6 @@ void acb_theta_eld_print(const acb_theta_eld_t E);
 
 /* Distances */
 
-void acb_theta_dist_pt(arb_t d, arb_srcptr v, const arb_mat_t C, const slong * n, slong prec);
-void acb_theta_dist_lat(arb_t d, arb_srcptr v, const arb_mat_t C, slong prec);
 void acb_theta_dist_a0(arb_ptr d, acb_srcptr z, const acb_mat_t tau, slong prec);
 slong acb_theta_dist_addprec(const arb_t d);
 
