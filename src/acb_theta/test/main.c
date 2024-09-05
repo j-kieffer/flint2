@@ -98,8 +98,8 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_agm_sqrt), */
     TEST_FUNCTION(acb_theta_all),
     TEST_FUNCTION(acb_theta_all_notransform),
-    /* TEST_FUNCTION(acb_theta_char_dot),
-    TEST_FUNCTION(acb_theta_char_is_even),
+    TEST_FUNCTION(acb_theta_char_dot),
+    /* TEST_FUNCTION(acb_theta_char_is_even),
     TEST_FUNCTION(acb_theta_char_is_goepel),
     TEST_FUNCTION(acb_theta_char_is_syzygous),*/
     TEST_FUNCTION(acb_theta_ctx_exp_inv),

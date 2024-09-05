@@ -71,7 +71,6 @@ void acb_siegel_randtest_vec_reduced(acb_ptr z, flint_rand_t state,
 
 /* Theta characteristics */
 
-void acb_theta_char_get_slong(slong * n, ulong a, slong g);
 void acb_theta_char_get_arb(arb_ptr v, ulong a, slong g);
 void acb_theta_char_get_acb(acb_ptr v, ulong a, slong g);
 
