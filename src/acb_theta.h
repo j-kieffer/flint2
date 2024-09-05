@@ -179,21 +179,19 @@ void acb_theta_ctx_tau_copy(acb_theta_ctx_tau_t res, const acb_theta_ctx_tau_t c
 int acb_theta_ctx_tau_overlaps(const acb_theta_ctx_tau_t ctx1, const acb_theta_ctx_tau_t ctx2);
 void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
 
-#define acb_theta_ctx_z(ctx) ((ctx)->z)
 #define acb_theta_ctx_exp_z(ctx) ((ctx)->exp_z)
 #define acb_theta_ctx_exp_z_inv(ctx) ((ctx)->exp_z_inv)
 #define acb_theta_ctx_exp_2z(ctx) ((ctx)->exp_2z)
 #define acb_theta_ctx_exp_2z_inv(ctx) ((ctx)->exp_2z_inv)
-#define acb_theta_ctx_c(ctx) (&(ctx)->c)
 #define acb_theta_ctx_u(ctx) (&(ctx)->u)
 #define acb_theta_ctx_uinv(ctx) (&(ctx)->uinv)
-#define acb_theta_ctx_v(ctx) ((ctx)->v)
 #define acb_theta_ctx_is_real(ctx) ((ctx)->is_real)
 
 void acb_theta_ctx_z_init(acb_theta_ctx_z_t ctx, slong g);
 void acb_theta_ctx_z_clear(acb_theta_ctx_z_t ctx);
 acb_theta_ctx_z_struct * acb_theta_ctx_z_vec_init(slong nb, slong g);
 void acb_theta_ctx_z_vec_clear(acb_theta_ctx_z_struct * vec, slong nb);
+
 void acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau_t ctx_tau, slong prec);
 void acb_theta_ctx_z_copy(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx);
 int acb_theta_ctx_z_overlaps(const acb_theta_ctx_z_t ctx1, const acb_theta_ctx_z_t ctx2);

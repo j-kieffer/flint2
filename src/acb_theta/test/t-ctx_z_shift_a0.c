@@ -80,11 +80,11 @@ TEST_FUNCTION_START(acb_theta_ctx_z_shift_a0, state)
             _acb_vec_printd(acb_theta_ctx_exp_2z_inv(ctx2), g, 5);
             flint_abort();
         }
-        if (!_arb_vec_overlaps(acb_theta_ctx_v(ctx1), acb_theta_ctx_v(ctx2), g))
+        if (!_arb_vec_overlaps(ctx1->v, ctx2->v, g))
         {
             flint_printf("FAIL (v)\n");
-            _arb_vec_printd(acb_theta_ctx_v(ctx1), g, 5);
-            _arb_vec_printd(acb_theta_ctx_v(ctx2), g, 5);
+            _arb_vec_printd(ctx1->v, g, 5);
+            _arb_vec_printd(ctx2->v, g, 5);
             flint_abort();
         }
 

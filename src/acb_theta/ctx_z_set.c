@@ -46,7 +46,7 @@ acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau
     arb_inv(acb_theta_ctx_uinv(ctx), acb_theta_ctx_u(ctx), prec);
     if (g > 1)
     {
-        arb_mat_vector_mul_col(acb_theta_ctx_v(ctx), acb_theta_ctx_cho(ctx_tau), t, prec);
+        arb_mat_vector_mul_col(ctx->v, acb_theta_ctx_cho(ctx_tau), t, prec);
     }
 
     /* Set z_is_real, exp_z, exp_z_inv, exp_2z, exp_2z_inv */

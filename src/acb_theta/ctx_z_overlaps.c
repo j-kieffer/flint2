@@ -36,8 +36,7 @@ int acb_theta_ctx_z_overlaps(const acb_theta_ctx_z_t ctx1, const acb_theta_ctx_z
                 acb_theta_ctx_exp_z_inv(ctx2), g)
             && _acb_vec_overlaps(acb_theta_ctx_exp_2z_inv(ctx1),
                 acb_theta_ctx_exp_2z_inv(ctx2), g)
-            && _arb_vec_overlaps(acb_theta_ctx_v(ctx1),
-                acb_theta_ctx_v(ctx2), g);
+            && _arb_vec_overlaps(ctx1->v, ctx2->v, g);
     }
 
     return res;

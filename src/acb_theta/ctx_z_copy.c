@@ -29,6 +29,6 @@ acb_theta_ctx_z_copy(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx)
         _acb_vec_set(acb_theta_ctx_exp_2z(res), acb_theta_ctx_exp_2z(ctx), g);
         _acb_vec_set(acb_theta_ctx_exp_z_inv(res), acb_theta_ctx_exp_z_inv(ctx), g);
         _acb_vec_set(acb_theta_ctx_exp_2z_inv(res), acb_theta_ctx_exp_2z_inv(ctx), g);
-        _arb_vec_set(acb_theta_ctx_v(res), acb_theta_ctx_v(ctx), g);
+        _arb_vec_set(res->v, ctx->v, g);
     }
 }

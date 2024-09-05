@@ -66,7 +66,7 @@ acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t
 
     acb_theta_char_get_arb(v_shift, a, g);
     arb_mat_vector_mul_col(v_shift, acb_theta_ctx_cho(ctx_tau), v_shift, prec);
-    _arb_vec_add(acb_theta_ctx_v(res), v_shift, acb_theta_ctx_v(ctx), g, prec);
+    _arb_vec_add(res->v, v_shift, ctx->v, g, prec);
 
     _arb_vec_clear(v_shift, g);
     arb_clear(abs);

@@ -28,7 +28,7 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
     acb_theta_ctx_is_real(res) = acb_theta_ctx_is_real(ctx);
     if (g > 1)
     {
-        _arb_vec_set(acb_theta_ctx_v(res), acb_theta_ctx_v(ctx), g);
+        _arb_vec_set(res->v, ctx->v, g);
     }
 
     /* Exponentials */
