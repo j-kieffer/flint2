@@ -167,7 +167,6 @@ void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr, int 
 void acb_theta_ctx_tau_init(acb_theta_ctx_tau_t ctx, slong g);
 void acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx);
 void acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec);
-void acb_theta_ctx_tau_copy(acb_theta_ctx_tau_t res, const acb_theta_ctx_tau_t ctx);
 int acb_theta_ctx_tau_overlaps(const acb_theta_ctx_tau_t ctx1, const acb_theta_ctx_tau_t ctx2);
 void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
 
