@@ -101,7 +101,6 @@ void acb_theta_eld_print(const acb_theta_eld_t E);
 
 /* AGM steps */
 
-void acb_theta_agm_hadamard(acb_ptr res, acb_srcptr a, slong g, slong prec);
 void acb_theta_agm_sqrt(acb_ptr res, acb_srcptr a, acb_srcptr roots, slong nb, slong prec);
 void acb_theta_agm_mul(acb_ptr res, acb_srcptr a1, acb_srcptr a2, slong g, slong prec);
 
