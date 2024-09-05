@@ -57,8 +57,7 @@ acb_theta_reduce_z(acb_ptr new_zs, arb_ptr rs, acb_ptr cs, acb_srcptr zs,
     t = _acb_vec_init(g);
     x = _acb_vec_init(g);
 
-    acb_siegel_cho(cho, tau, prec);
-    acb_siegel_yinv(yinv, tau, prec);
+    acb_siegel_cho_yinv(cho, yinv, tau, prec);
 
     for (j = 0; j < nb; j++)
     {

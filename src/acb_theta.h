@@ -59,6 +59,7 @@ void acb_siegel_transform_cocycle_inv(acb_mat_t w, acb_mat_t c, acb_mat_t cinv,
     const fmpz_mat_t mat, const acb_mat_t tau, slong prec);
 void acb_siegel_transform(acb_mat_t w, const fmpz_mat_t mat, const acb_mat_t tau, slong prec);
 
+void acb_siegel_cho_yinv(arb_mat_t cho, arb_mat_t yinv, const acb_mat_t tau, slong prec);
 void acb_siegel_cho(arb_mat_t C, const acb_mat_t tau, slong prec);
 void acb_siegel_yinv(arb_mat_t Yinv, const acb_mat_t tau, slong prec);
 

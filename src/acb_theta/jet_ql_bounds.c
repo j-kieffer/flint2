@@ -22,13 +22,13 @@ acb_theta_jet_ql_ci(arb_t c0, arb_t c1, arb_t c2, acb_srcptr z, const acb_mat_t 
 {
     slong lp = ACB_THETA_LOW_PREC;
     slong g = acb_mat_nrows(tau);
-    arb_mat_t Yinv;
+    arb_mat_t yinv;
     arb_mat_t cho;
     arb_ptr y, w;
     arb_t t, s;
     slong k, j;
 
-    arb_mat_init(Yinv, g, g);
+    arb_mat_init(yinv, g, g);
     arb_mat_init(cho, g, g);
     y = _arb_vec_init(g);
     w = _arb_vec_init(g);
@@ -36,8 +36,7 @@ acb_theta_jet_ql_ci(arb_t c0, arb_t c1, arb_t c2, acb_srcptr z, const acb_mat_t 
     arb_init(s);
 
     _acb_vec_get_imag(y, z, g);
-    acb_siegel_yinv(Yinv, tau, lp);
-    acb_siegel_cho(cho, tau, lp);
+    acb_siegel_cho_yinv(cho, yinv, tau, lp);
 
     /* c0 is 2^g \prod_{i=1}^g (1 + 2/\sqrt{\gamma_i}) */
     arb_one(c0);
@@ -51,15 +50,15 @@ acb_theta_jet_ql_ci(arb_t c0, arb_t c1, arb_t c2, acb_srcptr z, const acb_mat_t 
 
     /* c1 is sqrt(\pi y Y^{-1} y) */
     arb_const_pi(t, lp);
-    arb_mat_scalar_mul_arb(Yinv, Yinv, t, lp);
-    arb_mat_vector_mul_col(w, Yinv, y, lp);
+    arb_mat_scalar_mul_arb(yinv, yinv, t, lp);
+    arb_mat_vector_mul_col(w, yinv, y, lp);
     arb_dot(c1, NULL, 0, y, 1, w, 1, g, lp);
     arb_nonnegative_part(c1, c1);
     arb_sqrt(c1, c1, lp);
 
     /* c2 is sqrt(max of \pi x Y^{-1} x where |x| \leq 1) */
     arb_zero(c2);
-    arb_mat_cho(cho, Yinv, lp);
+    arb_mat_cho(cho, yinv, lp);
     arb_mat_transpose(cho, cho);
     for (k = 0; k < g; k++)
     {
@@ -75,7 +74,7 @@ acb_theta_jet_ql_ci(arb_t c0, arb_t c1, arb_t c2, acb_srcptr z, const acb_mat_t 
     arb_nonnegative_part(c2, c2);
     arb_sqrt(c2, c2, lp);
 
-    arb_mat_clear(Yinv);
+    arb_mat_clear(yinv);
     arb_mat_clear(cho);
     _arb_vec_clear(y, g);
     _arb_vec_clear(w, g);

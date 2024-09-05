@@ -29,7 +29,7 @@ TEST_FUNCTION_START(acb_theta_jet_naive_radius, state)
         slong nb = acb_theta_jet_nb(ord, g);
         acb_theta_eld_t E;
         acb_mat_t tau;
-        arb_mat_t C, Yinv;
+        arb_mat_t cho, yinv;
         arf_t R2, eps;
         acb_ptr z;
         arb_ptr y, v;
@@ -42,8 +42,8 @@ TEST_FUNCTION_START(acb_theta_jet_naive_radius, state)
         int res;
 
         acb_mat_init(tau, g, g);
-        arb_mat_init(C, g, g);
-        arb_mat_init(Yinv, g, g);
+        arb_mat_init(cho, g, g);
+        arb_mat_init(yinv, g, g);
         arf_init(R2);
         arf_init(eps);
         acb_theta_eld_init(E, g, g);
@@ -60,21 +60,20 @@ TEST_FUNCTION_START(acb_theta_jet_naive_radius, state)
         acb_siegel_randtest_reduced(tau, state, prec, bits);
         acb_siegel_randtest_vec_reduced(z, state, tau, 0, prec);
 
-        acb_siegel_cho(C, tau, prec);
-        acb_siegel_yinv(Yinv, tau, prec);
+        acb_siegel_cho_yinv(cho, yinv, tau, prec);
         _acb_vec_get_imag(y, z, g);
-        arb_mat_vector_mul_col(v, Yinv, y, prec);
+        arb_mat_vector_mul_col(v, yinv, y, prec);
         arb_dot(u, NULL, 0, v, 1, y, 1, g, prec);
         arb_const_pi(pi, prec);
         arb_mul(u, u, pi, prec);
         arb_exp(u, u, prec);
-        arb_mat_vector_mul_col(v, C, v, prec);
+        arb_mat_vector_mul_col(v, cho, v, prec);
 
-        acb_theta_jet_naive_radius(R2, eps, C, v, ord, mprec);
+        acb_theta_jet_naive_radius(R2, eps, cho, v, ord, mprec);
         arb_mul_arf(u, u, eps, prec);
 
         /* Test: sum of terms on the border of ellipsoid is less than u */
-        res = acb_theta_eld_set(E, C, R2, v);
+        res = acb_theta_eld_set(E, cho, R2, v);
         if (!res)
         {
             flint_printf("FAIL (ellipsoid)\n");
@@ -113,8 +112,8 @@ TEST_FUNCTION_START(acb_theta_jet_naive_radius, state)
         }
 
         acb_mat_clear(tau);
-        arb_mat_clear(C);
-        arb_mat_clear(Yinv);
+        arb_mat_clear(cho);
+        arb_mat_clear(yinv);
         arf_clear(R2);
         arf_clear(eps);
         acb_theta_eld_clear(E);

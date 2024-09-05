@@ -180,7 +180,7 @@ acb_theta_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     slong n = 1 << g;
     acb_mat_t new_tau;
     acb_ptr new_z, new_th;
-    arb_mat_t Yinv;
+    arb_mat_t cho, yinv;
     arb_ptr y, w;
     arb_t u, pi;
     int add_zero;
@@ -192,7 +192,8 @@ acb_theta_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     add_zero = !_acb_vec_is_zero(zs, g);
     acb_mat_init(new_tau, g, g);
     new_z = _acb_vec_init((nb + add_zero) * g);
-    arb_mat_init(Yinv, g, g);
+    arb_mat_init(cho, g, g);
+    arb_mat_init(yinv, g, g);
     y = _arb_vec_init(g);
     w = _arb_vec_init(g);
     arb_init(u);
@@ -257,12 +258,12 @@ acb_theta_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     if (res)
     {
         /* Multiply by exp(pi y^T Yinv y) */
-        acb_siegel_yinv(Yinv, tau, prec);
+        acb_siegel_cho_yinv(cho, yinv, tau, prec);
         arb_const_pi(pi, prec);
         for (j = 0; j < nb; j++)
         {
             _acb_vec_get_imag(y, zs + j * g, g);
-            arb_mat_vector_mul_col(w, Yinv, y, prec);
+            arb_mat_vector_mul_col(w, yinv, y, prec);
             arb_dot(u, NULL, 0, y, 1, w, 1, g, prec);
             arb_mul(u, u, pi, prec);
             if (sqr)
@@ -282,7 +283,8 @@ acb_theta_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 
     acb_mat_clear(new_tau);
     _acb_vec_clear(new_z, (nb + add_zero) * g);
-    arb_mat_clear(Yinv);
+    arb_mat_clear(cho);
+    arb_mat_clear(yinv);
     _arb_vec_clear(y, g);
     _arb_vec_clear(w, g);
     arb_clear(u);
