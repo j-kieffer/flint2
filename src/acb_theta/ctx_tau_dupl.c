@@ -22,7 +22,6 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
     slong n = 1 << g;
     slong j, k;
 
-    acb_mat_scalar_mul_2exp_si(acb_theta_ctx_tau(ctx), acb_theta_ctx_tau(ctx), 1);
     arb_mat_scalar_mul_2exp_si(acb_theta_ctx_yinv(ctx), acb_theta_ctx_yinv(ctx), -1);
     /* Swap matrices around */
     FLINT_SWAP(acb_mat_struct, *acb_theta_ctx_exp_tau_div_4(ctx),
@@ -57,10 +56,8 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
         {
             for (k = j; k < g; k++)
             {
-                acb_theta_ctx_sqr_inv(acb_mat_entry(acb_theta_ctx_exp_tau_inv(ctx), j, k),
-                    acb_mat_entry(acb_theta_ctx_exp_tau_div_2_inv(ctx), j, k),
-                    acb_mat_entry(acb_theta_ctx_exp_tau(ctx), j, k),
-                    acb_is_real(acb_mat_entry(acb_theta_ctx_tau(ctx), j, k)), prec);
+                acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau_inv(ctx), j, k),
+                    acb_mat_entry(acb_theta_ctx_exp_tau_div_2_inv(ctx), j, k), prec);
             }
         }
 

@@ -32,9 +32,7 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
     FLINT_ASSERT(g == acb_mat_nrows(tau));
     acb_init(x);
 
-    /* Set tau, Y, exp_tau, and inverses */
-    acb_mat_set(acb_theta_ctx_tau(ctx), tau);
-
+    /* Set exp_tau and inverses */
     for (j = 0; j < g; j++)
     {
         for (k = j; k < g; k++)
@@ -64,7 +62,7 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
         }
     }
 
-    /* Set C, Cinv, Yinv */
+    /* Set cho, yinv */
     if (g == 1)
     {
         arb_inv(arb_mat_entry(acb_theta_ctx_yinv(ctx), 0, 0),

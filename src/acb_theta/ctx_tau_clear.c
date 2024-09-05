@@ -21,7 +21,6 @@ acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx)
     slong g = acb_theta_ctx_g(ctx);
     slong n = 1 << g;
 
-    acb_mat_clear(acb_theta_ctx_tau(ctx));
     arb_mat_clear(acb_theta_ctx_yinv(ctx));
     acb_mat_clear(acb_theta_ctx_exp_tau_div_4(ctx));
     acb_mat_clear(acb_theta_ctx_exp_tau_div_2(ctx));

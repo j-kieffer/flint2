@@ -33,7 +33,6 @@ typedef struct acb_theta_eld_struct acb_theta_eld_t[1];
 
 struct acb_theta_ctx_tau_struct
 {
-    acb_mat_struct tau;
     arb_mat_struct yinv;
     acb_mat_t exp_tau_div_4;
     acb_mat_t exp_tau_div_2;

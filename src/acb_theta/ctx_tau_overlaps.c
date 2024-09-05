@@ -24,8 +24,7 @@ acb_theta_ctx_tau_overlaps(const acb_theta_ctx_tau_t ctx1, const acb_theta_ctx_t
 
     FLINT_ASSERT(acb_theta_ctx_g(ctx1) == g);
 
-    res = acb_mat_overlaps(acb_theta_ctx_tau(ctx1), acb_theta_ctx_tau(ctx2))
-        && arb_mat_overlaps(acb_theta_ctx_yinv(ctx1),
+    res = arb_mat_overlaps(acb_theta_ctx_yinv(ctx1),
             acb_theta_ctx_yinv(ctx2))
         && acb_mat_overlaps(acb_theta_ctx_exp_tau_div_4(ctx1),
             acb_theta_ctx_exp_tau_div_4(ctx2))

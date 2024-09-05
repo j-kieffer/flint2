@@ -21,7 +21,6 @@ acb_theta_ctx_tau_init(acb_theta_ctx_tau_t ctx, slong g)
     slong n = 1 << g;
     FLINT_ASSERT(g >= 1);
 
-    acb_mat_init(acb_theta_ctx_tau(ctx), g, g);
     arb_mat_init(acb_theta_ctx_yinv(ctx), g, g);
     acb_mat_init(acb_theta_ctx_exp_tau_div_4(ctx), g, g);
     acb_mat_init(acb_theta_ctx_exp_tau_div_2(ctx), g, g);

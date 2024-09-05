@@ -151,8 +151,7 @@ void acb_theta_naive_term(acb_t res, acb_srcptr z, const acb_mat_t tau, const sl
 void acb_theta_ctx_exp_inv(acb_t exp_inv, const acb_t exp, const acb_t x, int is_real, slong prec);
 void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr, int is_real, slong prec);
 
-#define acb_theta_ctx_g(ctx) (acb_mat_nrows(&(ctx)->tau))
-#define acb_theta_ctx_tau(ctx) (&(ctx)->tau)
+#define acb_theta_ctx_g(ctx) ((&(ctx)->yinv)->r)
 #define acb_theta_ctx_yinv(ctx) (&(ctx)->yinv)
 #define acb_theta_ctx_exp_tau_div_4(ctx) ((ctx)->exp_tau_div_4)
 #define acb_theta_ctx_exp_tau_div_2(ctx) ((ctx)->exp_tau_div_2)
