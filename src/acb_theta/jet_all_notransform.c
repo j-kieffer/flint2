@@ -105,6 +105,39 @@ acb_theta_jet_finite_diff(acb_ptr dth, const arf_t eps, const arf_t err,
 }
 
 static void
+acb_theta_jet_finite_diff_radius(arf_t eps, arf_t err, const arb_t c, const arb_t rho,
+    slong ord, slong g, slong prec)
+{
+    slong lp = ACB_THETA_LOW_PREC;
+    slong b = ord + 1;
+    arb_t x, y;
+
+    arb_init(x);
+    arb_init(y);
+
+    /* Set x to min of (1/2g)^(1/b)*rho, (2^(-prec)/2cg)^(1/b)*rho^(2b-1)/b */
+    arb_set_si(x, 2 * g);
+    arb_inv(x, x, lp);
+    arb_root_ui(x, x, b, lp);
+    arb_mul(x, x, rho, lp);
+
+    arb_pow_ui(y, rho, 2 * b - 1, prec);
+    arb_mul_2exp_si(y, y, -prec);
+    arb_div(y, y, c, lp);
+    arb_div_si(y, y, 2 * g, lp);
+    arb_root_ui(y, y, b, lp);
+
+    arb_min(x, x, y, lp);
+    arb_get_lbound_arf(eps, x, lp);
+
+    arf_one(err);
+    arf_mul_2exp_si(err, err, -prec);
+
+    arb_clear(x);
+    arb_clear(y);
+}
+
+static void
 acb_theta_jet_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb,
     const acb_mat_t tau, slong ord, slong prec)
 {
@@ -137,7 +170,7 @@ acb_theta_jet_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb,
     for (l = 0; l < nb; l++)
     {
         acb_theta_jet_ql_bounds(&c[l], &rho[l], zs + l * g, tau, ord);
-        acb_theta_jet_ql_radius(arb_midref(&eps[l]), arb_midref(&err[l]),
+        acb_theta_jet_finite_diff_radius(arb_midref(&eps[l]), arb_midref(&err[l]),
             &c[l], &rho[l], ord, g, prec);
 
         arb_log_base_ui(t, &eps[l], 2, lp);
