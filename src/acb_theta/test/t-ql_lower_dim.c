@@ -27,7 +27,6 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         slong nba = 1 << (g - s);
         ulong a = n_randint(state, nba);
         slong prec = 100 + n_randint(state, 100);
-        slong bits = n_randint(state, 4);
         int all = n_randint(state, 2);
         slong nbth = (all ? n * n : n);
         slong nbth0 = (all ? n0 * n0 : n0);
@@ -55,8 +54,8 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         test = _acb_vec_init(nbth);
         arf_init(err);
 
-        acb_siegel_randtest_reduced(tau, state, prec, bits);
-        acb_siegel_randtest_vec(z, state, g, prec);
+        acb_siegel_randtest_compact(tau, state, 0, prec);
+        acb_siegel_randtest_vec_reduced(z, state, 1, tau, 0, prec);
 
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
         acb_theta_ctx_z_set(ctx_z, z, ctx_tau, prec);

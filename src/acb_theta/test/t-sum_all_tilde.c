@@ -26,7 +26,6 @@ TEST_FUNCTION_START(acb_theta_sum_all_tilde, state)
         slong n2 = 1 << (2 * g);
         slong mprec = 100 + n_randint(state, 100);
         slong prec = mprec + 50;
-        slong bits = n_randint(state, 4);
         acb_mat_t tau, tau11;
         acb_ptr z;
         acb_theta_ctx_tau_t ctx_tau;
@@ -47,7 +46,7 @@ TEST_FUNCTION_START(acb_theta_sum_all_tilde, state)
 
         for (j = 0; j < g; j++)
         {
-            acb_siegel_randtest_reduced(tau11, state, prec, bits);
+            acb_siegel_randtest_compact(tau11, state, 0, prec);
             acb_set(acb_mat_entry(tau, j, j), acb_mat_entry(tau11, 0, 0));
         }
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
