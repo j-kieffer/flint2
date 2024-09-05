@@ -76,13 +76,16 @@ TEST_FUNCTION_START(acb_theta_ql_exact, state)
             acb_get_mid(&zs[j], &zs[j]);
         }
 
+        if (shifted_prec)
+        {
+            acb_theta_agm_distances(distances, zs, nb, tau, prec);
+        }
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
         for (j = 0; j < nb; j++)
         {
             acb_theta_ctx_z_set(&vec[j], zs + j * g, ctx_tau, prec);
             if (shifted_prec)
             {
-                acb_theta_dist_a0(distances + j * n, zs + j * g, tau, prec);
                 if (all)
                 {
                     acb_theta_sum_all_tilde(test + j * n * n, &vec[j], 1, ctx_tau, distances + j * n, prec);

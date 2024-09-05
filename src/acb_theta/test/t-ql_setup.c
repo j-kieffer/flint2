@@ -70,10 +70,7 @@ TEST_FUNCTION_START(acb_theta_ql_setup, state)
         }
 
         /* Compute distances */
-        for (j = 0; j < nb; j++)
-        {
-            acb_theta_dist_a0(distances + j * n, zs + j * g, tau, prec);
-        }
+        acb_theta_agm_distances(distances, zs, nb, tau, prec);
 
         res = acb_theta_ql_setup(rts, rts_all, t, &guard, easy_steps, zs, nb, tau,
             distances, nb_steps, all, prec);

@@ -47,7 +47,6 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         acb_mat_init(tau, g, g);
         z = _acb_vec_init(g);
         d = _arb_vec_init(n);
-        d0 = _arb_vec_init(n0);
         acb_theta_ctx_tau_init(ctx_tau, g);
         acb_theta_ctx_tau_init(ctx_tau0, s);
         acb_theta_ctx_z_init(ctx_z, g);
@@ -61,7 +60,7 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
 
         acb_theta_ctx_tau_set(ctx_tau, tau, prec);
         acb_theta_ctx_z_set(ctx_z, z, ctx_tau, prec);
-        acb_theta_dist_a0(d, z, tau, ACB_THETA_LOW_PREC);
+        acb_theta_agm_distances(d, z, 1, tau, ACB_THETA_LOW_PREC);
         if (all)
         {
             acb_theta_sum_all_tilde(th, ctx_z, 1, ctx_tau, d, prec);
@@ -81,20 +80,21 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         /* flint_printf("ql_lower_dim: got res = %wd, nb = %wd, fullprec = %wd\n", res, nb, fullprec); */
 
         th0s = _acb_vec_init(nb * nbth0);
+        d0 = _arb_vec_init(nb * n0);
         acb_mat_window_init(tau0, tau, 0, 0, s, s);
 
         acb_theta_ctx_tau_set(ctx_tau0, tau0, prec);
+        acb_theta_agm_distances(d0, z0s, nb, tau0, ACB_THETA_LOW_PREC);
         for (j = 0; j < nb; j++)
         {
-            acb_theta_dist_a0(d0, z0s + j * s, tau0, ACB_THETA_LOW_PREC);
             acb_theta_ctx_z_set(ctx_z0, z0s + j * s, ctx_tau0, prec);
             if (all)
             {
-                acb_theta_sum_all_tilde(th0s + j * nbth0, ctx_z0, 1, ctx_tau0, d0, prec);
+                acb_theta_sum_all_tilde(th0s + j * nbth0, ctx_z0, 1, ctx_tau0, d0 + j * n0, prec);
             }
             else
             {
-                acb_theta_sum_a0_tilde(th0s + j * nbth0, ctx_z0, 1, ctx_tau0, d0, prec);
+                acb_theta_sum_a0_tilde(th0s + j * nbth0, ctx_z0, 1, ctx_tau0, d0 + j * n0, prec);
             }
         }
 
@@ -134,7 +134,7 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         acb_mat_window_clear(tau0);
         _acb_vec_clear(z, g);
         _arb_vec_clear(d, n);
-        _arb_vec_clear(d0, n0);
+        _arb_vec_clear(d0, nb * n0);
         _acb_vec_clear(z0s, nb * s);
         _acb_vec_clear(cofactors, nb);
         arf_clear(err);

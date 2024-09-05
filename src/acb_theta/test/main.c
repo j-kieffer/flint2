@@ -12,6 +12,7 @@
 /* Include functions *********************************************************/
 
 #include "t-00.c"
+#include "t-agm_distances.c"
 #include "t-agm_hadamard.c"
 #include "t-agm_mul.c"
 #include "t-agm_mul_tight.c"
@@ -31,7 +32,6 @@
 #include "t-ctx_z_copy.c"
 #include "t-ctx_z_dupl.c"
 #include "t-ctx_z_shift_a0.c"
-#include "t-dist_a0.c"
 #include "t-eld_border.c"
 #include "t-eld_points.c"
 #include "t-g2_character.c"
@@ -90,6 +90,7 @@
 test_struct tests[] =
 {
     TEST_FUNCTION(acb_theta_00),
+    TEST_FUNCTION(acb_theta_agm_distances),
     /* TEST_FUNCTION(acb_theta_agm_hadamard),*/
     TEST_FUNCTION(acb_theta_agm_mul),
     /* TEST_FUNCTION(acb_theta_agm_mul_tight),
@@ -109,7 +110,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_ctx_z_copy),
     TEST_FUNCTION(acb_theta_ctx_z_dupl),
     TEST_FUNCTION(acb_theta_ctx_z_shift_a0),
-    /* TEST_FUNCTION(acb_theta_dist_a0), */
     TEST_FUNCTION(acb_theta_eld_border),
     TEST_FUNCTION(acb_theta_eld_points),
     TEST_FUNCTION(acb_theta_g2_character),
