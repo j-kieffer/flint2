@@ -98,9 +98,6 @@ void acb_theta_eld_border(slong * pts, const acb_theta_eld_t E);
 int acb_theta_eld_contains(const acb_theta_eld_t E, const slong * pt);
 void acb_theta_eld_print(const acb_theta_eld_t E);
 
-/* Distances */
-
-
 /* AGM steps */
 
 void acb_theta_agm_hadamard(acb_ptr res, acb_srcptr a, slong g, slong prec);
@@ -116,7 +113,6 @@ void acb_theta_agm_mul_tight(acb_ptr res, acb_srcptr a0, acb_srcptr a,
 /* The transformation formula */
 
 ulong acb_theta_transform_char(slong * e, const fmpz_mat_t mat, ulong ab);
-void acb_theta_transform_sqrtdet(acb_t res, const acb_mat_t tau, slong prec);
 slong acb_theta_transform_kappa(acb_t sqrtdet, const fmpz_mat_t mat,
     const acb_mat_t tau, slong prec);
 slong acb_theta_transform_kappa2(const fmpz_mat_t mat);

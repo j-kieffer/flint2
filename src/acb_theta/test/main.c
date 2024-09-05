@@ -83,7 +83,6 @@
 #include "t-transform_char.c"
 #include "t-transform_kappa.c"
 #include "t-transform_proj.c"
-#include "t-transform_sqrtdet.c"
 
 /* Array of test functions ***************************************************/
 
@@ -160,8 +159,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sum_jet_all),
     /* TEST_FUNCTION(acb_theta_transform_char),
     TEST_FUNCTION(acb_theta_transform_kappa),
-    TEST_FUNCTION(acb_theta_transform_proj),
-    TEST_FUNCTION(acb_theta_transform_sqrtdet)*/
+    TEST_FUNCTION(acb_theta_transform_proj), */
 };
 
 /* main function *************************************************************/
