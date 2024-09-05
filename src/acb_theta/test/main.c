@@ -74,7 +74,6 @@
 #include "t-siegel_is_reduced.c"
 #include "t-siegel_reduce.c"
 #include "t-siegel_transform.c"
-#include "t-siegel_transform_z.c"
 #include "t-sp2gz_decompose.c"
 #include "t-sp2gz_inv.c"
 #include "t-sp2gz_is_correct.c"
@@ -156,7 +155,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_siegel_is_reduced),
     TEST_FUNCTION(acb_theta_siegel_reduce),
     TEST_FUNCTION(acb_theta_siegel_transform),
-    TEST_FUNCTION(acb_theta_siegel_transform_z),
     TEST_FUNCTION(acb_theta_sp2gz_decompose),
     TEST_FUNCTION(acb_theta_sp2gz_inv),
     TEST_FUNCTION(acb_theta_sp2gz_is_correct),
