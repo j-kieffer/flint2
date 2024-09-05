@@ -52,7 +52,7 @@ acb_theta_eld_contains(const acb_theta_eld_t E, const slong * pt)
 
     for (k = d; k < g; k++)
     {
-        if (pt[k] != acb_theta_eld_coord(E, k))
+        if (pt[k] != E->last_coords[k - d])
         {
             return 0;
         }

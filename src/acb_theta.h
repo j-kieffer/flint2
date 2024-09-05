@@ -85,8 +85,6 @@ int acb_theta_char_is_syzygous(ulong ch1, ulong ch2, ulong ch3, slong g);
 
 /* Ellipsoids */
 
-#define acb_theta_eld_coord(E, k) ((E)->last_coords[(k) - (E)->dim])
-
 void acb_theta_eld_init(acb_theta_eld_t E, slong d, slong g);
 void acb_theta_eld_clear(acb_theta_eld_t E);
 

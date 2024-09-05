@@ -24,8 +24,8 @@ acb_theta_eld_border(slong * pts, const acb_theta_eld_t E)
         pts[g] = (E->max) + 1;
         for (k = 1; k < g; k++)
         {
-            pts[k] = acb_theta_eld_coord(E, k);
-            pts[k + g] = acb_theta_eld_coord(E, k);
+            pts[k] = E->last_coords[k - d];
+            pts[k + g] = E->last_coords[k - d];
         }
     }
     else /* d > 1 */

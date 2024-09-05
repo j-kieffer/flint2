@@ -53,7 +53,7 @@ acb_theta_sum_work_dim1(acb_ptr th, acb_ptr v1, acb_ptr v2, slong * precs,
     coords[0] = min;
     for (k = 1; k < g; k++)
     {
-        coords[k] = acb_theta_eld_coord(E, k);
+        coords[k] = E->last_coords[k - 1];
     }
 
     /* Store lin^k in v1 and square powers in v2; then call worker */

@@ -26,7 +26,7 @@ acb_theta_eld_points(slong * pts, const acb_theta_eld_t E)
             pts[i] = k;
             for (j = 1; j < g; j++)
             {
-                pts[i + j] = acb_theta_eld_coord(E, j);
+                pts[i + j] = E->last_coords[j - d];
             }
             i += g;
         }

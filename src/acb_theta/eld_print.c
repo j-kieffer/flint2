@@ -25,7 +25,7 @@ acb_theta_eld_print(const acb_theta_eld_t E)
     flint_printf("Slice (...");
     for (k = 0; k < g - d; k++)
     {
-        flint_printf(", %wd", acb_theta_eld_coord(E, k + d));
+        flint_printf(", %wd", E->last_coords[k]);
     }
     flint_printf("): from %wd to %wd (mid: %wd)\n", E->min, E->max, E->mid);
     if (d > 1)
