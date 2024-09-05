@@ -69,14 +69,14 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
             acb_theta_sum_a0_tilde(th, ctx_z, 1, ctx_tau, d, prec);
         }
 
-        /* flint_printf("\n\ng = %wd, s = %wd, all = %wd, a = %wd, tau, z:\n", g, s, all, a);
+        /*flint_printf("\n\ng = %wd, s = %wd, all = %wd, a = %wd, tau, z:\n", g, s, all, a);
            acb_mat_printd(tau, 5);
            _acb_vec_printd(z, g, 5); */
 
         res = acb_theta_ql_lower_dim(&z0s, &cofactors, &pts, &nb, err,
             &fullprec, z, tau, d, s, a, prec);
 
-        /* flint_printf("ql_lower_dim: got res = %wd, nb = %wd, fullprec = %wd\n", res, nb, fullprec); */
+        /*flint_printf("ql_lower_dim: got res = %wd, nb = %wd, fullprec = %wd\n", res, nb, fullprec); */
 
         th0s = _acb_vec_init(nb * nbth0);
         d0 = _arb_vec_init(nb * n0);
@@ -101,8 +101,8 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         {
             acb_theta_ql_recombine(test, th0s, cofactors, pts, nb, err, fullprec,
                 s, a, all, g, prec);
-            /* _acb_vec_printd(th, nbth, 5);
-               _acb_vec_printd(test, nbth, 5); */
+            /*_acb_vec_printd(th, nbth, 5);
+              _acb_vec_printd(test, nbth, 5); */
             if (all)
             {
                 for (j = 0; j < n * n; j++)

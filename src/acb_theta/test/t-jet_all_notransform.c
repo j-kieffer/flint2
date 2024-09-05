@@ -50,12 +50,12 @@ TEST_FUNCTION_START(acb_theta_jet_all_notransform, state)
         }
         acb_theta_sum_jet_all(test, vec, nb, ctx_tau, ord, prec);
 
-        /* flint_printf("\n\ng = %wd, prec = %wd, nb = %wd, ord = %wd\n",
+         flint_printf("\n\ng = %wd, prec = %wd, nb = %wd, ord = %wd\n",
             g, prec, nb, ord);
         acb_mat_printd(tau, 5);
         _acb_vec_printd(zs, nb * g, 5);
-        flint_printf("result of sum:\n");
-        _acb_vec_printd(test, nb * n2 * nbth, 5); */
+        /*flint_printf("result of sum:\n");
+          _acb_vec_printd(test, nb * n2 * nbth, 5);*/
 
         acb_theta_jet_all_notransform(th, zs, nb, tau, ord, prec);
 

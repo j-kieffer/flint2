@@ -76,9 +76,8 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong ** pts,
     slong g = acb_mat_nrows(tau);
     arb_mat_t cho, cho0, cho1, yinv, y0inv;
     acb_mat_t tau0, star, tau1;
-    arb_ptr y, v, w, new_y, new_w;
-    acb_ptr u, x;
-    acb_t f;
+    arb_ptr y, v, w, new_y, new_w, rs;
+    acb_ptr u, x, cs;
     slong j, k;
     int res;
 
@@ -98,7 +97,6 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong ** pts,
     x = _acb_vec_init(g - s);
     new_y = _arb_vec_init(s);
     new_w = _arb_vec_init(s);
-    acb_init(f);
 
     acb_siegel_cho_yinv(cho, yinv, tau, prec);
     acb_siegel_cho_yinv(cho0, y0inv, tau0, prec);
@@ -110,8 +108,10 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong ** pts,
         err, distances, a, w, cho, cho1, prec);
     *new_zs = _acb_vec_init((*nb) * s);
     *cofactors = _acb_vec_init(*nb);
+    rs = _arb_vec_init((*nb) * s);
+    cs = _acb_vec_init(*nb);
 
-    for (k = 0; k < *nb; k++)
+    for (k = 0; (k < *nb) && res; k++)
     {
         /* Set u to pt + a1/2 */
         acb_theta_char_get_acb(u, a, g - s);
@@ -120,20 +120,33 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong ** pts,
             acb_add_si(&u[j], &u[j], (*pts)[k * (g - s) + j], prec);
         }
 
-        /* Get new_z and cofactor at 0 */
+        /* Get new_z and log(cofactor) */
         acb_mat_vector_mul_col(*new_zs + k * s, star, u, prec);
         _acb_vec_add(*new_zs + k * s, *new_zs + k * s, z, s, prec);
-        acb_dot(f, NULL, 0, u, 1, z + s, 1, g - s, prec);
-        acb_mul_2exp_si(f, f, 1);
-        acb_mat_vector_mul_col(x, tau1, u, prec);
-        acb_dot(f, f, 0, x, 1, u, 1, g - s, prec);
 
-        arb_dot(acb_imagref(f), acb_imagref(f), 0, y, 1, w, 1, g, prec);
+        acb_dot(*cofactors + k, NULL, 0, u, 1, z + s, 1, g - s, prec);
+        acb_mul_2exp_si(*cofactors + k, *cofactors + k, 1);
+        acb_mat_vector_mul_col(x, tau1, u, prec);
+        acb_dot(*cofactors + k, *cofactors + k, 0, x, 1, u, 1, g - s, prec);
+    }
+
+    if (res)
+    {
+        /* Further reduce vectors */
+        res = acb_theta_reduce_z(*new_zs, rs, cs, *new_zs, *nb, tau0, prec);
+    }
+
+    for (k = 0; (k < *nb) && res; k++)
+    {
+        /* Adjust cofactor for theta_ab_tilde */
+        arb_dot(acb_imagref(*cofactors + k), acb_imagref(*cofactors + k), 0,
+            y, 1, w, 1, g, prec);
         _acb_vec_get_imag(new_y, *new_zs + k * s, s);
         arb_mat_vector_mul_col(new_w, y0inv, new_y, prec);
-        arb_dot(acb_imagref(f), acb_imagref(f), 1, new_y, 1, new_w, 1, s, prec);
-
-        acb_exp_pi_i(*cofactors + k, f, prec);
+        arb_dot(acb_imagref(*cofactors + k), acb_imagref(*cofactors + k), 1,
+            new_y, 1, new_w, 1, s, prec);
+        acb_exp_pi_i(*cofactors + k, *cofactors + k, prec);
+        acb_mul(*cofactors + k, *cofactors + k, &cs[k], prec);
     }
 
     arb_mat_clear(cho);
@@ -151,6 +164,7 @@ acb_theta_ql_lower_dim(acb_ptr * new_zs, acb_ptr * cofactors, slong ** pts,
     _acb_vec_clear(x, g - s);
     _arb_vec_clear(new_y, s);
     _arb_vec_clear(new_w, s);
-    acb_clear(f);
+    _arb_vec_clear(rs, (*nb) * s);
+    _acb_vec_clear(cs, *nb);
     return res;
 }
