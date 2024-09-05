@@ -68,8 +68,6 @@ void acb_theta_jet_one_notransform(acb_ptr th, acb_srcptr zs, slong nb,
                 _acb_vec_scalar_mul(th + j * nbth, th + j * nbth, nbth,
                     acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx_tau), 0, 0), prec);
             }
-            _acb_vec_scalar_mul(th + j * nbth, th + j * nbth, nbth,
-                acb_theta_ctx_c(ctx), prec);
         }
 
         acb_theta_ctx_tau_clear(ctx_tau);

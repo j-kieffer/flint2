@@ -48,8 +48,6 @@ acb_theta_sum_all_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb
             acb_neg(&th[4 * j + 3], &res[0]);
             _acb_vec_scalar_mul(th + 4 * j + 2, th + 4 * j + 2, 2,
                 acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx_tau), 0, 0), new_prec);
-            _acb_vec_scalar_mul(th + 4 * j, th + 4 * j, 4,
-                acb_theta_ctx_c(&vec[j]), new_prec);
             _acb_vec_scalar_mul_arb(th + 4 * j, th + 4 * j, 4,
                 acb_theta_ctx_uinv(&vec[j]), new_prec);
         }

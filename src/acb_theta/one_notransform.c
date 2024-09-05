@@ -63,7 +63,6 @@ void acb_theta_one_notransform(acb_ptr th, acb_srcptr zs, slong nb,
                 acb_mul(&th[j], &th[j],
                     acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx_tau), 0, 0), prec);
             }
-            acb_mul(&th[j], &th[j], acb_theta_ctx_c(ctx), prec);
         }
 
         acb_theta_ctx_tau_clear(ctx_tau);
