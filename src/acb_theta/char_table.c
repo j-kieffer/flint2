@@ -14,7 +14,7 @@
 #include "acb_theta.h"
 
 void
-acb_theta_char_table(ulong * chars, slong * es, const fmpz_mat_t mat)
+acb_theta_char_table(ulong * ch, slong * e, const fmpz_mat_t mat, slong ab)
 {
     slong g = sp2gz_dim(mat);
     slong n2 = 1 << (2 * g);
@@ -24,8 +24,9 @@ acb_theta_char_table(ulong * chars, slong * es, const fmpz_mat_t mat)
     fmpz_mat_t Cvec_1, Cvec_2, Lvec;
     fmpz_mat_t coef;
     fmpz_t eps, x;
-    ulong ab;
     slong i;
+    slong start = (ab < 0 ? 0 : ab);
+    slong end = (ab < 0 ? n2 : ab + 1);
 
     fmpz_mat_window_init(a, mat, 0, 0, g, g);
     fmpz_mat_window_init(b, mat, 0, g, g, 2 * g);
@@ -55,9 +56,9 @@ acb_theta_char_table(ulong * chars, slong * es, const fmpz_mat_t mat)
         fmpz_neg(fmpz_mat_entry(diags, g + i, 0), fmpz_mat_entry(abt, i, i));
     }
 
-    for (ab = 0; ab < n2; ab++)
+    for (ab = start; ab < end; ab++)
     {
-        chars[ab] = 0;
+        ch[ab - start] = 0;
 
         /* Turn ab into a 2g x 1 fmpz matrix, set alphabeta = diags + ab */
         for (i = 0; i < 2 * g; i++)
@@ -106,8 +107,8 @@ acb_theta_char_table(ulong * chars, slong * es, const fmpz_mat_t mat)
         /* Convert alphabeta mod 2 to ulong */
         for (i = 0; i < 2 * g; i++)
         {
-            chars[ab] = chars[ab] << 1;
-            chars[ab] += fmpz_tstbit(fmpz_mat_entry(alphabeta, i, 0), 0);
+            ch[ab - start] = ch[ab - start] << 1;
+            ch[ab - start] += fmpz_tstbit(fmpz_mat_entry(alphabeta, i, 0), 0);
         }
         /* Adjust sign of eps and reduce mod 8 */
         for (i = 0; i < g; i++)
@@ -118,7 +119,7 @@ acb_theta_char_table(ulong * chars, slong * es, const fmpz_mat_t mat)
                 fmpz_add_ui(eps, eps, 4);
             }
         }
-        es[ab] = fmpz_mod_ui(eps, eps, 8);
+        e[ab - start] = fmpz_mod_ui(eps, eps, 8);
     }
 
     fmpz_mat_window_clear(a);

@@ -28,7 +28,7 @@ acb_theta_transform_proj(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th, int s
     chars = flint_malloc(n2 * sizeof(ulong));
     es = flint_malloc(n2 * sizeof(slong));
 
-    acb_theta_char_table(chars, es, mat);
+    acb_theta_char_table(chars, es, mat, -1);
     _acb_vec_unit_roots(units, k, k, prec);
 
     for (ab = 0; ab < n2; ab++)

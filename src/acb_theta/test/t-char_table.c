@@ -26,7 +26,7 @@ TEST_FUNCTION_START(acb_theta_char_table, state)
         fmpz_mat_t mat;
         ulong * chars;
         slong * es;
-        ulong test, ab;
+        ulong ab;
         slong j, k;
 
         fmpz_mat_init(mat, 2 * g, 2 * g);
@@ -43,7 +43,7 @@ TEST_FUNCTION_START(acb_theta_char_table, state)
         }
         sp2gz_trig(mat, mat);
 
-        acb_theta_char_table(chars, es, mat);
+        acb_theta_char_table(chars, es, mat, -1);
         for (ab = 0; ab < n2; ab++)
         {
             if ((chars[ab] >> g) != (ab >> g))

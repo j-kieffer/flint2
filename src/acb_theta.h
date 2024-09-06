@@ -81,7 +81,7 @@ int acb_theta_char_is_even(ulong ab, slong g);
 int acb_theta_char_is_goepel(ulong ch1, ulong ch2, ulong ch3, ulong ch4, slong g);
 int acb_theta_char_is_syzygous(ulong ch1, ulong ch2, ulong ch3, slong g);
 
-void acb_theta_char_table(ulong * chars, slong * es, const fmpz_mat_t mat);
+void acb_theta_char_table(ulong * ch, slong * e, const fmpz_mat_t mat, slong ab);
 void acb_theta_char_shuffle(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th,
     int sqr, slong prec);
 
