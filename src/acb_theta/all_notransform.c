@@ -172,7 +172,7 @@ acb_theta_all_sum(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     _acb_vec_clear(zero, g);
 }
 
-static void
+static int
 acb_theta_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     const slong * pattern, int sqr, slong prec)
 {
@@ -276,10 +276,6 @@ acb_theta_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         /* Add error bounds */
         acb_theta_all_add_err(th, zs, nb, tau, sqr, prec);
     }
-    else
-    {
-        _acb_vec_indeterminate(th, n * n * nb);
-    }
 
     acb_mat_clear(new_tau);
     _acb_vec_clear(new_z, (nb + add_zero) * g);
@@ -289,6 +285,7 @@ acb_theta_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     _arb_vec_clear(w, g);
     arb_clear(u);
     arb_clear(pi);
+    return res;
 }
 
 void
@@ -318,14 +315,7 @@ acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t t
     }
     flint_printf("\n");
 
-    if (!res)
-    {
-        _acb_vec_indeterminate(th, n * n * nb);
-        flint_free(pattern);
-        return;
-    }
-
-    if (sqr) /* duplication formula means one step less */
+    if (res && sqr) /* duplication formula means one step less */
     {
         for (j = 0; j < g; j++)
         {
@@ -341,13 +331,41 @@ acb_theta_all_notransform(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t t
         }
     }
 
-    if (use_sum)
+    if (res && use_sum)
     {
         acb_theta_all_sum(th, zs, nb, tau, sqr, prec);
     }
-    else
+    else if (res)
     {
-        acb_theta_all_mid_err(th, zs, nb, tau, pattern, sqr, prec);
+        res = acb_theta_all_mid_err(th, zs, nb, tau, pattern, sqr, prec);
+    }
+
+    if (!res)
+    {
+        /* Use sum_bound to avoid returning NaN */
+        arb_t c, rho;
+        ulong ab;
+
+        arb_init(c);
+        arb_init(rho);
+
+        for (j = 0; j < nb; j++)
+        {
+            acb_theta_sum_bound(c, rho, zs + j * g, tau, 0);
+            if (sqr)
+            {
+                arb_sqr(c, c, prec);
+            }
+            for (ab = 0; ab < n * n; ab++)
+            {
+                arb_zero_pm_one(acb_realref(&th[j * n * n + ab]));
+                arb_zero_pm_one(acb_imagref(&th[j * n * n + ab]));
+            }
+            _acb_vec_scalar_mul_arb(th + j * n * n, th + j * n * n, n * n, c, prec);
+        }
+
+        arb_clear(c);
+        arb_clear(rho);
     }
 
     flint_free(pattern);

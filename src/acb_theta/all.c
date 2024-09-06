@@ -102,7 +102,24 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     }
     else
     {
-        _acb_vec_indeterminate(th, n2 * nb);
+        /* Use sum_bound to avoid returning NaN */
+        arb_t c, rho;
+        arb_init(c);
+        arb_init(rho);
+
+        for (j = 0; j < nb; j++)
+        {
+            acb_theta_sum_bound(c, rho, zs + j * g, tau, 0);
+            for (ab = 0; ab < n2; ab++)
+            {
+                arb_zero_pm_one(acb_realref(&th[j * n2 + ab]));
+                arb_zero_pm_one(acb_imagref(&th[j * n2 + ab]));
+            }
+            _acb_vec_scalar_mul_arb(th + j * n2, th + j * n2, n2, c, prec);
+        }
+
+        arb_clear(c);
+        arb_clear(rho);
     }
 
 
