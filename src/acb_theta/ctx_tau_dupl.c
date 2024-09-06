@@ -33,8 +33,8 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
     {
         for (k = j; k < g; k++)
         {
-            acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau(ctx), j, k),
-                acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), j, k), prec);
+            acb_sqr(acb_mat_entry(ctx->exp_tau, j, k),
+                acb_mat_entry(ctx->exp_tau_div_2, j, k), prec);
         }
     }
 
@@ -54,8 +54,8 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
         {
             for (k = j; k < g; k++)
             {
-                acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau_inv(ctx), j, k),
-                    acb_mat_entry(acb_theta_ctx_exp_tau_div_2_inv(ctx), j, k), prec);
+                acb_sqr(acb_mat_entry(ctx->exp_tau_inv, j, k),
+                    acb_mat_entry(ctx->exp_tau_div_2_inv, j, k), prec);
             }
         }
 

@@ -145,13 +145,7 @@ void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr, int 
 
 #define acb_theta_ctx_g(ctx) ((&(ctx)->yinv)->r)
 #define acb_theta_ctx_yinv(ctx) (&(ctx)->yinv)
-#define acb_theta_ctx_exp_tau_div_4(ctx) ((ctx)->exp_tau_div_4)
-#define acb_theta_ctx_exp_tau_div_2(ctx) ((ctx)->exp_tau_div_2)
-#define acb_theta_ctx_exp_tau(ctx) ((ctx)->exp_tau)
 #define acb_theta_ctx_cho(ctx) (&(ctx)->cho)
-#define acb_theta_ctx_exp_tau_div_4_inv(ctx) ((ctx)->exp_tau_div_4_inv)
-#define acb_theta_ctx_exp_tau_div_2_inv(ctx) ((ctx)->exp_tau_div_2_inv)
-#define acb_theta_ctx_exp_tau_inv(ctx) ((ctx)->exp_tau_inv)
 
 void acb_theta_ctx_tau_init(acb_theta_ctx_tau_t ctx, slong g);
 void acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx);

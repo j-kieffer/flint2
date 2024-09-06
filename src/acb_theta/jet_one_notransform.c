@@ -46,7 +46,7 @@ void acb_theta_jet_one_notransform(acb_ptr th, acb_srcptr zs, slong nb,
             /* acb_modular_theta_sum recomputes the inverse of exp_z */
             acb_modular_theta_sum(res, res + nbth, res + 2 * nbth, res + 3 * nbth,
                 acb_theta_ctx_exp_z(ctx), acb_theta_ctx_is_real(ctx),
-                acb_mat_entry(acb_theta_ctx_exp_tau(ctx_tau), 0, 0), ord + 1, prec);
+                acb_mat_entry(ctx_tau->exp_tau, 0, 0), ord + 1, prec);
             if (ab == 0)
             {
                 _acb_vec_set(th + j * nbth, res + 2 * nbth, nbth);
@@ -66,7 +66,7 @@ void acb_theta_jet_one_notransform(acb_ptr th, acb_srcptr zs, slong nb,
             if (ab >= 2)
             {
                 _acb_vec_scalar_mul(th + j * nbth, th + j * nbth, nbth,
-                    acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx_tau), 0, 0), prec);
+                    acb_mat_entry(ctx_tau->exp_tau_div_4, 0, 0), prec);
             }
         }
 

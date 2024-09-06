@@ -39,25 +39,25 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
         {
             acb_set_round(x, acb_mat_entry(tau, j, k), prec);
             acb_mul_2exp_si(x, x, (k == j ? -2 : -1));
-            acb_exp_pi_i(acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), x, prec);
+            acb_exp_pi_i(acb_mat_entry(ctx->exp_tau_div_4, j, k), x, prec);
 
-            acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), j, k),
-                acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), prec);
-            acb_sqr(acb_mat_entry(acb_theta_ctx_exp_tau(ctx), j, k),
-                acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), j, k), prec);
+            acb_sqr(acb_mat_entry(ctx->exp_tau_div_2, j, k),
+                acb_mat_entry(ctx->exp_tau_div_4, j, k), prec);
+            acb_sqr(acb_mat_entry(ctx->exp_tau, j, k),
+                acb_mat_entry(ctx->exp_tau_div_2, j, k), prec);
 
             if (g > 1)
             {
                 /* Diagonal entries are also needed in shift_a0. */
                 b = acb_is_real(acb_mat_entry(tau, j, k));
-                acb_theta_ctx_exp_inv(acb_mat_entry(acb_theta_ctx_exp_tau_div_4_inv(ctx), j, k),
-                    acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), x, b, prec);
-                acb_theta_ctx_sqr_inv(acb_mat_entry(acb_theta_ctx_exp_tau_div_2_inv(ctx), j, k),
-                    acb_mat_entry(acb_theta_ctx_exp_tau_div_4_inv(ctx), j, k),
-                    acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), j, k), b, prec);
-                acb_theta_ctx_sqr_inv(acb_mat_entry(acb_theta_ctx_exp_tau_inv(ctx), j, k),
-                    acb_mat_entry(acb_theta_ctx_exp_tau_div_2_inv(ctx), j, k),
-                    acb_mat_entry(acb_theta_ctx_exp_tau(ctx), j, k), b, prec);
+                acb_theta_ctx_exp_inv(acb_mat_entry(ctx->exp_tau_div_4_inv, j, k),
+                    acb_mat_entry(ctx->exp_tau_div_4, j, k), x, b, prec);
+                acb_theta_ctx_sqr_inv(acb_mat_entry(ctx->exp_tau_div_2_inv, j, k),
+                    acb_mat_entry(ctx->exp_tau_div_4_inv, j, k),
+                    acb_mat_entry(ctx->exp_tau_div_2, j, k), b, prec);
+                acb_theta_ctx_sqr_inv(acb_mat_entry(ctx->exp_tau_inv, j, k),
+                    acb_mat_entry(ctx->exp_tau_div_2_inv, j, k),
+                    acb_mat_entry(ctx->exp_tau, j, k), b, prec);
             }
         }
     }
@@ -65,12 +65,12 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
     /* Set cho, yinv */
     if (g == 1)
     {
-        arb_inv(arb_mat_entry(acb_theta_ctx_yinv(ctx), 0, 0),
+        arb_inv(arb_mat_entry(&ctx->yinv, 0, 0),
             acb_imagref(acb_mat_entry(tau, 0, 0)), prec);
     }
     else
     {
-        acb_siegel_cho_yinv(acb_theta_ctx_cho(ctx), acb_theta_ctx_yinv(ctx), tau, prec);
+        acb_siegel_cho_yinv(&ctx->cho, &ctx->yinv, tau, prec);
     }
 
     /* Set exponentials for shifts */
@@ -89,15 +89,15 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
                     }
                     if (k < j)
                     {
-                        acb_mul(x, x, acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), k, j), prec);
+                        acb_mul(x, x, acb_mat_entry(ctx->exp_tau_div_4, k, j), prec);
                     }
                     else if (k == j)
                     {
-                        acb_mul(x, x, acb_mat_entry(acb_theta_ctx_exp_tau_div_2(ctx), k, k), prec);
+                        acb_mul(x, x, acb_mat_entry(ctx->exp_tau_div_2, k, k), prec);
                     }
                     else
                     {
-                        acb_mul(x, x, acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), prec);
+                        acb_mul(x, x, acb_mat_entry(ctx->exp_tau_div_4, j, k), prec);
                     }
                 }
                 acb_set(&ctx->exp_tau_a_div_2[a * g + j], x);
@@ -112,15 +112,15 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
                     }
                     if (k < j)
                     {
-                        acb_mul(x, x, acb_mat_entry(acb_theta_ctx_exp_tau_div_4_inv(ctx), k, j), prec);
+                        acb_mul(x, x, acb_mat_entry(ctx->exp_tau_div_4_inv, k, j), prec);
                     }
                     else if (k == j)
                     {
-                        acb_mul(x, x, acb_mat_entry(acb_theta_ctx_exp_tau_div_2_inv(ctx), k, k), prec);
+                        acb_mul(x, x, acb_mat_entry(ctx->exp_tau_div_2_inv, k, k), prec);
                     }
                     else
                     {
-                        acb_mul(x, x, acb_mat_entry(acb_theta_ctx_exp_tau_div_4_inv(ctx), j, k), prec);
+                        acb_mul(x, x, acb_mat_entry(ctx->exp_tau_div_4_inv, j, k), prec);
                     }
                 }
                 acb_set(&ctx->exp_tau_a_div_2_inv[a * g + j], x);
@@ -139,7 +139,7 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
                     {
                         continue;
                     }
-                    acb_mul(x, x, acb_mat_entry(acb_theta_ctx_exp_tau_div_4(ctx), j, k), prec);
+                    acb_mul(x, x, acb_mat_entry(ctx->exp_tau_div_4, j, k), prec);
                 }
             }
             acb_set(&ctx->exp_a_tau_a_div_4[a], x);
