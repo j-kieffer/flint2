@@ -25,8 +25,8 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     acb_ptr new_zs, exps, cs, aux, units;
     arb_ptr rs;
     acb_t s;
-    ulong * image_ab;
-    slong * e;
+    ulong * chars;
+    slong * es;
     slong kappa;
     slong j, ab;
     int res;
@@ -46,8 +46,8 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     aux = _acb_vec_init(n2 * nb);
     units = _acb_vec_init(8);
     rs = _arb_vec_init(nb * g);
-    image_ab = flint_malloc(n2 * sizeof(ulong));
-    e = flint_malloc(n2 * sizeof(slong));
+    chars = flint_malloc(n2 * sizeof(ulong));
+    es = flint_malloc(n2 * sizeof(slong));
     acb_init(s);
 
     /* Reduce tau then z */
@@ -61,6 +61,7 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     {
         /* Setup */
         _acb_vec_unit_roots(units, 8, 8, prec);
+        acb_theta_char_table(chars, es, mat);
         if (sqr)
         {
             kappa = acb_siegel_kappa2(mat);
@@ -69,11 +70,6 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         else
         {
             kappa = acb_siegel_kappa(s, mat, new_tau, prec);
-        }
-        for (ab = 0; ab < n2; ab++)
-        {
-            /* todo: can do better than this loop */
-            image_ab[ab] = acb_theta_transform_char(&e[ab], mat, ab);
         }
 
         acb_theta_all_notransform(aux, new_zs, nb, new_tau, sqr, prec);
@@ -97,10 +93,10 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
             }
             for (ab = 0; ab < n2; ab++)
             {
-                acb_mul(&th[j * n2 + ab], &aux[j * n2 + image_ab[ab]], &exps[j], prec);
+                acb_mul(&th[j * n2 + ab], &aux[j * n2 + chars[ab]], &exps[j], prec);
                 acb_mul(&th[j * n2 + ab], &th[j * n2 + ab], s, prec);
                 acb_mul(&th[j * n2 + ab], &th[j * n2 + ab],
-                    &units[((sqr ? 2 : 1) * (kappa + e[ab])) % 8], prec);
+                    &units[((sqr ? 2 : 1) * (kappa + es[ab])) % 8], prec);
             }
         }
     }
@@ -121,6 +117,6 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     _acb_vec_clear(units, 8);
     _arb_vec_clear(rs, nb * g);
     acb_clear(s);
-    flint_free(e);
-    flint_free(image_ab);
+    flint_free(es);
+    flint_free(chars);
 }

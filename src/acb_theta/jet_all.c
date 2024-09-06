@@ -27,8 +27,8 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     arb_ptr rs, r;
     acb_t s, t;
     ulong ab;
-    ulong * image_ab;
-    slong * e;
+    ulong * chars;
+    slong * es;
     slong kappa, j;
     int res;
 
@@ -51,8 +51,8 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     r = _arb_vec_init(g);
     acb_init(s);
     acb_init(t);
-    image_ab = flint_malloc(n2 * sizeof(ulong));
-    e = flint_malloc(n2 * sizeof(slong));
+    chars = flint_malloc(n2 * sizeof(ulong));
+    es = flint_malloc(n2 * sizeof(slong));
 
     res = acb_theta_reduce_tau(new_zs, new_tau, mat, N, ct, exps, zs, nb, tau, prec);
     if (res)
@@ -65,10 +65,7 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         /* Setup */
         _acb_vec_unit_roots(units, 8, 8, prec);
         kappa = acb_siegel_kappa(s, mat, new_tau, prec);
-        for (ab = 0; ab < n2; ab++)
-        {
-            image_ab[ab] = acb_theta_transform_char(&e[ab], mat, ab);
-        }
+        acb_theta_char_table(chars, es, mat);
 
         acb_theta_jet_all_notransform(aux, new_zs, nb, new_tau, ord, prec);
 
@@ -95,9 +92,9 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
 
             for (ab = 0; ab < n2; ab++)
             {
-                acb_mul(t, s, &units[(kappa + e[ab]) % 8], prec);
+                acb_mul(t, s, &units[(kappa + es[ab]) % 8], prec);
                 _acb_vec_scalar_mul(th + j * n2 * nbth + ab * nbth,
-                    aux + j * n2 * nbth + image_ab[ab] * nbth, nbth, t, prec);
+                    aux + j * n2 * nbth + chars[ab] * nbth, nbth, t, prec);
                 acb_theta_jet_compose(th + j * n2 * nbth + ab * nbth,
                     th + j * n2 * nbth + ab * nbth, ct, ord, prec);
                 acb_theta_jet_mul(th + j * n2 * nbth + ab * nbth,
@@ -124,6 +121,6 @@ acb_theta_jet_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     _arb_vec_clear(r, g);
     acb_clear(s);
     acb_clear(t);
-    flint_free(image_ab);
-    flint_free(e);
+    flint_free(chars);
+    flint_free(es);
 }

@@ -81,6 +81,10 @@ int acb_theta_char_is_even(ulong ab, slong g);
 int acb_theta_char_is_goepel(ulong ch1, ulong ch2, ulong ch3, ulong ch4, slong g);
 int acb_theta_char_is_syzygous(ulong ch1, ulong ch2, ulong ch3, slong g);
 
+void acb_theta_char_table(ulong * chars, slong * es, const fmpz_mat_t mat);
+void acb_theta_char_shuffle(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th,
+    int sqr, slong prec);
+
 /* Ellipsoids */
 
 void acb_theta_eld_init(acb_theta_eld_t E, slong d, slong g);
@@ -129,7 +133,7 @@ ulong acb_theta_transform_char(slong * e, const fmpz_mat_t mat, ulong ab);
 void acb_theta_transform_proj(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th,
     int sqr, slong prec);
 
-/* Contexts for tau and z in summation algorithms */
+/* Context for tau, z in summation algorithms */
 
 void acb_theta_ctx_exp_inv(acb_t exp_inv, const acb_t exp, const acb_t x, int is_real, slong prec);
 void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr, int is_real, slong prec);
@@ -184,7 +188,6 @@ int acb_theta_reduce_tau(acb_ptr new_zs, acb_mat_t new_tau, fmpz_mat_t mat, acb_
     acb_mat_t ct, acb_ptr exps, acb_srcptr zs, slong nb, const acb_mat_t tau, slong prec);
 int acb_theta_reduce_z(acb_ptr new_zs, arb_ptr rs, acb_ptr cs, acb_srcptr zs,
     slong nb, const acb_mat_t tau, slong prec);
-
 
 /* Quasilinear algorithms on exact input */
 

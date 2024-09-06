@@ -18,24 +18,27 @@ acb_theta_transform_proj(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th, int s
     slong g = sp2gz_dim(mat);
     ulong n2 = 1 << (2 * g);
     slong k = (sqr ? 4 : 8);
-    acb_ptr aux;
-    ulong ab, image_ab;
-    slong e;
-    acb_t c;
+    acb_ptr aux, units;
+    ulong ab;
+    ulong * chars;
+    slong * es;
 
     aux = _acb_vec_init(n2);
-    acb_init(c);
+    units = _acb_vec_init(k);
+    chars = flint_malloc(n2 * sizeof(ulong));
+    es = flint_malloc(n2 * sizeof(slong));
+
+    acb_theta_char_table(chars, es, mat);
+    _acb_vec_unit_roots(units, k, k, prec);
 
     for (ab = 0; ab < n2; ab++)
     {
-        image_ab = acb_theta_transform_char(&e, mat, ab);
-        acb_unit_root(c, k, prec);
-        acb_pow_ui(c, c, e, prec);
-        acb_mul(c, c, &th[image_ab], prec);
-        acb_set(&aux[ab], c);
+        acb_mul(&aux[ab], &units[es[ab] % k], &th[chars[ab]], prec);
     }
     _acb_vec_set(res, aux, n2);
 
     _acb_vec_clear(aux, n2);
-    acb_clear(c);
+    _acb_vec_clear(units, k);
+    flint_free(es);
+    flint_free(chars);
 }

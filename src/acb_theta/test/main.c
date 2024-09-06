@@ -22,6 +22,7 @@
 #include "t-char_is_even.c"
 #include "t-char_is_goepel.c"
 #include "t-char_is_syzygous.c"
+#include "t-char_table.c"
 #include "t-ctx_exp_inv.c"
 #include "t-ctx_sqr_inv.c"
 #include "t-ctx_tau_dupl.c"
@@ -75,7 +76,6 @@
 #include "t-sum_jet_all.c"
 #include "t-sum_jet_radius.c"
 #include "t-sum_radius.c"
-#include "t-transform_char.c"
 #include "t-transform_proj.c"
 
 /* Array of test functions ***************************************************/
@@ -93,6 +93,7 @@ test_struct tests[] =
     /* TEST_FUNCTION(acb_theta_char_is_even),
     TEST_FUNCTION(acb_theta_char_is_goepel),
     TEST_FUNCTION(acb_theta_char_is_syzygous),*/
+    TEST_FUNCTION(acb_theta_char_table),
     TEST_FUNCTION(acb_theta_ctx_exp_inv),
     TEST_FUNCTION(acb_theta_ctx_sqr_inv),
     TEST_FUNCTION(acb_theta_ctx_tau_dupl),
@@ -145,8 +146,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sum_jet_all),
     TEST_FUNCTION(acb_theta_sum_jet_radius),
     TEST_FUNCTION(acb_theta_sum_radius),
-    /* TEST_FUNCTION(acb_theta_transform_char),
-    TEST_FUNCTION(acb_siegel_kappa),
+    /*TEST_FUNCTION(acb_siegel_kappa),
     TEST_FUNCTION(acb_theta_transform_proj), */
 };
 

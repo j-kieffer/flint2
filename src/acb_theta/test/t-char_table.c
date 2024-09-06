@@ -13,22 +13,25 @@
 #include "fmpz_mat.h"
 #include "acb_theta.h"
 
-TEST_FUNCTION_START(acb_theta_transform_char, state)
+TEST_FUNCTION_START(acb_theta_char_table, state)
 {
     slong iter;
 
     /* Test: on trigonal symplectic matrices, a remains the same */
     for (iter = 0; iter < 100 * flint_test_multiplier(); iter++)
     {
-        slong g = 1 + n_randint(state, 10);
+        slong g = 1 + n_randint(state, 4);
+        slong n2 = 1 << (2 * g);
         slong bits = 8;
         fmpz_mat_t mat;
-        slong e;
-        ulong ab = n_randint(state, 1 << (2 * g));
-        ulong test;
+        ulong * chars;
+        slong * es;
+        ulong test, ab;
         slong j, k;
 
         fmpz_mat_init(mat, 2 * g, 2 * g);
+        chars = flint_malloc(n2 * sizeof(ulong));
+        es = flint_malloc(n2 * sizeof(slong));
 
         for (j = 0; j < g; j++)
         {
@@ -40,17 +43,21 @@ TEST_FUNCTION_START(acb_theta_transform_char, state)
         }
         sp2gz_trig(mat, mat);
 
-        test = acb_theta_transform_char(&e, mat, ab);
-
-        if ((test >> g) != (ab >> g))
+        acb_theta_char_table(chars, es, mat);
+        for (ab = 0; ab < n2; ab++)
         {
-            flint_printf("FAIL\n");
-            flint_printf("ab = %wd, test = %wd, matrix:\n", ab, test);
-            fmpz_mat_print_pretty(mat);
-            flint_abort();
+            if ((chars[ab] >> g) != (ab >> g))
+            {
+                flint_printf("FAIL\n");
+                flint_printf("ab = %wd, test = %wd, matrix:\n", ab, chars[ab]);
+                fmpz_mat_print_pretty(mat);
+                flint_abort();
+            }
         }
 
         fmpz_mat_clear(mat);
+        flint_free(chars);
+        flint_free(es);
     }
 
     TEST_FUNCTION_END(state);
