@@ -35,7 +35,7 @@ void
 acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     const acb_theta_ctx_tau_t ctx_tau, slong prec)
 {
-    slong g = acb_theta_ctx_g(ctx_tau);
+    slong g = ctx_tau->g;
     slong j;
 
     FLINT_ASSERT(nb >= 0);
@@ -74,8 +74,8 @@ acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
         v = _arb_vec_init(g);
 
         acb_theta_ctx_z_common_v(v, vec, nb, prec);
-        acb_theta_naive_radius(R2, eps, acb_theta_ctx_cho(ctx_tau), 0, prec);
-        b = acb_theta_eld_set(E, acb_theta_ctx_cho(ctx_tau), R2, v);
+        acb_theta_naive_radius(R2, eps, &ctx_tau->cho, 0, prec);
+        b = acb_theta_eld_set(E, &ctx_tau->cho, R2, v);
 
         if (b)
         {

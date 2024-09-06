@@ -18,7 +18,7 @@ void
 acb_theta_sum_all_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     const acb_theta_ctx_tau_t ctx_tau, arb_srcptr distances, slong prec)
 {
-    slong g = acb_theta_ctx_g(ctx_tau);
+    slong g = ctx_tau->g;
     slong n = 1 << g;
     acb_ptr res, cs;
     acb_theta_ctx_z_struct * new_vec;

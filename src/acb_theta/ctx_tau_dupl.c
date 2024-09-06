@@ -18,7 +18,7 @@
 void
 acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
 {
-    slong g = acb_theta_ctx_g(ctx);
+    slong g = ctx->g;
     slong n = 1 << g;
     slong j, k;
 

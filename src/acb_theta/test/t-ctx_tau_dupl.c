@@ -16,11 +16,11 @@
 static int
 acb_theta_ctx_tau_overlaps(const acb_theta_ctx_tau_t ctx1, const acb_theta_ctx_tau_t ctx2)
 {
-    slong g = acb_theta_ctx_g(ctx2);
+    slong g = ctx2->g;
     slong n = 1 << g;
     int res;
 
-    FLINT_ASSERT(acb_theta_ctx_g(ctx1) == g);
+    FLINT_ASSERT(ctx1->g == g);
 
     res = arb_mat_overlaps(&ctx1->yinv, &ctx2->yinv)
         && acb_mat_overlaps(ctx1->exp_tau_div_4, ctx2->exp_tau_div_4)

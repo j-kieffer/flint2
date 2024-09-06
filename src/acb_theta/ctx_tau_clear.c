@@ -18,7 +18,7 @@
 void
 acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx)
 {
-    slong g = acb_theta_ctx_g(ctx);
+    slong g = ctx->g;
     slong n = 1 << g;
 
     arb_mat_clear(&ctx->yinv);

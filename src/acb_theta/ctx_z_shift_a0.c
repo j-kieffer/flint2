@@ -24,7 +24,7 @@ void
 acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t ctx,
     const acb_theta_ctx_tau_t ctx_tau, ulong a, slong prec)
 {
-    slong g = acb_theta_ctx_g(ctx_tau);
+    slong g = ctx_tau->g;
     arb_ptr v_shift;
     arb_t abs;
     slong j;
@@ -65,7 +65,7 @@ acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t
     arb_mul(acb_theta_ctx_uinv(res), acb_theta_ctx_uinv(ctx), abs, prec);
 
     acb_theta_char_get_arb(v_shift, a, g);
-    arb_mat_vector_mul_col(v_shift, acb_theta_ctx_cho(ctx_tau), v_shift, prec);
+    arb_mat_vector_mul_col(v_shift, &ctx_tau->cho, v_shift, prec);
     _arb_vec_add(res->v, v_shift, ctx->v, g, prec);
 
     _arb_vec_clear(v_shift, g);

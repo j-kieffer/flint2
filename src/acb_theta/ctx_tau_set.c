@@ -23,7 +23,7 @@ acb_theta_aj_is_zero(ulong a, slong j, slong g)
 void
 acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
 {
-    slong g = acb_theta_ctx_g(ctx);
+    slong g = ctx->g;
     slong n = 1 << g;
     acb_t x;
     slong j, k, a;

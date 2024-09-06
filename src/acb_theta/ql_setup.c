@@ -20,10 +20,10 @@
 static void
 acb_theta_ctx_tau_copy(acb_theta_ctx_tau_t res, const acb_theta_ctx_tau_t ctx)
 {
-    slong g = acb_theta_ctx_g(ctx);
+    slong g = ctx->g;
     slong n = 1 << g;
 
-    FLINT_ASSERT(acb_theta_ctx_g(res) == g);
+    FLINT_ASSERT(res->g == g);
 
     arb_mat_set(&res->yinv, &ctx->yinv);
     acb_mat_set(res->exp_tau_div_4, ctx->exp_tau_div_4);

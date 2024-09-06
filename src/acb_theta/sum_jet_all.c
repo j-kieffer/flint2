@@ -130,7 +130,7 @@ void
 acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
     const acb_theta_ctx_tau_t ctx_tau, slong ord, slong prec)
 {
-    slong g = acb_theta_ctx_g(ctx_tau);
+    slong g = ctx_tau->g;
     slong n2 = 1 << (2 * g);
     slong nbth = acb_theta_jet_nb(ord, g);
     slong j, k;
@@ -184,10 +184,10 @@ acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
 
         /* Take into account that everything is duplicated in worker */
         acb_theta_ctx_z_common_v(v, vec, nb, prec);
-        acb_theta_jet_naive_radius(R2, eps, acb_theta_ctx_cho(ctx_tau), v, ord, prec);
+        acb_theta_jet_naive_radius(R2, eps, &ctx_tau->cho, v, ord, prec);
         _arb_vec_scalar_mul_2exp_si(v, v, g, 1);
         arf_mul_2exp_si(R2, R2, 2);
-        b = acb_theta_eld_set(E, acb_theta_ctx_cho(ctx_tau), R2, v);
+        b = acb_theta_eld_set(E, &ctx_tau->cho, R2, v);
 
         if (b)
         {
