@@ -84,7 +84,7 @@ acb_theta_all_add_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     {
         for (k = 0; k < n * n; k++)
         {
-            acb_theta_jet_error_bounds(err, zs + j * g, tau,
+            acb_theta_jet_error(err, zs + j * g, tau,
                 dth + j * (n * n * nb_der) + k * nb_der, 0, lp);
             if (sqr)
             {

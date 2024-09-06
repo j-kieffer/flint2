@@ -14,7 +14,7 @@
 #include "acb_theta.h"
 
 void
-acb_theta_jet_naive_radius(arf_t R2, arf_t eps, const arb_mat_t C, arb_srcptr v,
+acb_theta_sum_jet_radius(arf_t R2, arf_t eps, const arb_mat_t C, arb_srcptr v,
     slong ord, slong prec)
 {
     slong g = arb_mat_nrows(C);
@@ -45,7 +45,7 @@ acb_theta_jet_naive_radius(arf_t R2, arf_t eps, const arb_mat_t C, arb_srcptr v,
     arf_set_mag(arb_midref(nx), norm);
 
     /* Get R2, eps assuming R <= nx/na */
-    acb_theta_naive_radius(R2, eps, C, 0, prec);
+    acb_theta_sum_radius(R2, eps, C, 0, prec);
     arb_mul_2exp_si(t, nx, 1);
     arb_one(u);
     arb_max(t, t, u, lp);
@@ -59,7 +59,7 @@ acb_theta_jet_naive_radius(arf_t R2, arf_t eps, const arb_mat_t C, arb_srcptr v,
     arb_get_lbound_arf(cmp, t, lp);
     if (arf_cmp(cmp, R2) <= 0)
     {
-        acb_theta_naive_radius(R2, eps, C, ord, prec);
+        acb_theta_sum_radius(R2, eps, C, ord, prec);
         arb_div(t, nx, na, lp);
         arb_get_ubound_arf(cmp, t, lp);
         arf_max(R2, R2, cmp);

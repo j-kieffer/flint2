@@ -74,7 +74,7 @@ acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
         v = _arb_vec_init(g);
 
         acb_theta_ctx_z_common_v(v, vec, nb, prec);
-        acb_theta_naive_radius(R2, eps, &ctx_tau->cho, 0, prec);
+        acb_theta_sum_radius(R2, eps, &ctx_tau->cho, 0, prec);
         b = acb_theta_eld_set(E, &ctx_tau->cho, R2, v);
 
         if (b)

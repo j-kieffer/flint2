@@ -279,7 +279,7 @@ acb_theta_jet_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb,
     {
         for (k = 0; k < n2; k++)
         {
-            acb_theta_jet_error_bounds(err_vec, zs + l * g, tau,
+            acb_theta_jet_error(err_vec, zs + l * g, tau,
                 dth_low + l * n2 * nb_low + k * nb_low, ord, lp);
             for (j = 0; j < nbth; j++)
             {

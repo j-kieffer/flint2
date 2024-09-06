@@ -106,12 +106,6 @@ slong acb_theta_agm_addprec(const arb_t d);
 void acb_theta_agm_mul_tight(acb_ptr res, acb_srcptr a0, acb_srcptr a,
     arb_srcptr d0, arb_srcptr d, slong g, slong prec);
 
-/* The transformation formula */
-
-ulong acb_theta_transform_char(slong * e, const fmpz_mat_t mat, ulong ab);
-void acb_theta_transform_proj(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th,
-    int sqr, slong prec);
-
 /* Toolbox for derivatives */
 
 slong acb_theta_jet_nb(slong ord, slong g);
@@ -126,17 +120,19 @@ void acb_theta_jet_compose(acb_ptr res, acb_srcptr v, const acb_mat_t N,
 void acb_theta_jet_exp_pi_i(acb_ptr res, arb_srcptr a, slong ord, slong g, slong prec);
 void acb_theta_jet_exp_qf(acb_ptr res, acb_srcptr z, const acb_mat_t N, slong ord, slong prec);
 
-void acb_theta_jet_error_bounds(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
+void acb_theta_jet_error(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
     acb_srcptr dth, slong ord, slong prec);
+
+/* The transformation formula */
+
+ulong acb_theta_transform_char(slong * e, const fmpz_mat_t mat, ulong ab);
+void acb_theta_transform_proj(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th,
+    int sqr, slong prec);
+
 
 /* Error bounds in summation algorithms */
 
-void acb_theta_naive_radius(arf_t R2, arf_t eps, const arb_mat_t C, slong ord, slong prec);
-void acb_theta_jet_naive_radius(arf_t R2, arf_t eps, const arb_mat_t C, arb_srcptr v,
-    slong ord, slong prec);
 void acb_theta_jet_ql_bounds(arb_t c, arb_t rho, acb_srcptr z, const acb_mat_t tau, slong ord);
-void acb_theta_jet_ql_radius(arf_t eps, arf_t err, const arb_t c, const arb_t rho,
-    slong ord, slong g, slong prec);
 
 /* Contexts for tau and z in summation algorithms */
 
@@ -164,6 +160,9 @@ int acb_theta_ctx_z_overlaps(const acb_theta_ctx_z_t ctx1, const acb_theta_ctx_z
 
 /* Summation algorithms */
 
+void acb_theta_sum_radius(arf_t R2, arf_t eps, const arb_mat_t cho, slong ord, slong prec);
+void acb_theta_sum_jet_radius(arf_t R2, arf_t eps, const arb_mat_t cho, arb_srcptr v,
+    slong ord, slong prec);
 void acb_theta_sum_term(acb_t res, acb_srcptr z, const acb_mat_t tau, const slong * tup,
     const slong * n, slong prec);
 void acb_theta_sum_work(acb_ptr th, slong len, acb_srcptr exp_zs, acb_srcptr exp_zs_inv,
@@ -243,7 +242,6 @@ void acb_theta_g2_transvectant(acb_poly_t res, const acb_poly_t g, const acb_pol
     slong m, slong n, slong k, slong prec);
 void acb_theta_g2_transvectant_lead(acb_t r, const acb_poly_t g, const acb_poly_t h,
     slong m, slong n, slong k, slong prec);
-
 slong acb_theta_g2_character(const fmpz_mat_t mat);
 
 void acb_theta_g2_psi4(acb_t res, acb_srcptr th2, slong prec);

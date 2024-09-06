@@ -46,7 +46,7 @@ acb_theta_ql_eld_points(slong ** pts, slong * nb_pts, arb_ptr v,
         arb_max(max_d, max_d, &d[k], lp);
     }
     *fullprec = prec + acb_theta_agm_addprec(max_d);
-    acb_theta_naive_radius(R2, eps, C, 0, *fullprec);
+    acb_theta_sum_radius(R2, eps, C, 0, *fullprec);
 
     /* List points in ellipsoid */
     res = acb_theta_eld_set(E, C1, R2, v);

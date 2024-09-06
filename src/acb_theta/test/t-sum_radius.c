@@ -14,7 +14,7 @@
 #include "acb_mat.h"
 #include "acb_theta.h"
 
-TEST_FUNCTION_START(acb_theta_naive_radius, state)
+TEST_FUNCTION_START(acb_theta_sum_radius, state)
 {
     slong iter;
 
@@ -65,7 +65,7 @@ TEST_FUNCTION_START(acb_theta_naive_radius, state)
         arb_exp(u, u, prec);
         arb_mat_vector_mul_col(v, cho, v, prec);
 
-        acb_theta_naive_radius(R2, eps, cho, 0, mprec);
+        acb_theta_sum_radius(R2, eps, cho, 0, mprec);
         arb_mul_arf(u, u, eps, prec);
 
         /* Test: sum of terms on the border of ellipsoid is less than u */
