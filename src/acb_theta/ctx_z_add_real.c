@@ -25,7 +25,7 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
     /* Copy things */
     arb_set(acb_theta_ctx_u(res), acb_theta_ctx_u(ctx));
     arb_set(acb_theta_ctx_uinv(res), acb_theta_ctx_uinv(ctx));
-    acb_theta_ctx_is_real(res) = acb_theta_ctx_is_real(ctx);
+    res->is_real = ctx->is_real;
     if (g > 1)
     {
         _arb_vec_set(res->v, ctx->v, g);
@@ -44,7 +44,7 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
                 &acb_theta_ctx_exp_z(res)[j], prec);
             acb_theta_ctx_sqr_inv(&acb_theta_ctx_exp_2z_inv(res)[j],
                 &acb_theta_ctx_exp_z_inv(res)[j], &acb_theta_ctx_exp_2z(res)[j],
-                acb_theta_ctx_is_real(ctx), prec);
+                ctx->is_real, prec);
         }
     }
 }

@@ -40,7 +40,7 @@ void acb_theta_one_notransform(acb_ptr th, acb_srcptr zs, slong nb,
             acb_theta_ctx_z_set(ctx, zs + j * g, ctx_tau, prec);
             /* acb_modular_theta_sum recomputes the inverse of exp_z */
             acb_modular_theta_sum(&res[0], &res[1], &res[2], &res[3],
-                acb_theta_ctx_exp_z(ctx), acb_theta_ctx_is_real(ctx),
+                acb_theta_ctx_exp_z(ctx), ctx->is_real,
                 acb_mat_entry(ctx_tau->exp_tau, 0, 0), 1, prec);
             if (ab == 0)
             {

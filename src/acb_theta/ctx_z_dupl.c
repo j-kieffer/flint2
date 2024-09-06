@@ -41,7 +41,7 @@ acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec)
             acb_sqr(&acb_theta_ctx_exp_2z(ctx)[j], &acb_theta_ctx_exp_z(ctx)[j], prec);
             acb_theta_ctx_sqr_inv(&acb_theta_ctx_exp_2z_inv(ctx)[j],
                 &acb_theta_ctx_exp_z_inv(ctx)[j], &acb_theta_ctx_exp_2z(ctx)[j],
-                acb_theta_ctx_is_real(ctx), prec);
+                ctx->is_real, prec);
         }
     }
 

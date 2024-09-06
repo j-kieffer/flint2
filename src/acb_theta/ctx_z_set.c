@@ -60,7 +60,7 @@ acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau
                 is_real, prec);
         }
     }
-    acb_theta_ctx_is_real(ctx) = _acb_vec_is_real(z, g);
+    ctx->is_real = _acb_vec_is_real(z, g);
 
     arb_clear(u);
     _arb_vec_clear(y, g);

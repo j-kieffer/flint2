@@ -154,7 +154,6 @@ void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
 #define acb_theta_ctx_exp_2z_inv(ctx) ((ctx)->exp_2z_inv)
 #define acb_theta_ctx_u(ctx) (&(ctx)->u)
 #define acb_theta_ctx_uinv(ctx) (&(ctx)->uinv)
-#define acb_theta_ctx_is_real(ctx) ((ctx)->is_real)
 
 void acb_theta_ctx_z_init(acb_theta_ctx_z_t ctx, slong g);
 void acb_theta_ctx_z_clear(acb_theta_ctx_z_t ctx);

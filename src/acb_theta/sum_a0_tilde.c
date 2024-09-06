@@ -19,10 +19,8 @@ void acb_theta_sum_a0_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slon
 {
     slong g = ctx_tau->g;
     slong n = 1 << g;
-    acb_ptr res, cs;
-    acb_theta_ctx_z_struct * new_vec;
     slong new_prec;
-    slong a, j;
+    slong j;
 
     FLINT_ASSERT(nb >= 0);
     if (nb == 0)
@@ -32,6 +30,8 @@ void acb_theta_sum_a0_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slon
 
     if (g == 1)
     {
+        acb_ptr res;
+
         res = _acb_vec_init(4);
         new_prec = FLINT_MAX(prec + acb_theta_agm_addprec(&distances[0]),
             prec + acb_theta_agm_addprec(&distances[1]));
@@ -39,7 +39,7 @@ void acb_theta_sum_a0_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slon
         for (j = 0; j < nb; j++)
         {
             acb_modular_theta_sum(&res[0], &res[1], &res[2], &res[3],
-                acb_theta_ctx_exp_z(&vec[j]), acb_theta_ctx_is_real(&vec[j]),
+                acb_theta_ctx_exp_z(&vec[j]), (&vec[j])->is_real,
                 acb_mat_entry(ctx_tau->exp_tau, 0, 0), 1, new_prec);
             acb_set(&th[2 * j], &res[2]);
             acb_mul(&th[2 * j + 1], &res[1],
@@ -53,6 +53,10 @@ void acb_theta_sum_a0_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slon
     else
     {
         /* Update the context for each a, call sum_00 with the right precision */
+        acb_theta_ctx_z_struct * new_vec;
+        acb_ptr res, cs;
+        ulong a;
+
         new_vec = acb_theta_ctx_z_vec_init(nb, g);
         res = _acb_vec_init(nb);
         cs = _acb_vec_init(nb);
