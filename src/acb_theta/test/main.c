@@ -52,7 +52,6 @@
 #include "t-jet_compose.c"
 #include "t-jet_error.c"
 #include "t-jet_mul.c"
-#include "t-jet_ql_bounds.c"
 #include "t-jet_tuples.c"
 #include "t-one_notransform.c"
 #include "t-ql_setup.c"
@@ -71,6 +70,7 @@
 #include "t-sum_00.c"
 #include "t-sum_a0_tilde.c"
 #include "t-sum_all_tilde.c"
+#include "t-sum_bound.c"
 #include "t-sum_jet_00.c"
 #include "t-sum_jet_all.c"
 #include "t-sum_jet_radius.c"
@@ -123,7 +123,6 @@ test_struct tests[] =
     /* TEST_FUNCTION(acb_theta_jet_compose), */
     TEST_FUNCTION(acb_theta_jet_error),
     /* TEST_FUNCTION(acb_theta_jet_mul), */
-    TEST_FUNCTION(acb_theta_jet_ql_bounds),
     /* TEST_FUNCTION(acb_theta_jet_tuples), */
     TEST_FUNCTION(acb_theta_one_notransform),
     TEST_FUNCTION(acb_theta_ql_setup),
@@ -141,6 +140,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sum_00),
     TEST_FUNCTION(acb_theta_sum_a0_tilde),
     TEST_FUNCTION(acb_theta_sum_all_tilde),
+    TEST_FUNCTION(acb_theta_sum_bound),
     TEST_FUNCTION(acb_theta_sum_jet_00),
     TEST_FUNCTION(acb_theta_sum_jet_all),
     TEST_FUNCTION(acb_theta_sum_jet_radius),
