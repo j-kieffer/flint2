@@ -85,14 +85,14 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_00),
     TEST_FUNCTION(acb_theta_agm_distances),
     TEST_FUNCTION(acb_theta_agm_mul),
-    /* TEST_FUNCTION(acb_theta_agm_mul_tight),
-    TEST_FUNCTION(acb_theta_agm_sqrt), */
+    TEST_FUNCTION(acb_theta_agm_mul_tight),
+    TEST_FUNCTION(acb_theta_agm_sqrt),
     TEST_FUNCTION(acb_theta_all),
     TEST_FUNCTION(acb_theta_all_notransform),
     TEST_FUNCTION(acb_theta_char_dot),
-    /* TEST_FUNCTION(acb_theta_char_is_even),
+    TEST_FUNCTION(acb_theta_char_is_even),
     TEST_FUNCTION(acb_theta_char_is_goepel),
-    TEST_FUNCTION(acb_theta_char_is_syzygous),*/
+    TEST_FUNCTION(acb_theta_char_is_syzygous),
     TEST_FUNCTION(acb_theta_char_table),
     TEST_FUNCTION(acb_theta_char_shuffle),
     TEST_FUNCTION(acb_theta_ctx_exp_inv),
@@ -122,16 +122,16 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_jet_all),
     TEST_FUNCTION(acb_theta_jet_all_notransform),
     TEST_FUNCTION(acb_theta_jet_one_notransform),
-    /* TEST_FUNCTION(acb_theta_jet_compose), */
+    TEST_FUNCTION(acb_theta_jet_compose),
     TEST_FUNCTION(acb_theta_jet_error),
-    /* TEST_FUNCTION(acb_theta_jet_mul), */
-    /* TEST_FUNCTION(acb_theta_jet_tuples), */
+    TEST_FUNCTION(acb_theta_jet_mul),
+    TEST_FUNCTION(acb_theta_jet_tuples),
     TEST_FUNCTION(acb_theta_one_notransform),
     TEST_FUNCTION(acb_theta_ql_setup),
     TEST_FUNCTION(acb_theta_ql_steps),
     TEST_FUNCTION(acb_theta_ql_lower_dim),
     TEST_FUNCTION(acb_theta_ql_exact),
-    /* TEST_FUNCTION(acb_theta_siegel_cocycle),
+    TEST_FUNCTION(acb_theta_siegel_cocycle),
     TEST_FUNCTION(acb_theta_siegel_is_reduced),
     TEST_FUNCTION(acb_siegel_kappa),
     TEST_FUNCTION(acb_theta_siegel_reduce),
@@ -139,7 +139,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sp2gz_decompose),
     TEST_FUNCTION(acb_theta_sp2gz_inv),
     TEST_FUNCTION(acb_theta_sp2gz_is_correct),
-    TEST_FUNCTION(acb_theta_sp2gz_set_blocks), */
+    TEST_FUNCTION(acb_theta_sp2gz_set_blocks),
     TEST_FUNCTION(acb_theta_sum_00),
     TEST_FUNCTION(acb_theta_sum_a0_tilde),
     TEST_FUNCTION(acb_theta_sum_all_tilde),
