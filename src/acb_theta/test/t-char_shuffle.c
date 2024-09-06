@@ -12,7 +12,7 @@
 #include "test_helpers.h"
 #include "acb_theta.h"
 
-TEST_FUNCTION_START(acb_theta_transform_proj, state)
+TEST_FUNCTION_START(acb_theta_char_shuffle, state)
 {
     slong iter;
 
@@ -43,8 +43,8 @@ TEST_FUNCTION_START(acb_theta_transform_proj, state)
             acb_urandom(&test[k], state, prec);
         }
 
-        acb_theta_transform_proj(aux, mat, test, sqr, prec);
-        acb_theta_transform_proj(th, inv, aux, sqr, prec);
+        acb_theta_char_shuffle(aux, mat, test, sqr, prec);
+        acb_theta_char_shuffle(th, inv, aux, sqr, prec);
         acb_div(scal, &test[0], &th[0], prec);
         _acb_vec_scalar_mul(th, th, n2, scal, prec);
 

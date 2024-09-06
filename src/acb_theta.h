@@ -127,11 +127,6 @@ void acb_theta_jet_exp_qf(acb_ptr res, acb_srcptr z, const acb_mat_t N, slong or
 void acb_theta_jet_error(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
     acb_srcptr dth, slong ord, slong prec);
 
-/* The transformation formula */
-
-void acb_theta_transform_proj(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th,
-    int sqr, slong prec);
-
 /* Context for tau, z in summation algorithms */
 
 void acb_theta_ctx_exp_inv(acb_t exp_inv, const acb_t exp, const acb_t x, int is_real, slong prec);

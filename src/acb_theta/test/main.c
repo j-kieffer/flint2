@@ -76,7 +76,7 @@
 #include "t-sum_jet_all.c"
 #include "t-sum_jet_radius.c"
 #include "t-sum_radius.c"
-#include "t-transform_proj.c"
+#include "t-char_shuffle.c"
 
 /* Array of test functions ***************************************************/
 
@@ -94,6 +94,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_char_is_goepel),
     TEST_FUNCTION(acb_theta_char_is_syzygous),*/
     TEST_FUNCTION(acb_theta_char_table),
+    TEST_FUNCTION(acb_theta_char_shuffle),
     TEST_FUNCTION(acb_theta_ctx_exp_inv),
     TEST_FUNCTION(acb_theta_ctx_sqr_inv),
     TEST_FUNCTION(acb_theta_ctx_tau_dupl),
@@ -132,6 +133,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_ql_exact),
     /* TEST_FUNCTION(acb_theta_siegel_cocycle),
     TEST_FUNCTION(acb_theta_siegel_is_reduced),
+    TEST_FUNCTION(acb_siegel_kappa),
     TEST_FUNCTION(acb_theta_siegel_reduce),
     TEST_FUNCTION(acb_theta_siegel_transform),
     TEST_FUNCTION(acb_theta_sp2gz_decompose),
@@ -146,8 +148,6 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sum_jet_all),
     TEST_FUNCTION(acb_theta_sum_jet_radius),
     TEST_FUNCTION(acb_theta_sum_radius),
-    /*TEST_FUNCTION(acb_siegel_kappa),
-    TEST_FUNCTION(acb_theta_transform_proj), */
 };
 
 /* main function *************************************************************/

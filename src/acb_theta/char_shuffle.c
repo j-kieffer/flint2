@@ -13,7 +13,7 @@
 #include "acb_theta.h"
 
 void
-acb_theta_transform_proj(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th, int sqr, slong prec)
+acb_theta_char_shuffle(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th, int sqr, slong prec)
 {
     slong g = sp2gz_dim(mat);
     ulong n2 = 1 << (2 * g);
