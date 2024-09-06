@@ -59,7 +59,7 @@ acb_theta_all_add_err(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     slong j, k;
 
     dth = _acb_vec_init(n * n * nb * nb_der);
-    acb_theta_ctx_tau_init(ctx_tau, g);
+    acb_theta_ctx_tau_init(ctx_tau, 0, g);
     vec = acb_theta_ctx_z_vec_init(nb, g);
     arb_init(err);
     arb_init(x);
@@ -120,7 +120,7 @@ acb_theta_all_sum(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     FLINT_ASSERT(nb > 0);
 
     add_zero = sqr && !_acb_vec_is_zero(zs, g);
-    acb_theta_ctx_tau_init(ctx_tau, g);
+    acb_theta_ctx_tau_init(ctx_tau, 1, g);
     vec = acb_theta_ctx_z_vec_init(nb + add_zero, g);
     distances = _arb_vec_init(n); /* set to zero */
     zero = _acb_vec_init(g);

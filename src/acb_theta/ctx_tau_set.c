@@ -74,7 +74,7 @@ acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec)
     }
 
     /* Set exponentials for shifts */
-    if (g > 1)
+    if (ctx->allow_shift)
     {
         for (a = 0; a < n; a++)
         {

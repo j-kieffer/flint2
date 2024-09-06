@@ -25,7 +25,7 @@ acb_theta_jet_all_sum(acb_ptr th, acb_srcptr zs, slong nb,
     acb_theta_ctx_z_struct * vec;
     slong j;
 
-    acb_theta_ctx_tau_init(ctx_tau, g);
+    acb_theta_ctx_tau_init(ctx_tau, 0, g);
     vec = acb_theta_ctx_z_vec_init(nb, g);
 
     acb_theta_ctx_tau_set(ctx_tau, tau, prec);
@@ -200,7 +200,7 @@ acb_theta_jet_all_mid_err(acb_ptr th, acb_srcptr zs, slong nb,
     val = _acb_vec_init(nbpts);
     dth_low = _acb_vec_init(n2 * nb * nb_low);
     err_vec = _arb_vec_init(nbth);
-    acb_theta_ctx_tau_init(ctx_tau, g);
+    acb_theta_ctx_tau_init(ctx_tau, 0, g);
     vec = acb_theta_ctx_z_vec_init(nb, g);
 
     /* Get midpoint of tau and zetas */

@@ -44,7 +44,7 @@ TEST_FUNCTION_START(acb_theta_jet_error, state)
         z1 = _acb_vec_init(g);
         z2 = _acb_vec_init(g);
         z3 = _acb_vec_init(g);
-        acb_theta_ctx_tau_init(ctx_tau, g);
+        acb_theta_ctx_tau_init(ctx_tau, 0, g);
         acb_theta_ctx_z_init(ctx_z, g);
         dth = _acb_vec_init(n * nb_der);
         err = _arb_vec_init(n * nb);

@@ -38,7 +38,7 @@ TEST_FUNCTION_START(acb_theta_sum_jet_00, state)
 
         acb_mat_init(tau, g, g);
         zs = _acb_vec_init(nbz * g);
-        acb_theta_ctx_tau_init(ctx_tau, g);
+        acb_theta_ctx_tau_init(ctx_tau, 0, g);
         vec = acb_theta_ctx_z_vec_init(nbz, g);
         th1 = _acb_vec_init(nbz * nbth);
         th2 = _acb_vec_init(nbz * nbth * n2);

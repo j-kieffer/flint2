@@ -71,7 +71,7 @@ TEST_FUNCTION_START(acb_theta_ql_steps, state)
             acb_ptr new_z;
             arb_ptr d;
 
-            acb_theta_ctx_tau_init(ctx, g);
+            acb_theta_ctx_tau_init(ctx, 1, g);
             aux = acb_theta_ctx_z_vec_init(3, g);
             acb_mat_init(new_tau, g, g);
             new_z = _acb_vec_init(g);

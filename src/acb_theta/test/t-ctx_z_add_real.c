@@ -32,7 +32,7 @@ TEST_FUNCTION_START(acb_theta_ctx_z_add_real, state)
         z = _acb_vec_init(g);
         t = _acb_vec_init(g);
         w = _acb_vec_init(g);
-        acb_theta_ctx_tau_init(ctx_tau, g);
+        acb_theta_ctx_tau_init(ctx_tau, 0, g);
         acb_theta_ctx_z_init(ctx1, g);
         acb_theta_ctx_z_init(ctx2, g);
 

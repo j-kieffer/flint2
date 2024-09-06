@@ -90,8 +90,8 @@ acb_theta_ql_setup(acb_ptr rts, acb_ptr rts_all, acb_ptr t, slong * guard, slong
         return 1;
     }
 
-    acb_theta_ctx_tau_init(ctx_tau, g);
-    acb_theta_ctx_tau_init(ctx_tau_dupl, g);
+    acb_theta_ctx_tau_init(ctx_tau, 1, g);
+    acb_theta_ctx_tau_init(ctx_tau_dupl, 1, g);
     vec = acb_theta_ctx_z_vec_init(nb, g);
     aux = acb_theta_ctx_z_vec_init(2, g);
     acb_theta_ctx_z_init(ctxt, g);

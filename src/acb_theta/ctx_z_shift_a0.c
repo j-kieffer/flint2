@@ -29,7 +29,6 @@ acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t
     arb_t abs;
     slong j;
 
-    FLINT_ASSERT(g > 1);
     v_shift = _arb_vec_init(g);
     arb_init(abs);
 

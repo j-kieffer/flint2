@@ -37,7 +37,7 @@ TEST_FUNCTION_START(acb_theta_sum_all_tilde, state)
         acb_mat_init(tau, g, g);
         acb_mat_init(tau11, 1, 1);
         z = _acb_vec_init(g);
-        acb_theta_ctx_tau_init(ctx_tau, g);
+        acb_theta_ctx_tau_init(ctx_tau, 1, g);
         acb_theta_ctx_z_init(ctx, g);
         d = _arb_vec_init(n);
         th = _acb_vec_init(n2);

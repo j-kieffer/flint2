@@ -40,7 +40,7 @@ TEST_FUNCTION_START(acb_theta_ql_exact, state)
         zs = _acb_vec_init(nb * g);
         th = _acb_vec_init(nb * nbth);
         test = _acb_vec_init(nb * nbth);
-        acb_theta_ctx_tau_init(ctx_tau, g);
+        acb_theta_ctx_tau_init(ctx_tau, 1, g);
         vec = acb_theta_ctx_z_vec_init(nb, g);
         distances = _arb_vec_init(nb * n);
         pattern = flint_malloc(g * sizeof(slong));

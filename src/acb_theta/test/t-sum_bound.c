@@ -39,7 +39,7 @@ TEST_FUNCTION_START(acb_theta_sum_bound, state)
         z = _acb_vec_init(g);
         x = _acb_vec_init(g);
         th = _acb_vec_init(n2);
-        acb_theta_ctx_tau_init(ctx_tau, g);
+        acb_theta_ctx_tau_init(ctx_tau, 1, g);
         acb_theta_ctx_z_init(ctx, g);
         d = _arb_vec_init(n);
         arb_init(c);

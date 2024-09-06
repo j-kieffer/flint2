@@ -132,7 +132,7 @@ void acb_theta_jet_error(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
 void acb_theta_ctx_exp_inv(acb_t exp_inv, const acb_t exp, const acb_t x, int is_real, slong prec);
 void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr, int is_real, slong prec);
 
-void acb_theta_ctx_tau_init(acb_theta_ctx_tau_t ctx, slong g);
+void acb_theta_ctx_tau_init(acb_theta_ctx_tau_t ctx, int allow_shift, slong g);
 void acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx);
 void acb_theta_ctx_z_init(acb_theta_ctx_z_t ctx, slong g);
 void acb_theta_ctx_z_clear(acb_theta_ctx_z_t ctx);

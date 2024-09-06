@@ -37,7 +37,7 @@ TEST_FUNCTION_START(acb_theta_jet_all_notransform, state)
         zs = _acb_vec_init(nb * g);
         th = _acb_vec_init(nb * nbth * n2);
         test = _acb_vec_init(nb * nbth * n2);
-        acb_theta_ctx_tau_init(ctx_tau, g);
+        acb_theta_ctx_tau_init(ctx_tau, 0, g);
         vec = acb_theta_ctx_z_vec_init(nb, g);
 
         acb_siegel_randtest_reduced(tau, state, prec, bits);

@@ -32,10 +32,14 @@ acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx)
         acb_mat_clear(ctx->exp_tau_div_4_inv);
         acb_mat_clear(ctx->exp_tau_div_2_inv);
         acb_mat_clear(ctx->exp_tau_inv);
-        _acb_vec_clear(ctx->exp_tau_a_div_2, n * g);
-        _acb_vec_clear(ctx->exp_tau_a, n * g);
-        _acb_vec_clear(ctx->exp_tau_a_div_2_inv, n * g);
-        _acb_vec_clear(ctx->exp_tau_a_inv, n * g);
-        _acb_vec_clear(ctx->exp_a_tau_a_div_4, n);
+
+        if (ctx->allow_shift)
+        {
+            _acb_vec_clear(ctx->exp_tau_a_div_2, n * g);
+            _acb_vec_clear(ctx->exp_tau_a, n * g);
+            _acb_vec_clear(ctx->exp_tau_a_div_2_inv, n * g);
+            _acb_vec_clear(ctx->exp_tau_a_inv, n * g);
+            _acb_vec_clear(ctx->exp_a_tau_a_div_4, n);
+        }
     }
 }

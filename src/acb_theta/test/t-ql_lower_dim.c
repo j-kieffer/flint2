@@ -46,8 +46,8 @@ TEST_FUNCTION_START(acb_theta_ql_lower_dim, state)
         acb_mat_init(tau, g, g);
         z = _acb_vec_init(g);
         d = _arb_vec_init(n);
-        acb_theta_ctx_tau_init(ctx_tau, g);
-        acb_theta_ctx_tau_init(ctx_tau0, s);
+        acb_theta_ctx_tau_init(ctx_tau, 1, g);
+        acb_theta_ctx_tau_init(ctx_tau0, 1, s);
         acb_theta_ctx_z_init(ctx_z, g);
         acb_theta_ctx_z_init(ctx_z0, s);
         th = _acb_vec_init(nbth);

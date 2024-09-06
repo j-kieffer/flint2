@@ -34,7 +34,7 @@ TEST_FUNCTION_START(acb_theta_ctx_z_shift_a0, state)
         acb_mat_init(tau, g, g);
         z = _acb_vec_init(g);
         z_shift = _acb_vec_init(g);
-        acb_theta_ctx_tau_init(ctx_tau, g);
+        acb_theta_ctx_tau_init(ctx_tau, 1, g);
         acb_theta_ctx_z_init(ctx1, g);
         acb_theta_ctx_z_init(ctx2, g);
         acb_init(c);
