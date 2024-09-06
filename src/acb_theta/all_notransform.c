@@ -163,7 +163,7 @@ acb_theta_all_sum(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
     {
         /* if sqr, then u was squared during duplication. */
         _acb_vec_scalar_mul_arb(th + j * n * n, th + j * n * n, n * n,
-            acb_theta_ctx_u(&vec[add_zero + j]), prec);
+            &(&vec[add_zero + j])->u, prec);
     }
 
     acb_theta_ctx_tau_clear(ctx_tau);

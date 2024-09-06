@@ -145,25 +145,22 @@ void acb_theta_ctx_sqr_inv(acb_t sqr_inv, const acb_t inv, const acb_t sqr, int 
 
 void acb_theta_ctx_tau_init(acb_theta_ctx_tau_t ctx, slong g);
 void acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx);
-void acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec);
-void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
-
-#define acb_theta_ctx_u(ctx) (&(ctx)->u)
-
 void acb_theta_ctx_z_init(acb_theta_ctx_z_t ctx, slong g);
 void acb_theta_ctx_z_clear(acb_theta_ctx_z_t ctx);
 acb_theta_ctx_z_struct * acb_theta_ctx_z_vec_init(slong nb, slong g);
 void acb_theta_ctx_z_vec_clear(acb_theta_ctx_z_struct * vec, slong nb);
 
-void acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau_t ctx_tau, slong prec);
-int acb_theta_ctx_z_overlaps(const acb_theta_ctx_z_t ctx1, const acb_theta_ctx_z_t ctx2);
+void acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec);
+void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
 
+void acb_theta_ctx_z_set(acb_theta_ctx_z_t ctx, acb_srcptr z, const acb_theta_ctx_tau_t ctx_tau, slong prec);
+void acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec);
 void acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
     const acb_theta_ctx_z_t ctx_real, slong prec);
-void acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec);
 void acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t ctx,
     const acb_theta_ctx_tau_t ctx_tau, ulong a, slong prec);
 void acb_theta_ctx_z_common_v(arb_ptr v, const acb_theta_ctx_z_struct * vec, slong nb, slong prec);
+int acb_theta_ctx_z_overlaps(const acb_theta_ctx_z_t ctx1, const acb_theta_ctx_z_t ctx2);
 
 /* Summation algorithms */
 

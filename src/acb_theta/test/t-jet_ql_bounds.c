@@ -80,7 +80,7 @@ TEST_FUNCTION_START(acb_theta_jet_ql_bounds, state)
         acb_theta_ctx_z_set(ctx, x, ctx_tau, lp);
         acb_theta_agm_distances(d, x, 1, tau, lp);
         acb_theta_sum_all_tilde(th, ctx, 1, ctx_tau, d, lp);
-        _acb_vec_scalar_mul_arb(th, th, n2, acb_theta_ctx_u(ctx), lp);
+        _acb_vec_scalar_mul_arb(th, th, n2, &ctx->u, lp);
 
         arb_zero(abs);
         for (k = 0; k < n2; k++)

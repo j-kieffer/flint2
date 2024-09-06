@@ -85,7 +85,7 @@ acb_theta_sum_00(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
                     (&vec[j])->exp_2z_inv, 1,
                     ctx_tau->exp_tau, ctx_tau->exp_tau_inv, E, 0,
                     prec, acb_theta_sum_00_worker);
-                arb_mul_arf(err, acb_theta_ctx_u(&vec[j]), eps, prec);
+                arb_mul_arf(err, &(&vec[j])->u, eps, prec);
                 acb_add_error_arb(&th[j], err);
             }
         }

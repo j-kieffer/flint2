@@ -53,7 +53,7 @@ TEST_FUNCTION_START(acb_theta_all_notransform, state)
         for (j = 0; j < nb; j++)
         {
             _acb_vec_scalar_mul_arb(test + j * n * n, test + j * n * n, n * n,
-                acb_theta_ctx_u(&vec[j]), prec);
+                &(&vec[j])->u, prec);
         }
         if (sqr)
         {

@@ -57,7 +57,7 @@ TEST_FUNCTION_START(acb_theta_sum_all_tilde, state)
 
         /* Call sum_all_tilde at precision mprec, test against modular_theta */
         acb_theta_sum_all_tilde(th, ctx, 1, ctx_tau, d, mprec);
-        _acb_vec_scalar_mul_arb(th, th, n2, acb_theta_ctx_u(ctx), prec);
+        _acb_vec_scalar_mul_arb(th, th, n2, &ctx->u, prec);
 
         for (j = 0; j < n2; j++)
         {
