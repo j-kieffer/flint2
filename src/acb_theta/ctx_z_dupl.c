@@ -25,23 +25,22 @@ acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec)
     {
         for (j = 0; j < g; j++)
         {
-            acb_sqr(&acb_theta_ctx_exp_z(ctx)[j], &acb_theta_ctx_exp_z(ctx)[j], prec);
+            acb_sqr(&ctx->exp_z[j], &ctx->exp_z[j], prec);
         }
     }
     else
     {
-        temp = acb_theta_ctx_exp_z(ctx);
-        acb_theta_ctx_exp_z(ctx) = acb_theta_ctx_exp_2z(ctx);
-        acb_theta_ctx_exp_2z(ctx) = temp;
-        temp = acb_theta_ctx_exp_z_inv(ctx);
-        acb_theta_ctx_exp_z_inv(ctx) = acb_theta_ctx_exp_2z_inv(ctx);
-        acb_theta_ctx_exp_2z_inv(ctx) = temp;
+        temp = ctx->exp_z;
+        ctx->exp_z = ctx->exp_2z;
+        ctx->exp_2z = temp;
+        temp = ctx->exp_z_inv;
+        ctx->exp_z_inv = ctx->exp_2z_inv;
+        ctx->exp_2z_inv = temp;
         for (j = 0; j < g; j++)
         {
-            acb_sqr(&acb_theta_ctx_exp_2z(ctx)[j], &acb_theta_ctx_exp_z(ctx)[j], prec);
-            acb_theta_ctx_sqr_inv(&acb_theta_ctx_exp_2z_inv(ctx)[j],
-                &acb_theta_ctx_exp_z_inv(ctx)[j], &acb_theta_ctx_exp_2z(ctx)[j],
-                ctx->is_real, prec);
+            acb_sqr(&ctx->exp_2z[j], &ctx->exp_z[j], prec);
+            acb_theta_ctx_sqr_inv(&ctx->exp_2z_inv[j], &ctx->exp_z_inv[j],
+                &ctx->exp_2z[j], ctx->is_real, prec);
         }
     }
 

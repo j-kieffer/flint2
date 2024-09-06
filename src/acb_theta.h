@@ -148,10 +148,6 @@ void acb_theta_ctx_tau_clear(acb_theta_ctx_tau_t ctx);
 void acb_theta_ctx_tau_set(acb_theta_ctx_tau_t ctx, const acb_mat_t tau, slong prec);
 void acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec);
 
-#define acb_theta_ctx_exp_z(ctx) ((ctx)->exp_z)
-#define acb_theta_ctx_exp_z_inv(ctx) ((ctx)->exp_z_inv)
-#define acb_theta_ctx_exp_2z(ctx) ((ctx)->exp_2z)
-#define acb_theta_ctx_exp_2z_inv(ctx) ((ctx)->exp_2z_inv)
 #define acb_theta_ctx_u(ctx) (&(ctx)->u)
 #define acb_theta_ctx_uinv(ctx) (&(ctx)->uinv)
 

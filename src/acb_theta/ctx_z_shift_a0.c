@@ -36,13 +36,13 @@ acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t
     /* Replace exp_z by analogs for z + tau a/2 */
     for (j = 0; j < g; j++)
     {
-        acb_mul(&acb_theta_ctx_exp_z(res)[j], &acb_theta_ctx_exp_z(ctx)[j],
+        acb_mul(&res->exp_z[j], &ctx->exp_z[j],
             &ctx_tau->exp_tau_a_div_2[a * g + j], prec);
-        acb_mul(&acb_theta_ctx_exp_2z(res)[j], &acb_theta_ctx_exp_2z(ctx)[j],
+        acb_mul(&res->exp_2z[j], &ctx->exp_2z[j],
             &ctx_tau->exp_tau_a[a * g + j], prec);
-        acb_mul(&acb_theta_ctx_exp_z_inv(res)[j], &acb_theta_ctx_exp_z_inv(ctx)[j],
+        acb_mul(&res->exp_z_inv[j], &ctx->exp_z_inv[j],
             &ctx_tau->exp_tau_a_div_2_inv[a * g + j], prec);
-        acb_mul(&acb_theta_ctx_exp_2z_inv(res)[j], &acb_theta_ctx_exp_2z_inv(ctx)[j],
+        acb_mul(&res->exp_2z_inv[j], &ctx->exp_2z_inv[j],
             &ctx_tau->exp_tau_a_inv[a * g + j], prec);
     }
 
@@ -55,7 +55,7 @@ acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t
         {
             continue;
         }
-        acb_mul(c, c, &acb_theta_ctx_exp_z(ctx)[j], prec);
+        acb_mul(c, c, &ctx->exp_z[j], prec);
     }
     acb_mul(c, c, &ctx_tau->exp_a_tau_a_div_4[a], prec);
 

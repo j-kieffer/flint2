@@ -150,7 +150,7 @@ acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
         {
             /* acb_modular_theta_sum recomputes the inverse of exp_z */
             acb_modular_theta_sum(res, res + nbth, res + 2 * nbth, res + 3 * nbth,
-                acb_theta_ctx_exp_z(&vec[j]), (&vec[j])->is_real,
+                (&vec[j])->exp_z, (&vec[j])->is_real,
                 acb_mat_entry(ctx_tau->exp_tau, 0, 0), ord + 1, prec);
             _acb_vec_set(th + 4 * j * nbth, res + 2 * nbth, nbth);
             _acb_vec_set(th + (4 * j + 1) * nbth, res + 3 * nbth, nbth);
@@ -196,7 +196,7 @@ acb_theta_sum_jet_all(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb,
                 /* Duplication in worker: use exp_z instead of exp_2z,
                    exp_tau_div_4 instead of exp_tau */
                 acb_theta_sum_work(th + j * n2 * nbth, n2 * nbth,
-                    acb_theta_ctx_exp_z(&vec[j]), acb_theta_ctx_exp_z_inv(&vec[j]),
+                    (&vec[j])->exp_z, (&vec[j])->exp_z_inv,
                     1, ctx_tau->exp_tau_div_4, ctx_tau->exp_tau_div_4_inv, E, ord,
                     prec, acb_theta_sum_jet_all_worker);
                 arb_mul_arf(u, acb_theta_ctx_u(&vec[j]), eps, prec);

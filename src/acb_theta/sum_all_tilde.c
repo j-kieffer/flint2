@@ -40,7 +40,7 @@ acb_theta_sum_all_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb
         for (j = 0; j < nb; j++)
         {
             acb_modular_theta_sum(&res[0], &res[1], &res[2], &res[3],
-                acb_theta_ctx_exp_z(&vec[j]), (&vec[j])->is_real,
+                (&vec[j])->exp_z, (&vec[j])->is_real,
                 acb_mat_entry(ctx_tau->exp_tau, 0, 0), 1, new_prec);
             acb_set(&th[4 * j], &res[2]);
             acb_set(&th[4 * j + 1], &res[3]);
