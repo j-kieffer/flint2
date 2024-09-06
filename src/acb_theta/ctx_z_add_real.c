@@ -23,8 +23,8 @@ acb_theta_ctx_z_add_real(acb_theta_ctx_z_t res, const acb_theta_ctx_z_t ctx,
     FLINT_ASSERT(res->g == g);
 
     /* Copy things */
-    arb_set(acb_theta_ctx_u(res), acb_theta_ctx_u(ctx));
-    arb_set(acb_theta_ctx_uinv(res), acb_theta_ctx_uinv(ctx));
+    arb_set(&res->u, &ctx->u);
+    arb_set(&res->uinv, &ctx->uinv);
     res->is_real = ctx->is_real;
     if (g > 1)
     {

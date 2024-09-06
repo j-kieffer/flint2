@@ -49,7 +49,7 @@ acb_theta_sum_all_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb
             _acb_vec_scalar_mul(th + 4 * j + 2, th + 4 * j + 2, 2,
                 acb_mat_entry(ctx_tau->exp_tau_div_4, 0, 0), new_prec);
             _acb_vec_scalar_mul_arb(th + 4 * j, th + 4 * j, 4,
-                acb_theta_ctx_uinv(&vec[j]), new_prec);
+                &(&vec[j])->uinv, new_prec);
         }
         _acb_vec_clear(res, 4);
     }
@@ -76,7 +76,7 @@ acb_theta_sum_all_tilde(acb_ptr th, const acb_theta_ctx_z_struct * vec, slong nb
             {
                 _acb_vec_scalar_mul(res + n * j, res + n * j, n, &cs[j], prec);
                 _acb_vec_scalar_mul_arb(th + n * n * j + n * a, res + n * j, n,
-                    acb_theta_ctx_uinv(&vec[j]), prec);
+                    &(&vec[j])->uinv, prec);
             }
             for (b = 0; b < n; b++)
             {

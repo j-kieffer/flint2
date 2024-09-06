@@ -45,9 +45,9 @@ acb_theta_ctx_z_dupl(acb_theta_ctx_z_t ctx, slong prec)
     }
 
     /* Compute other quantities */
-    arb_sqr(acb_theta_ctx_u(ctx), acb_theta_ctx_u(ctx), prec);
-    arb_sqr(acb_theta_ctx_uinv(ctx), acb_theta_ctx_uinv(ctx), prec);
-    /* r does not change. */
+    arb_sqr(&ctx->u, &ctx->u, prec);
+    arb_sqr(&ctx->uinv, &ctx->uinv, prec);
+
     if (g > 1)
     {
         arb_t sqrt2;

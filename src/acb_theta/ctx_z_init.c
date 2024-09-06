@@ -20,8 +20,8 @@ acb_theta_ctx_z_init(acb_theta_ctx_z_t ctx, slong g)
 
     ctx->g = g;
     ctx->exp_z = _acb_vec_init(g);
-    arb_init(acb_theta_ctx_u(ctx));
-    arb_init(acb_theta_ctx_uinv(ctx));
+    arb_init(&ctx->u);
+    arb_init(&ctx->uinv);
 
     if (g > 1)
     {

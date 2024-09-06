@@ -24,8 +24,8 @@ int acb_theta_ctx_z_overlaps(const acb_theta_ctx_z_t ctx1, const acb_theta_ctx_z
 
     res =  _acb_vec_overlaps(ctx1->exp_z, ctx2->exp_z, g)
         && (ctx1->is_real == ctx2->is_real)
-        && arb_overlaps(acb_theta_ctx_u(ctx1), acb_theta_ctx_u(ctx2))
-        && arb_overlaps(acb_theta_ctx_uinv(ctx1), acb_theta_ctx_uinv(ctx2));
+        && arb_overlaps(&ctx1->u, &ctx2->u)
+        && arb_overlaps(&ctx1->uinv, &ctx2->uinv);
 
     if (g > 1)
     {
