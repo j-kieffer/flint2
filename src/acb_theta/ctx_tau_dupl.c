@@ -22,12 +22,12 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
     slong n = 1 << g;
     slong j, k;
 
-    arb_mat_scalar_mul_2exp_si(acb_theta_ctx_yinv(ctx), acb_theta_ctx_yinv(ctx), -1);
+    arb_mat_scalar_mul_2exp_si(&ctx->yinv, &ctx->yinv, -1);
+
     /* Swap matrices around */
-    FLINT_SWAP(acb_mat_struct, *acb_theta_ctx_exp_tau_div_4(ctx),
-        *acb_theta_ctx_exp_tau_div_2(ctx));
-    FLINT_SWAP(acb_mat_struct, *acb_theta_ctx_exp_tau_div_2(ctx),
-        *acb_theta_ctx_exp_tau(ctx));
+    FLINT_SWAP(acb_mat_struct, *ctx->exp_tau_div_4, *ctx->exp_tau_div_2);
+    FLINT_SWAP(acb_mat_struct, *ctx->exp_tau_div_2, *ctx->exp_tau);
+
     /* Update exp_tau */
     for (j = 0; j < g; j++)
     {
@@ -47,11 +47,9 @@ acb_theta_ctx_tau_dupl(acb_theta_ctx_tau_t ctx, slong prec)
         arb_set_si(sqrt2, 2);
         arb_sqrt(sqrt2, sqrt2, prec);
 
-        arb_mat_scalar_mul_arb(acb_theta_ctx_cho(ctx), acb_theta_ctx_cho(ctx), sqrt2, prec);
-        FLINT_SWAP(acb_mat_struct, *acb_theta_ctx_exp_tau_div_4_inv(ctx),
-            *acb_theta_ctx_exp_tau_div_2_inv(ctx));
-        FLINT_SWAP(acb_mat_struct, *acb_theta_ctx_exp_tau_div_2_inv(ctx),
-            *acb_theta_ctx_exp_tau_inv(ctx));
+        arb_mat_scalar_mul_arb(&ctx->cho, &ctx->cho, sqrt2, prec);
+        FLINT_SWAP(acb_mat_struct, *ctx->exp_tau_div_4_inv, *ctx->exp_tau_div_2_inv);
+        FLINT_SWAP(acb_mat_struct, *ctx->exp_tau_div_2_inv, *ctx->exp_tau_inv);
         for (j = 0; j < g; j++)
         {
             for (k = j; k < g; k++)

@@ -37,13 +37,13 @@ acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t
     for (j = 0; j < g; j++)
     {
         acb_mul(&acb_theta_ctx_exp_z(res)[j], &acb_theta_ctx_exp_z(ctx)[j],
-            &acb_theta_ctx_exp_tau_a_div_2(ctx_tau, a)[j], prec);
+            &ctx_tau->exp_tau_a_div_2[a * g + j], prec);
         acb_mul(&acb_theta_ctx_exp_2z(res)[j], &acb_theta_ctx_exp_2z(ctx)[j],
-            &acb_theta_ctx_exp_tau_a(ctx_tau, a)[j], prec);
+            &ctx_tau->exp_tau_a[a * g + j], prec);
         acb_mul(&acb_theta_ctx_exp_z_inv(res)[j], &acb_theta_ctx_exp_z_inv(ctx)[j],
-            &acb_theta_ctx_exp_tau_a_div_2_inv(ctx_tau, a)[j], prec);
+            &ctx_tau->exp_tau_a_div_2_inv[a * g + j], prec);
         acb_mul(&acb_theta_ctx_exp_2z_inv(res)[j], &acb_theta_ctx_exp_2z_inv(ctx)[j],
-            &acb_theta_ctx_exp_tau_a_inv(ctx_tau, a)[j], prec);
+            &ctx_tau->exp_tau_a_inv[a * g + j], prec);
     }
 
     /* Compute cofactor exp(pi i a^T z), and multiply by common cofactor
@@ -57,7 +57,7 @@ acb_theta_ctx_z_shift_a0(acb_theta_ctx_z_t res, acb_t c, const acb_theta_ctx_z_t
         }
         acb_mul(c, c, &acb_theta_ctx_exp_z(ctx)[j], prec);
     }
-    acb_mul(c, c, acb_theta_ctx_exp_a_tau_a_div_4(ctx_tau, a), prec);
+    acb_mul(c, c, &ctx_tau->exp_a_tau_a_div_4[a], prec);
 
     /* Compute v; u and uinv must be multiplied by abs(c) */
     acb_abs(abs, c, prec);
