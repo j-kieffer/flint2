@@ -55,7 +55,7 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
         /* Setup */
         ab = acb_theta_transform_char(&e, mat, 0);
         _acb_vec_unit_roots(units, 8, 8, prec);
-        kappa = acb_theta_transform_kappa(s, mat, new_tau, prec);
+        kappa = acb_siegel_kappa(s, mat, new_tau, prec);
 
         acb_theta_one_notransform(th, new_zs, nb, new_tau, ab, prec);
 

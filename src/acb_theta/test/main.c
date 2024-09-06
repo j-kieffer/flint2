@@ -65,6 +65,7 @@
 #include "t-siegel_is_reduced.c"
 #include "t-siegel_reduce.c"
 #include "t-siegel_transform.c"
+#include "t-siegel_kappa.c"
 #include "t-sp2gz_decompose.c"
 #include "t-sp2gz_inv.c"
 #include "t-sp2gz_is_correct.c"
@@ -75,7 +76,6 @@
 #include "t-sum_jet_00.c"
 #include "t-sum_jet_all.c"
 #include "t-transform_char.c"
-#include "t-transform_kappa.c"
 #include "t-transform_proj.c"
 
 /* Array of test functions ***************************************************/
@@ -146,7 +146,7 @@ test_struct tests[] =
     TEST_FUNCTION(acb_theta_sum_jet_00),
     TEST_FUNCTION(acb_theta_sum_jet_all),
     /* TEST_FUNCTION(acb_theta_transform_char),
-    TEST_FUNCTION(acb_theta_transform_kappa),
+    TEST_FUNCTION(acb_siegel_kappa),
     TEST_FUNCTION(acb_theta_transform_proj), */
 };
 

@@ -12,7 +12,7 @@
 #include "test_helpers.h"
 #include "acb_theta.h"
 
-TEST_FUNCTION_START(acb_theta_transform_kappa, state)
+TEST_FUNCTION_START(acb_siegel_kappa, state)
 {
     slong iter;
 
@@ -36,8 +36,8 @@ TEST_FUNCTION_START(acb_theta_transform_kappa, state)
         sp2gz_randtest(mat, state, bits);
         acb_siegel_randtest_reduced(tau, state, prec, bits);
 
-        kappa = acb_theta_transform_kappa(sqrtdet, mat, tau, prec);
-        kappa2 = acb_theta_transform_kappa2(mat);
+        kappa = acb_siegel_kappa(sqrtdet, mat, tau, prec);
+        kappa2 = acb_siegel_kappa2(mat);
 
         if (kappa % 4 != kappa2)
         {

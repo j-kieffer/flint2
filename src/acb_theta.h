@@ -58,6 +58,9 @@ void acb_siegel_cho_yinv(arb_mat_t cho, arb_mat_t yinv, const acb_mat_t tau, slo
 void acb_siegel_reduce(fmpz_mat_t mat, const acb_mat_t tau, slong prec);
 int acb_siegel_is_reduced(const acb_mat_t tau, slong tol_exp, slong prec);
 
+slong acb_siegel_kappa2(const fmpz_mat_t mat);
+slong acb_siegel_kappa(acb_t sqrtdet, const fmpz_mat_t mat, const acb_mat_t tau, slong prec);
+
 void acb_siegel_randtest(acb_mat_t tau, flint_rand_t state, slong prec, slong mag_bits);
 void acb_siegel_randtest_reduced(acb_mat_t tau, flint_rand_t state, slong prec, slong mag_bits);
 void acb_siegel_randtest_compact(acb_mat_t tau, flint_rand_t state, int exact, slong prec);
@@ -106,9 +109,6 @@ void acb_theta_agm_mul_tight(acb_ptr res, acb_srcptr a0, acb_srcptr a,
 /* The transformation formula */
 
 ulong acb_theta_transform_char(slong * e, const fmpz_mat_t mat, ulong ab);
-slong acb_theta_transform_kappa(acb_t sqrtdet, const fmpz_mat_t mat,
-    const acb_mat_t tau, slong prec);
-slong acb_theta_transform_kappa2(const fmpz_mat_t mat);
 void acb_theta_transform_proj(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th,
     int sqr, slong prec);
 

@@ -29,7 +29,7 @@ TEST_FUNCTION_START(acb_theta_g2_character, state)
 
         eps = acb_theta_g2_character(mat);
 
-        test = 10 * acb_theta_transform_kappa2(mat); /* 10 theta constants */
+        test = 10 * acb_siegel_kappa2(mat); /* 10 theta constants */
         for (ab = 0; ab < 16; ab++)
         {
             if (acb_theta_char_is_even(ab, 2))

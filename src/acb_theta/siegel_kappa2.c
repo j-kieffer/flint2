@@ -14,7 +14,7 @@
 #include "acb_theta.h"
 
 static slong
-transform_kappa2_g1(const fmpz_mat_t mat, const fmpz_mat_t x)
+acb_siegel_kappa2_g1(const fmpz_mat_t mat, const fmpz_mat_t x)
 {
     slong g = sp2gz_dim(mat);
     psl2z_t y;
@@ -64,7 +64,7 @@ transform_kappa2_g1(const fmpz_mat_t mat, const fmpz_mat_t x)
 }
 
 static slong
-transform_kappa2_j(const fmpz_mat_t mat)
+acb_siegel_kappa2_j(const fmpz_mat_t mat)
 {
     slong g = sp2gz_dim(mat);
     fmpz_mat_t gamma;
@@ -83,7 +83,7 @@ transform_kappa2_j(const fmpz_mat_t mat)
 }
 
 slong
-acb_theta_transform_kappa2(const fmpz_mat_t mat)
+acb_siegel_kappa2(const fmpz_mat_t mat)
 {
     slong g = sp2gz_dim(mat);
     fmpz_mat_struct * dec;
@@ -120,17 +120,17 @@ acb_theta_transform_kappa2(const fmpz_mat_t mat)
                     && fmpz_cmp_si(fmpz_mat_entry(x, 1, 1), 0) < 0))
             {
                 fmpz_mat_neg(x, x);
-                res += transform_kappa2_g1(&dec[k], x);
+                res += acb_siegel_kappa2_g1(&dec[k], x);
                 res += 2;
             }
             else
             {
-                res += transform_kappa2_g1(&dec[k], x);
+                res += acb_siegel_kappa2_g1(&dec[k], x);
             }
         }
         else /* embedded j */
         {
-            res += transform_kappa2_j(&dec[k]);
+            res += acb_siegel_kappa2_j(&dec[k]);
         }
     }
 

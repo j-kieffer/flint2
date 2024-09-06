@@ -63,12 +63,12 @@ acb_theta_all(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         _acb_vec_unit_roots(units, 8, 8, prec);
         if (sqr)
         {
-            kappa = acb_theta_transform_kappa2(mat);
+            kappa = acb_siegel_kappa2(mat);
             acb_mat_det(s, ct, prec);
         }
         else
         {
-            kappa = acb_theta_transform_kappa(s, mat, new_tau, prec);
+            kappa = acb_siegel_kappa(s, mat, new_tau, prec);
         }
         for (ab = 0; ab < n2; ab++)
         {
