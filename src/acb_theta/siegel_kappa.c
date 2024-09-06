@@ -17,7 +17,7 @@
 #include "acb_theta.h"
 
 static void
-acb_theta_sqrt_branch(acb_t res, const acb_t x, acb_srcptr rts_neg, slong nb_neg,
+acb_siegel_sqrt_branch(acb_t res, const acb_t x, acb_srcptr rts_neg, slong nb_neg,
     acb_srcptr rts_pos, slong nb_pos, const acb_t sqrt_lead, slong prec)
 {
     acb_t s, t;
@@ -47,7 +47,7 @@ acb_theta_sqrt_branch(acb_t res, const acb_t x, acb_srcptr rts_neg, slong nb_neg
 }
 
 static void
-acb_theta_transform_sqrtdet(acb_t res, const acb_mat_t tau, slong prec)
+acb_siegel_sqrtdet(acb_t res, const acb_mat_t tau, slong prec)
 {
     slong g = acb_mat_nrows(tau);
     flint_rand_t state;
@@ -155,12 +155,12 @@ acb_theta_transform_sqrtdet(acb_t res, const acb_mat_t tau, slong prec)
         acb_exp_pi_i(z, z, prec);
         acb_mul(mu, mu, z, prec);
         acb_set_si(z, -1);
-        acb_theta_sqrt_branch(z, z, rts_neg, nb_neg, rts_pos, nb_pos, rt, prec);
+        acb_siegel_sqrt_branch(z, z, rts_neg, nb_neg, rts_pos, nb_pos, rt, prec);
         acb_div(mu, mu, z, prec);
 
         /* Compute square root branch at z=1 to get sqrtdet */
         acb_set_si(z, 1);
-        acb_theta_sqrt_branch(rt, z, rts_neg, nb_neg, rts_pos, nb_pos, rt, prec);
+        acb_siegel_sqrt_branch(rt, z, rts_neg, nb_neg, rts_pos, nb_pos, rt, prec);
         acb_mul(rt, rt, mu, prec);
         acb_mat_det(res, tau, prec);
         acb_theta_agm_sqrt(res, res, rt, 1, prec);
@@ -188,7 +188,7 @@ acb_theta_transform_sqrtdet(acb_t res, const acb_mat_t tau, slong prec)
 }
 
 static slong
-transform_kappa_g1(acb_t sqrtdet, const fmpz_mat_t mat, const fmpz_mat_t x,
+acb_siegel_kappa_g1(acb_t sqrtdet, const fmpz_mat_t mat, const fmpz_mat_t x,
     const acb_mat_t tau, slong prec)
 {
     slong g = acb_mat_nrows(tau);
@@ -226,7 +226,7 @@ transform_kappa_g1(acb_t sqrtdet, const fmpz_mat_t mat, const fmpz_mat_t x,
     {
         ab = 1 << (g - 1);
     }
-    acb_theta_transform_char(&e, mat, ab);
+    acb_theta_char_table(&ab, &e, mat, ab);
 
     /* adjust root of unity based on R */
     if (fmpz_is_zero(&y->c))
@@ -243,7 +243,7 @@ transform_kappa_g1(acb_t sqrtdet, const fmpz_mat_t mat, const fmpz_mat_t x,
 }
 
 static slong
-transform_kappa_j(acb_t sqrtdet, const fmpz_mat_t mat, const acb_mat_t tau, slong prec)
+acb_siegel_kappa_j(acb_t sqrtdet, const fmpz_mat_t mat, const acb_mat_t tau, slong prec)
 {
     slong g = sp2gz_dim(mat);
     fmpz_mat_t gamma;
@@ -257,7 +257,7 @@ transform_kappa_j(acb_t sqrtdet, const fmpz_mat_t mat, const acb_mat_t tau, slon
     /* Mumford: theta_00(mtau) = det(tau0/i)^{1/2} theta_00(tau), and
        transform_sqrtdet(tau0) = i^{r/2} det(tau0/i)^{1/2} */
     acb_mat_window_init(tau0, tau, 0, 0, r, r);
-    acb_theta_transform_sqrtdet(sqrtdet, tau0, prec);
+    acb_siegel_sqrtdet(sqrtdet, tau0, prec);
     acb_mat_window_clear(tau0);
 
     res = -r;
@@ -319,30 +319,30 @@ acb_siegel_kappa(acb_t sqrtdet, const fmpz_mat_t mat, const acb_mat_t tau, slong
                     && fmpz_cmp_si(fmpz_mat_entry(x, 1, 1), 0) < 0))
             {
                 fmpz_mat_neg(x, x);
-                res += transform_kappa_g1(c, &dec[k], x, w, prec);
+                res += acb_siegel_kappa_g1(c, &dec[k], x, w, prec);
                 acb_div_onei(c, c);
                 res += 2;
             }
             else
             {
-                res += transform_kappa_g1(c, &dec[k], x, w, prec);
+                res += acb_siegel_kappa_g1(c, &dec[k], x, w, prec);
             }
         }
         else /* embedded j */
         {
-            res += transform_kappa_j(c, &dec[k], w, prec);
+            res += acb_siegel_kappa_j(c, &dec[k], w, prec);
         }
         acb_siegel_transform(w, &dec[k], w, prec);
         acb_mul(sqrtdet, sqrtdet, c, prec);
     }
 
     /* Adjust final sign based on transformation of coordinates */
-    acb_theta_transform_char(&e, mat, 0);
+    acb_theta_char_table(&ab, &e, mat, 0);
     res -= e;
     ab = 0;
     for (k = 0; k < nb_dec; k++)
     {
-        ab = acb_theta_transform_char(&e, &dec[k], ab);
+        acb_theta_char_table(&ab, &e, &dec[k], ab);
         res += e;
     }
 

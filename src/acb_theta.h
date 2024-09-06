@@ -129,7 +129,6 @@ void acb_theta_jet_error(arb_ptr err, acb_srcptr z, const acb_mat_t tau,
 
 /* The transformation formula */
 
-ulong acb_theta_transform_char(slong * e, const fmpz_mat_t mat, ulong ab);
 void acb_theta_transform_proj(acb_ptr res, const fmpz_mat_t mat, acb_srcptr th,
     int sqr, slong prec);
 

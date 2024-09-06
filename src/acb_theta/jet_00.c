@@ -59,7 +59,7 @@ acb_theta_jet_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau,
         /* Setup */
         _acb_vec_unit_roots(units, 8, 8, prec);
         kappa = acb_siegel_kappa(s, mat, new_tau, prec);
-        image_ab = acb_theta_transform_char(&e, mat, 0);
+        acb_theta_char_table(&image_ab, &e, mat, 0);
 
         acb_theta_jet_one_notransform(th, new_zs, nb, new_tau, ord, image_ab, prec);
 

@@ -23,7 +23,8 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
     acb_ptr new_zs, exps, cs, units;
     arb_ptr rs;
     acb_t s;
-    slong kappa, e, ab;
+    slong kappa, e;
+    ulong ab;
     slong j;
     int res;
 
@@ -53,7 +54,7 @@ acb_theta_00(acb_ptr th, acb_srcptr zs, slong nb, const acb_mat_t tau, slong pre
     if (res)
     {
         /* Setup */
-        ab = acb_theta_transform_char(&e, mat, 0);
+        acb_theta_char_table(&ab, &e, mat, 0);
         _acb_vec_unit_roots(units, 8, 8, prec);
         kappa = acb_siegel_kappa(s, mat, new_tau, prec);
 
