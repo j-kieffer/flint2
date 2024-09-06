@@ -12,7 +12,7 @@
 #ifndef ACB_THETA_H
 #define ACB_THETA_H
 
-#include "fmpz_mat.h"
+#include "fmpz_types.h"
 #include "acb_types.h"
 #include "acb_theta_types.h"
 
@@ -24,12 +24,7 @@ extern "C" {
 
 /* The Siegel modular group */
 
-FLINT_FORCE_INLINE slong
-sp2gz_dim(const fmpz_mat_t mat)
-{
-    return fmpz_mat_nrows(mat) / 2;
-}
-
+slong sp2gz_dim(const fmpz_mat_t mat);
 void sp2gz_set_blocks(fmpz_mat_t mat, const fmpz_mat_t alpha, const fmpz_mat_t beta,
     const fmpz_mat_t gamma, const fmpz_mat_t delta);
 void sp2gz_j(fmpz_mat_t mat);
